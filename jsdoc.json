@@ -1,0 +1,58 @@
+{
+  "tags": {
+    "allowUnknownTags" : true,
+    "dictionaries": ["jsdoc","closure"]
+  },
+  "source": {
+      "include": [
+        "src", "README.md",
+        "node_modules/@egjs/component/src"
+      ],
+      "includePattern": ".+\\.(j|t)s(doc|x)?$",
+      "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "opts": {
+      "template": "node_modules/egjs-jsdoc-template",
+      "destination": "./doc/",
+      "ignores": ["eg.Component"],
+      "expendsItemMembers": true,
+      "recurse": true
+  },
+  "plugins": [
+    "plugins/markdown",
+    "node_modules/egjs-jsdoc-template/jsdoc-plugin/ko",
+    "node_modules/egjs-jsdoc-template/jsdoc-plugin/group",
+    "node_modules/egjs-jsdoc-template/jsdoc-plugin/support"
+  ],
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": true,
+    "default": {
+      "outputSourceFiles" : true
+    },
+    "applicationName": "eg.Grid",
+    "disqus": "egjs",
+    "googleAnalytics": "G-4139M7LXY0",
+    "openGraph": {
+      "title": "",
+      "type": "website",
+      "image": "",
+      "site_name": "",
+      "url": ""
+    },
+    "meta": {
+      "title": "egjs::Grid - API",
+      "description": "..",
+      "keyword": "Grid, Masonry, Justified, Layout, Packing, Frame, Square"
+    },
+    "linenums": true,
+    "link": {
+      "canonical": "https://naver.github.io/egjs-grid/release/latest/doc/"
+    }
+  },
+  "markdown": {
+    "parser": "gfm",
+    "hardwrap": true,
+    "tags": ["examples", "ko"]
+  }
+}
