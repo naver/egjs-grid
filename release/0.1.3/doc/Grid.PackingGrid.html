@@ -98,6 +98,8 @@
     
         <li data-name="Grid.PackingGrid#gap"><a href="Grid.PackingGrid.html#gap">gap</a></li>
     
+        <li data-name="Grid.PackingGrid#preserveUIOnDestroy"><a href="Grid.PackingGrid.html#preserveUIOnDestroy">preserveUIOnDestroy</a></li>
+    
     </ul>
     <ul class="typedefs itemMembers expends">
     
@@ -174,6 +176,8 @@
     
         <li data-name="Grid.MasonryGrid#gap"><a href="Grid.MasonryGrid.html#gap">gap</a></li>
     
+        <li data-name="Grid.MasonryGrid#preserveUIOnDestroy"><a href="Grid.MasonryGrid.html#preserveUIOnDestroy">preserveUIOnDestroy</a></li>
+    
     </ul>
     <ul class="typedefs itemMembers expends">
     
@@ -243,6 +247,8 @@
         <li data-name="Grid.JustifiedGrid#defaultDirection"><a href="Grid.JustifiedGrid.html#defaultDirection">defaultDirection</a></li>
     
         <li data-name="Grid.JustifiedGrid#gap"><a href="Grid.JustifiedGrid.html#gap">gap</a></li>
+    
+        <li data-name="Grid.JustifiedGrid#preserveUIOnDestroy"><a href="Grid.JustifiedGrid.html#preserveUIOnDestroy">preserveUIOnDestroy</a></li>
     
         <li data-name="Grid.JustifiedGrid#rowRange"><a href="Grid.JustifiedGrid.html#rowRange">rowRange</a></li>
     
@@ -370,6 +376,8 @@
     
         <li data-name="Grid.FrameGrid#gap"><a href="Grid.FrameGrid.html#gap">gap</a></li>
     
+        <li data-name="Grid.FrameGrid#preserveUIOnDestroy"><a href="Grid.FrameGrid.html#preserveUIOnDestroy">preserveUIOnDestroy</a></li>
+    
         <li data-name="Grid.FrameGrid#rectSize"><a href="Grid.FrameGrid.html#rectSize">rectSize</a></li>
     
         <li data-name="Grid.FrameGrid#useFrameFill"><a href="Grid.FrameGrid.html#useFrameFill">useFrameFill</a></li>
@@ -441,6 +449,8 @@
         <li data-name="Grid#defaultDirection"><a href="Grid.html#defaultDirection">defaultDirection</a></li>
     
         <li data-name="Grid#gap"><a href="Grid.html#gap">gap</a></li>
+    
+        <li data-name="Grid#preserveUIOnDestroy"><a href="Grid.html#preserveUIOnDestroy">preserveUIOnDestroy</a></li>
     
     </ul>
     <ul class="typedefs itemMembers expends">
@@ -1177,6 +1187,71 @@ defaultDirection: &quot;end&quot;,<br>
 gap: 0,<br>
 });</p>
 <p>grid.gap = 5;</p></code></pre>
+    
+
+    
+</dd>
+
+        
+            
+
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="preserveUIOnDestroy">preserveUIOnDestroy<span class="type-signature type $ts:grid.gridoptions["preserveuiondestroy"]"><a href="Grid.html#.GridOptions">Grid.GridOptions</a>["preserveUIOnDestroy"]</span> </h4>
+    </div>
+    
+</dt>
+<dd>
+    
+    <div class="description en">
+        <p>Whether to preserve the UI of the existing container or item when destroying.</p>
+    </div>
+    
+    
+    <div class="description ko">
+        <p>destroy 시 기존 컨테이너, 아이템의 UI를 보존할지 여부.</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    <!-- if data.codepen -->
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code><p>import { MasonryGrid } from &quot;@egjs/grid&quot;;</p>
+<p>const grid = new MasonryGrid(container, {<br>
+preserveUIOnDestroy: false,<br>
+});</p>
+<p>grid.preserveUIOnDestroy = true;</p></code></pre>
     
 
     
@@ -3281,6 +3356,43 @@ gap: 0,<br>
 	
         <tr>
             
+                <td class="name"><code>preserveUIOnDestroy</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">
+                
+                <div class="en"><p>Whether to preserve the UI of the existing container or item when destroying. </p></div>
+                <div class="ko"><p>destroy 시 기존 컨테이너, 아이템의 UI를 보존할지 여부.</p></div>
+                
+
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
                 <td class="name"><code>defaultDirection</code></td>
             
             
@@ -3582,7 +3694,7 @@ gap: 0,<br>
     
         
         <div class="tag-source">
-            <a href="src_Grid.ts.html">Grid.ts</a>, <a href="src_Grid.ts.html#line295">line 295</a>
+            <a href="src_Grid.ts.html">Grid.ts</a>, <a href="src_Grid.ts.html#line300">line 300</a>
         </div>
         
     </div>
@@ -3853,7 +3965,7 @@ e.update();<br>
     
         
         <div class="tag-source">
-            <a href="src_Grid.ts.html">Grid.ts</a>, <a href="src_Grid.ts.html#line371">line 371</a>
+            <a href="src_Grid.ts.html">Grid.ts</a>, <a href="src_Grid.ts.html#line376">line 376</a>
         </div>
         
     </div>
@@ -4097,7 +4209,7 @@ console.log(e.mounted, e.updated, e.useResize);<br>
         
 
         <footer>
-            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 0.3.10</a> on Fri Mar 26 2021 13:56:18 GMT+0900 (대한민국 표준시)
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 0.3.10</a> on Fri Mar 26 2021 18:04:21 GMT+0900 (대한민국 표준시)
         </footer>
     </div>
 </div>

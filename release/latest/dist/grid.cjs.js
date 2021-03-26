@@ -91,6 +91,7 @@ var DEFAULT_GRID_OPTIONS = {
   resizeDebounce: 100,
   maxResizeDebounce: 0,
   autoResize: true,
+  preserveUIOnDestroy: false,
   defaultDirection: "end",
   externalContainerManager: null,
   externalItemRenderer: null,
@@ -122,7 +123,8 @@ var UPDATE_STATE;
 var GRID_PROPERTY_TYPES = {
   gap: PROPERTY_TYPE.RENDER_PROPERTY,
   defaultDirection: PROPERTY_TYPE.PROPERTY,
-  renderOnPropertyChange: PROPERTY_TYPE.PROPERTY
+  renderOnPropertyChange: PROPERTY_TYPE.PROPERTY,
+  preserveUIOnDestroy: PROPERTY_TYPE.PROPERTY
 };
 var GRID_METHODS = ["syncElements", "updateItems", "getItems", "setItems", "renderItems", "getContainerInlineSize"];
 var GRID_EVENTS = ["renderComplete", "contentError"];
@@ -1039,9 +1041,13 @@ function (_super) {
       options = {};
     }
 
-    this.containerManager.destroy(options);
+    var _b = options.preserveUI,
+        preserveUI = _b === void 0 ? this.options.preserveUIOnDestroy : _b;
+    this.containerManager.destroy({
+      preserveUI: preserveUI
+    });
 
-    if (!options.preserveUI) {
+    if (!preserveUI) {
       this.items.forEach(function (_a) {
         var element = _a.element,
             orgCSSText = _a.orgCSSText;
@@ -1272,6 +1278,21 @@ function (_super) {
  * });
  *
  * grid.defaultDirection = "start";
+ */
+
+/**
+ * Whether to preserve the UI of the existing container or item when destroying.
+ * @ko destroy 시 기존 컨테이너, 아이템의 UI를 보존할지 여부.
+ * @name Grid#preserveUIOnDestroy
+ * @type {$ts:Grid.GridOptions["preserveUIOnDestroy"]}
+ * @example
+ * import { MasonryGrid } from "@egjs/grid";
+ *
+ * const grid = new MasonryGrid(container, {
+ *   preserveUIOnDestroy: false,
+ * });
+ *
+ * grid.preserveUIOnDestroy = true;
  */
 
 /**
