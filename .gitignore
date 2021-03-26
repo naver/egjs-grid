@@ -210,5 +210,5 @@ demo/_data/version.yml
 demo/release
 demo/storybook
 declaration/
-dist/
+
 packages/*/dist/
