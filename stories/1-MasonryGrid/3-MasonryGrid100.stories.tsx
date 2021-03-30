@@ -6,28 +6,9 @@ import { MASONRY_GRID_CONTROLS } from "../templates/controls";
 import { MasonryGrid } from "../../src";
 import { getPreview } from "../templates/preview";
 import "../templates/default.css";
+import { getApp } from "../templates/ReactJSX";
 
-export const MasonryGrid100Template = function App(props: Record<string, any>) {
-  const gridRef = React.useRef<MasonryGrid | null>(null);
-
-  React.useEffect(() => {
-    gridRef.current = MasonryGridApp(props);
-
-    return () => {
-      gridRef.current!.destroy();
-    };
-  }, []);
-
-  React.useEffect(() => {
-    if (!gridRef.current) {
-      return;
-    }
-    for (const name in MasonryGrid.propertyTypes) {
-      if (name in props) {
-        gridRef.current[name] = props[name];
-      }
-    }
-  });
+export const MasonryGrid100Template = getApp(MasonryGrid, MasonryGridApp, () => {
   return <div className="container">
     <div className={"item"} data-grid-column="0" style={{
       width: "100%",
@@ -42,7 +23,7 @@ export const MasonryGrid100Template = function App(props: Record<string, any>) {
     <div className={"item"}>9</div>
     <div className={"item"}>10</div>
   </div>;
-};
+});
 
 
 MasonryGrid100Template.storyName = "MasonryGrid with item that place 100% columns";
