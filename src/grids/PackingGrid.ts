@@ -46,10 +46,9 @@ function fitArea(
  * @typedef
  * @memberof Grid.PackingGrid
  * @extends Grid.GridOptions
- * @property - The number of columns. If the number of columns is 0, it is automatically calculated according to the size of the container. <ko>열의 개수. 열의 개수가 0이라면, 컨테이너의 사이즈에 의해 계산이 된다. (default: 0) </ko>
- * @property - The size of the columns. If it is 0, it is calculated as the size of the first item in items. (default: 0) <ko> 열의 사이즈. 만약 열의 사이즈가 0이면, 아이템들의 첫번째 아이템의 사이즈로 계산이 된다. (default: 0) </ko>
- * @property - The size ratio(inlineSize / contentSize) of the columns. 0 is not set. (default: 0) <ko>열의 사이즈 비율(inlineSize / contentSize). 0은 미설정이다. </ko>
- * @property - Align of the position of the items. If you want to use `stretch`, be sure to set `column` or `columnSize` option. ("start", "center", "end", "justify", "stretch") (default: "justify") <ko>아이템들의 위치의 정렬. `stretch`를 사용하고 싶다면 `column` 또는 `columnSize` 옵션을 설정해라.  ("start", "center", "end", "justify", "stretch") (default: "justify")</ko>
+ * @property - The aspect ratio (inlineSize / contentSize) of the container with items. (default: 1) <ko>아이템들을 가진 컨테이너의 종횡비(inlineSize / contentSize). (default: 1)</ko>
+ * @property - The size weight when placing items. (default: 1)<ko>아이템들을 배치하는데 사이즈 가중치. (default: 1)</ko>
+ * @property - The weight to keep ratio when placing items. (default: 1)<ko>아이템들을 배치하는데 비율을 유지하는 가중치. (default: 1)</ko>
  */
 export interface PackingGridOptions extends GridOptions {
   aspectRatio?: number;
@@ -58,8 +57,8 @@ export interface PackingGridOptions extends GridOptions {
 }
 
 /**
- * The PackingGrid is a grid that shows the important items bigger without sacrificing the weight of the items. Rows and columns are separated so that items are dynamically placed within the horizontal and vertical space rather than arranged in an orderly fashion.
- * @ko PackingGrid는 아이템의 본래 크기에 따른 비중을 해치지 않으면서 중요한 카드는 더 크게 보여 주는 레이아웃이다. 행과 열이 구분돼 아이템을 정돈되게 배치하는 대신 가로세로 일정 공간 내에서 동적으로 아이템을 배치한다.
+ * The PackingGrid is a grid that shows the important items bigger without sacrificing the weight of the items. Rows and columns are separated so that items are dynamically placed within the horizontal and vertical space rather than arranged in an orderly fashion. The position and size of the items are different depending on the values of the `sizeWeight` and `ratioWeight` options.
+ * @ko PackingGrid는 아이템의 본래 크기에 따른 비중을 해치지 않으면서 중요한 카드는 더 크게 보여 주는 레이아웃이다. 행과 열이 구분돼 아이템을 정돈되게 배치하는 대신 가로세로 일정 공간 내에서 동적으로 아이템을 배치한다. `sizeWeight`와 `ratioWeight` 옵션 값에 따라 아이템이 배치되는 위치, 사이즈가 달라진다.
  * @memberof Grid
  * @param {HTMLElement | string} container - A base element for a module <ko>모듈을 적용할 기준 엘리먼트</ko>
  * @param {Grid.PackingGrid.PackingGridOptions} options - The option object of the PackingGrid module <ko>PackingGrid 모듈의 옵션 객체</ko>
@@ -201,64 +200,48 @@ export interface PackingGrid extends Properties<typeof PackingGrid> {
 
 
 /**
- * Align of the position of the items. If you want to use `stretch`, be sure to set `column` or `columnSize` option. ("start", "center", "end", "justify", "stretch") (default: "justify")
- * @ko 아이템들의 위치의 정렬. `stretch`를 사용하고 싶다면 `column` 또는 `columnSize` 옵션을 설정해라.  ("start", "center", "end", "justify", "stretch") (default: "justify")
- * @name Grid.PackingGrid#align
- * @type {$ts:Grid.PackingGrid.PackingGridOptions["align"]}
+ * The aspect ratio (inlineSize / contentSize) of the container with items. (default: 1)
+ * @ko 아이템들을 가진 컨테이너의 종횡비(inlineSize / contentSize). (default: 1)
+ * @name Grid.PackingGrid#aspectRatio
+ * @type {$ts:Grid.PackingGrid.PackingGridOptions["aspectRatio"]}
  * @example
  * import { PackingGrid } from "@egjs/grid";
  *
  * const grid = new PackingGrid(container, {
- *   align: "start",
+ *   aspectRatio: 1,
  * });
  *
- * grid.align = "justify";
+ * grid.aspectRatio = 1.5;
  */
 
 
 /**
- * The number of columns. If the number of columns is 0, it is automatically calculated according to the size of the container.
- * @ko 열의 개수. 열의 개수가 0이라면, 컨테이너의 사이즈에 의해 계산이 된다. (default: 0)
- * @name Grid.PackingGrid#column
- * @type {$ts:Grid.PackingGrid.PackingGridOptions["column"]}
+ * The size weight when placing items. (default: 1)
+ * @ko 아이템들을 배치하는데 사이즈 가중치. (default: 1)
+ * @name Grid.PackingGrid#sizeWeight
+ * @type {$ts:Grid.PackingGrid.PackingGridOptions["sizeWeight"]}
  * @example
  * import { PackingGrid } from "@egjs/grid";
  *
  * const grid = new PackingGrid(container, {
- *   column: 0,
+ *   sizeWeight: 1,
  * });
  *
- * grid.column = 4;
+ * grid.sizeWeight = 10;
  */
 
 
 /**
- * The size of the columns. If it is 0, it is calculated as the size of the first item in items. (default: 0)
- * @ko 열의 사이즈. 만약 열의 사이즈가 0이면, 아이템들의 첫번째 아이템의 사이즈로 계산이 된다. (default: 0)
- * @name Grid.PackingGrid#columnSize
- * @type {$ts:Grid.PackingGrid.PackingGridOptions["columnSize"]}
+ * The weight to keep ratio when placing items. (default: 1)
+ * @ko 아이템들을 배치하는데 비율을 유지하는 가중치. (default: 1)
+ * @name Grid.PackingGrid#ratioWeight
+ * @type {$ts:Grid.PackingGrid.PackingGridOptions["ratioWeight"]}
  * @example
  * import { PackingGrid } from "@egjs/grid";
  *
  * const grid = new PackingGrid(container, {
- *   columnSize: 0,
+ *   ratioWeight: 1,
  * });
  *
- * grid.columnSize = 200;
- */
-
-
-/**
- * The size ratio(inlineSize / contentSize) of the columns. 0 is not set. (default: 0)
- * @ko 열의 사이즈 비율(inlineSize / contentSize). 0은 미설정이다.
- * @name Grid.PackingGrid#columnSizeRatio
- * @type {$ts:Grid.PackingGrid.PackingGridOptions["columnSizeRatio"]}
- * @example
- * import { PackingGrid } from "@egjs/grid";
- *
- * const grid = new PackingGrid(container, {
- *   columnSizeRatio: 0,
- * });
- *
- * grid.columnSizeRatio = 0.5;
+ * grid.ratioWeight = 10;
  */
