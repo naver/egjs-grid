@@ -179,9 +179,17 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     return this;
   }
   /**
-   * Rearrange items to fit the grid and render them.
-   * @ko grid에 맞게 아이템을 재배치하고 렌더링을 한다.
+   * Rearrange items to fit the grid and render them. When rearrange is complete, the `renderComplete` event is fired.
+   * @ko grid에 맞게 아이템을 재배치하고 렌더링을 한다. 배치가 완료되면 `renderComplete` 이벤트가 발생한다.
    * @param - Options for rendering. <ko>렌더링을 하기 위한 옵션.</ko>
+   * @example
+   * import { MasonryGrid } from "@egjs/grid";
+   * const grid = new MasonryGrid();
+   *
+   * grid.on("renderComplete", e => {
+   *   console.log(e);
+   * });
+   * grid.renderItems();
    */
   public renderItems(options: RenderOptions = {}) {
     this._clearRenderTimer();
