@@ -13,7 +13,8 @@ import { ItemRenderer, ItemRendererStatus } from "./ItemRenderer";
 /**
  * @typedef
  * @memberof Grid
- * @property - Direction of the scroll movement. (true: horizontal, false: vertical) (default: false) <ko>스크롤 이동 방향. (true: 가로방향, false: 세로방향) (default: false)</ko>
+ * @property - Direction of the scroll movement. (true: horizontal, false: vertical) If horizontal is false, `inlinePos` is left, `inlineSize` is width, `contentPos` is top, and `contentSize` is height. If horizontal is true, `inlinePos` is top, `inlineSize` is height, `contentPos` is left, and `contentSize` is width.  (default: false)
+ * <ko>스크롤 이동 방향. (true: 가로방향, false: 세로방향) horizontal이 false 면 `inlinePos`는 left, `inlineSize`는 width, `contentPos`는 top, `contentSize`는 height다. horizontal이 true면 `inlinePos`는 top, `inlineSize`는 height, `contentPos`는 left, `contentSize`는 width이다. (default: false)</ko>
  * @property - Whether to set the css size and position of the item to %. (default: false)<ko>item의 css size와 position를 %로 설정할지 여부.</ko>
  * @property - Indicates whether sizes of all card elements are equal to one another. If sizes of card elements to be arranged are all equal and this option is set to "true", the performance of layout arrangement can be improved. (default: false)<ko>카드 엘리먼트의 크기가 동일한지 여부. 배치될 카드 엘리먼트의 크기가 모두 동일할 때 이 옵션을 'true'로 설정하면 레이아웃 배치 성능을 높일 수 있다. (default: false)</ko>
  * @property - Indicates whether sizes of all card elements does not change, the performance of layout arrangement can be improved. (default: false)<ko>모든 카드 엘리먼트의 크기가 불변일 때 이 옵션을 'true'로 설정하면 레이아웃 배치 성능을 높일 수 있다. (default: false)</ko>
