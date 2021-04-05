@@ -95,7 +95,8 @@ export interface FrameRect extends Required<GridRect> {
  * @typedef
  * @memberof Grid.FrameGrid
  * @extends Grid.GridOptions
- * @property - The shape of the Grid. You can set the shape of the item as a 2d array. 0 and "" are empty spaces, and the order of items is determined in ascending order. (default: []) <ko>Grid의 모양. 2d 배열로 아이템의 모양을 설정할 수 있다. 0과 ""은 공백이며 아이템의 순서는 오름차순으로 결정된다. (default: [])</ko>
+ * @property - The shape of the grid. You can set the shape and order of items with a 2d array ([contentPos][inlinePos]). You can place items as many times as you fill the array with numbers, and zeros and spaces are empty spaces. The order of the items is arranged in ascending order of the numeric values that fill the array. (default: [])
+ * <ko>Grid의 모양. 2d 배열([contentPos][inlinePos])로 아이템의 모양과 순서를 설정할 수 있다. 숫자로 배열을 채운만큼 아이템을 배치할 수 있으며 0과 공백은 빈 공간이다. 아이템들의 순서는 배열을 채운 숫자값의 오름차순대로 배치가 된다. (default: [])</ko>
  * @property - Make sure that the frame can be attached after the previous frame. (default: true) <ko> 다음 프레임이 전 프레임에 이어 붙일 수 있는지 있는지 확인한다.</ko>
  * @property - 1x1 rect size. If it is 0, it is determined by the number of columns in the frame. (default: 0) <ko>1x1 직사각형 크기. 0이면 frame의 column의 개수에 의해 결정된다. (default: 0)</ko>
  */
@@ -312,13 +313,18 @@ export interface FrameGrid extends Properties<typeof FrameGrid> {
 
 
 /**
- * The shape of the Grid. You can set the shape of the item as a 2d array. 0 and space are empty spaces, and the order of items is determined in ascending order. (default: [])
- * @ko grid의 모양. 2d 배열로 아이템의 모양을 설정할 수 있다. 0과 공백은 빈 공간이며 아이템의 순서는 오름차순으로 결정된다. (default: [])
+ * The shape of the grid. You can set the shape and order of items with a 2d array ([contentPos][inlinePos]). You can place items as many times as you fill the array with numbers, and zeros and spaces are empty spaces. The order of the items is arranged in ascending order of the numeric values that fill the array. (default: [])
+ * @ko Grid의 모양. 2d 배열([contentPos][inlinePos])로 아이템의 모양과 순서를 설정할 수 있다. 숫자로 배열을 채운만큼 아이템을 배치할 수 있으며 0과 공백은 빈 공간이다. 아이템들의 순서는 배열을 채운 숫자값의 오름차순대로 배치가 된다. (default: [])
  * @name Grid.FrameGrid#frame
  * @type {$ts:Grid.FrameGrid.FrameGridOptions["frame"]}
  * @example
  * import { FrameGrid } from "@egjs/grid";
  *
+ * // Item 1 : 2 x 2
+ * // Item 2 : 1 x 1
+ * // Item 3 : 1 x 2
+ * // Item 4 : 1 x 1
+ * // Item 5 : 2 x 1
  * const grid = new FrameGrid(container, {
  *   frame: [
  *     [1, 1, 0, 0, 2, 3],
@@ -326,6 +332,8 @@ export interface FrameGrid extends Properties<typeof FrameGrid> {
  *   ],
  * });
  *
+ * // Item 1 : 2 x 2
+ * // Item 2 : 2 x 2
  * grid.frame = [
  *   [1, 1, 0, 0, 2, 2],
  *   [1, 1, 0, 0, 2, 2],
