@@ -106,11 +106,11 @@ describe("test PackingGrid", () => {
     expect(maxContentPos).to.be.closeTo(1200, 0.000001);
     expect(container!.style.height).to.be.equals("1200px");
   });
-  it(`should check if inlineSize:ContentSize is 1:2`, async () => {
+  it(`should check if inlineSize:ContentSize is 2:1`, async () => {
     // Given
     container!.style.cssText = "width: 600px;";
     grid = new PackingGrid(container!, {
-      aspectRatio: 0.5,
+      aspectRatio: 2,
       gap: 5,
     });
 
@@ -128,7 +128,7 @@ describe("test PackingGrid", () => {
     // Then
     expect(grid.getOutlines()).to.be.deep.equals({
       start: [0],
-      end: [1205],
+      end: [305],
     });
 
     const maxInlinePos = Math.max(...items.map((item) => item.cssInlinePos + item.cssInlineSize));
@@ -136,10 +136,10 @@ describe("test PackingGrid", () => {
 
     expect(checks.every((chk) => chk)).to.be.true;
     expect(maxInlinePos).to.be.closeTo(600, 0.000001);
-    expect(maxContentPos).to.be.closeTo(1200, 0.000001);
-    expect(container!.style.height).to.be.equals("1200px");
+    expect(maxContentPos).to.be.closeTo(300, 0.000001);
+    expect(container!.style.height).to.be.equals("300px");
   });
-  it(`should check if the distortion of the ratio is less when the weightPriority is "ratio" than "size"`, async () => {
+  it(`should check if ratio distortion with weightPriority "ratio" is less than ratio distortion with weightPriority "size"`, async () => {
     // Given
     container!.style.cssText = "width: 600px;";
     grid = new PackingGrid(container!, {
