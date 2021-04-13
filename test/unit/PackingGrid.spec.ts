@@ -2,7 +2,7 @@ import { PackingGrid } from "../../src/grids/PackingGrid";
 import {
   appendElements,
   chaseItem,
-  cleanup, sandbox, waitEvent,
+  cleanup, getCost, sandbox, waitEvent,
 } from "./utils/utils";
 
 
@@ -105,5 +105,77 @@ describe("test PackingGrid", () => {
     expect(maxInlinePos).to.be.closeTo(600, 0.000001);
     expect(maxContentPos).to.be.closeTo(1200, 0.000001);
     expect(container!.style.height).to.be.equals("1200px");
+  });
+  it(`should check if inlineSize:ContentSize is 1:2`, async () => {
+    // Given
+    container!.style.cssText = "width: 600px;";
+    grid = new PackingGrid(container!, {
+      aspectRatio: 0.5,
+      gap: 5,
+    });
+
+    appendElements(container!, 4);
+    // When
+
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+
+    const items = grid.getItems();
+    const checks = chaseItem(items, items[0], 5);
+
+    // Then
+    expect(grid.getOutlines()).to.be.deep.equals({
+      start: [0],
+      end: [1205],
+    });
+
+    const maxInlinePos = Math.max(...items.map((item) => item.cssInlinePos + item.cssInlineSize));
+    const maxContentPos = Math.max(...items.map((item) => item.cssContentPos + item.cssContentSize));
+
+    expect(checks.every((chk) => chk)).to.be.true;
+    expect(maxInlinePos).to.be.closeTo(600, 0.000001);
+    expect(maxContentPos).to.be.closeTo(1200, 0.000001);
+    expect(container!.style.height).to.be.equals("1200px");
+  });
+  it(`should check if the distortion of the ratio is less when the weightPriority is "ratio" than "size"`, async () => {
+    // Given
+    container!.style.cssText = "width: 600px;";
+    grid = new PackingGrid(container!, {
+      aspectRatio: 1,
+      gap: 0,
+      weightPriority: "size",
+      sizeWeight: 1,
+      ratioWeight: 1,
+    });
+
+    appendElements(container!, 10);
+
+    // When
+    // "size"
+    grid.renderItems();
+    await waitEvent(grid, "renderComplete");
+
+    const items = grid.getItems();
+    const distortion1 = items.reduce((prev, item) => {
+      const ratioCost = getCost(item.orgInlineSize / item.orgContentSize, item.cssInlineSize / item.cssContentSize);
+
+      return prev + ratioCost;
+    }, 0);
+
+
+    // "ratio"
+    grid.weightPriority = "ratio";
+    await waitEvent(grid, "renderComplete");
+
+    const distortion2 = items.reduce((prev, item) => {
+      const ratioCost = getCost(item.orgInlineSize / item.orgContentSize, item.cssInlineSize / item.cssContentSize);
+
+      return prev + ratioCost;
+    }, 0);
+
+    // Then
+    expect(distortion2).to.be.below(distortion1);
   });
 });

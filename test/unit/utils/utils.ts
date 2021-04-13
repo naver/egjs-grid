@@ -109,6 +109,16 @@ export function chaseItem(
   return checks;
 }
 
+export function getCost(originLength: number, length: number) {
+  let cost = originLength / length;
+
+  if (cost < 1) {
+    cost = 1 / cost;
+  }
+
+  return cost - 1;
+}
+
 export type EventType = {
   eventType: string;
   [key: string]: any;
