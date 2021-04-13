@@ -154,8 +154,8 @@ export class PackingGrid extends Grid<PackingGridOptions> {
       inlineSize: 0,
       contentSize: 0,
     };
-    const sizeWeight = this._getSizeWeight();
-    const ratioWeight = this._getRatioWeight();
+    const sizeWeight = this._getWeight("size");
+    const ratioWeight = this._getWeight("ratio");
 
     container.items.forEach((child) => {
       const containerSizeCost = getCost(child.getOrgSizeWeight(), child.getSize()) * sizeWeight;
@@ -206,31 +206,16 @@ export class PackingGrid extends Grid<PackingGridOptions> {
 
     fitArea(item, bestFitArea, itemFitSize, containerFitSize, isContentDirection);
   }
-  private _getSizeWeight() {
-    const {
-      weightPriority,
-      sizeWeight,
-    } = this.options;
+  private _getWeight(type: "size" | "ratio"): number {
+    const options = this.options;
+    const weightPriority = options.weightPriority;
 
-    if (weightPriority === "size") {
+    if (weightPriority === type) {
       return 100;
-    } else if (weightPriority === "ratio") {
-      return 1;
+    } else if (weightPriority === "custom") {
+      return options[`${type}Weight`];
     }
-    return sizeWeight;
-  }
-  private _getRatioWeight() {
-    const {
-      weightPriority,
-      ratioWeight,
-    } = this.options;
-
-    if (weightPriority === "size") {
-      return 1;
-    } else if (weightPriority === "ratio") {
-      return 100;
-    }
-    return ratioWeight;
+    return 1;
   }
 }
 
