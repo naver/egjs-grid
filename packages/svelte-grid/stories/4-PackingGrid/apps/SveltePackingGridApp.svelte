@@ -6,6 +6,7 @@
   export let sizeWeight;
   export let ratioWeight;
   export let aspectRatio;
+  export let weightPriority;
 </script>
 
 <MasonryGrid
@@ -15,6 +16,7 @@
   {sizeWeight}
   {ratioWeight}
   {aspectRatio}
+  {weightPriority}
 >
   <div class="item">1</div>
   <div class="item">2</div>

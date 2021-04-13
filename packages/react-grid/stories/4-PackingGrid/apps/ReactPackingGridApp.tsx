@@ -9,6 +9,7 @@ export default function App(props: Record<string, any>) {
     sizeWeight={props.sizeWeight}
     ratioWeight={props.ratioWeight}
     aspectRatio={props.aspectRatio}
+    weightPriority={props.weightPriority}
   >
     <div className={"item"}>1</div>
     <div className={"item"}>2</div>

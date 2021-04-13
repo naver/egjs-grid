@@ -5,6 +5,7 @@
     v-bind:defaultDirection="defaultDirection"
     v-bind:sizeWeight="sizeWeight"
     v-bind:ratioWeight="ratioWeight"
+    v-bind:weightPriority="weightPriority"
     v-bind:aspectRatio="aspectRatio"
   >
     <div class="item">1</div>
@@ -29,6 +30,7 @@ export default {
     "sizeWeight",
     "ratioWeight",
     "aspectRatio",
+    "weightPriority",
   ],
   components: {
     PackingGrid,

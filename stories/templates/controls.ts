@@ -103,4 +103,12 @@ export const PACKING_GRID_CONTROLS = {
     description: makeLink("PackingGrid", "aspectRatio"),
     defaultValue: 1,
   }),
+  weightPriority: makeArgType({
+    type: "inline-radio",
+    description: makeLink("PackingGrid", "weightPriority"),
+    defaultValue: "custom",
+    control: {
+      options: ["ratio", "size", "custom"],
+    },
+  }),
 };
