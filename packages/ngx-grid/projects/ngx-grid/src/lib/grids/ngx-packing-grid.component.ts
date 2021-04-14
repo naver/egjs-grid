@@ -19,4 +19,5 @@ export class NgxPackingGridComponent
   @Input() sizeWeight!: Required<PackingGrid>['sizeWeight'];
   @Input() ratioWeight!: Required<PackingGrid>['ratioWeight'];
   @Input() aspectRatio!: Required<PackingGrid>['aspectRatio'];
+  @Input() weightPriority!: Required<PackingGrid>['weightPriority'];
 }
