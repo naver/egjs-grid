@@ -7,6 +7,7 @@ export default function App(props: Record<string, any>) {
     sizeWeight: props.sizeWeight,
     ratioWeight: props.ratioWeight,
     aspectRatio: props.aspectRatio,
+    weightPriority: props.weightPriority,
   });
 
   grid.renderItems();
