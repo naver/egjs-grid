@@ -130,7 +130,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
   /**
    * Set outlines.
    * @ko 아웃라인을 설정한다.
-   * @param items - The outlines to set. <ko>설정할 아웃라인.</ko>
+   * @param outlines - The outlines to set. <ko>설정할 아웃라인.</ko>
    */
   public setOutlines(outlines: GridOutlines) {
     this.outlines = outlines;
