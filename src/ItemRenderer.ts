@@ -109,7 +109,7 @@ export class ItemRenderer {
         height: element.offsetHeight,
       };
     }
-    if (!isLoading && !hasOrgSize) {
+    if (!item.isFirstUpdate) {
       item.orgRect = { ...rect };
     }
     item.rect = { ...rect };
@@ -117,8 +117,10 @@ export class ItemRenderer {
     if (item.element) {
       item.mountState = MOUNT_STATE.MOUNTED;
     }
+
     if (item.updateState === UPDATE_STATE.NEED_UPDATE) {
       item.updateState = UPDATE_STATE.UPDATED;
+      item.isFirstUpdate = true;
     }
     item.attributes = element ? getDataAttributes(element, this.options.attributePrefix) : {};
 

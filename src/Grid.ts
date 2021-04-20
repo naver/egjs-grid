@@ -287,21 +287,20 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     this._im = new ImReady({
       prefix: this.options.attributePrefix,
     }).on("preReadyElement", (e) => {
-      if (e.hasLoading) {
-        updated[e.index].updateState = UPDATE_STATE.WAIT_LOADING;
-      }
+      updated[e.index].updateState = UPDATE_STATE.WAIT_LOADING;
     }).on("preReady", () => {
       this.itemRenderer.updateItems(updated);
       this._renderItems(mounted, updated, options);
     }).on("readyElement", (e) => {
       const item = updated[e.index];
-      if (e.hasLoading) {
-        item.updateState = UPDATE_STATE.NEED_UPDATE;
 
-        if (e.isPreReadyOver) {
-          this.itemRenderer.updateItems([item]);
-          this._renderItems([], [item], options);
-        }
+      item.updateState = UPDATE_STATE.NEED_UPDATE;
+
+      // after preReady
+      if (e.isPreReadyOver) {
+        item.element!.style.cssText = item.orgCSSText;
+        this.itemRenderer.updateItems([item]);
+        this._renderItems([], [item], options);
       }
     }).on("error", (e) => {
       const item = items[e.index];

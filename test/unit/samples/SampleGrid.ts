@@ -35,6 +35,8 @@ export class SampleGrid extends Grid<SampleGridOptions> {
 
 
         item.setCSSGridRect({
+          inlineSize: item.inlineSize,
+          contentSize: item.contentSize,
           contentPos: prevPos,
         });
 

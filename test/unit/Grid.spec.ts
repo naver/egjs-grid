@@ -92,7 +92,7 @@ describe("test Grid", () => {
       `;
       grid = new SampleGrid(container!);
 
-      const loadingImg= grid.getChildren()[1].querySelector<HTMLImageElement>("img")!;
+      const loadingImg = grid.getChildren()[1].querySelector<HTMLImageElement>("img")!;
 
       loadingImg.setAttribute("loading", "lazy");
 
@@ -107,6 +107,7 @@ describe("test Grid", () => {
 
       const e1 = await waitEvent(grid, "renderComplete");
 
+      // When
       // loading is complete
       loadingImg.src = "complete";
 
@@ -115,6 +116,62 @@ describe("test Grid", () => {
       // Then
       expect(e1.updated.length).to.be.equals(3);
       expect(e2.updated.length).to.be.equals(1);
+    });
+    it(`should check if the size is recalculated after loading`, async () => {
+      // Given
+      container!.innerHTML = `
+      <div>1</div>
+      <div style="position:absolute;"><img /></div>
+      <div>3</div>
+      `;
+      grid = new SampleGrid(container!);
+
+      const loadingImg = grid.getChildren()[1].querySelector<HTMLImageElement>("img")!;
+
+      loadingImg.setAttribute("loading", "lazy");
+
+      Object.defineProperty(loadingImg, "loading", {
+        value: "lazy",
+      });
+      Object.defineProperty(loadingImg, "complete", {
+        value: false,
+      });
+
+      grid.renderItems();
+
+      await waitEvent(grid, "renderComplete");
+      const imgItem = grid.getItems()[1];
+      const orgRect1 = {...imgItem.orgRect};
+      const rect1 = {...imgItem.rect};
+      const cssRect1 = {...imgItem.cssRect};
+
+      // When
+      // loading is complete
+      loadingImg.src = "complete";
+      loadingImg.style.width = "200px";
+      loadingImg.style.height = "200px";
+
+      await waitEvent(grid, "renderComplete");
+      const orgRect2 = {...imgItem.orgRect};
+      const rect2 = {...imgItem.rect};
+      const cssRect2 = {...imgItem.cssRect};
+
+      // Then
+      // orgRect1 = rect1 = cssRect1
+      expect(orgRect1.width).to.be.equals(rect1.width);
+      expect(orgRect1.width).to.be.equals(cssRect1.width);
+      expect(orgRect1.height).to.be.equals(rect1.height);
+      expect(orgRect1.height).to.be.equals(cssRect1.height);
+
+      // orgRect2 = rect2 = cssRect2
+      expect(orgRect2.width).to.be.equals(rect2.width);
+      expect(orgRect2.width).to.be.equals(cssRect2.width);
+      expect(orgRect2.height).to.be.equals(rect2.height);
+      expect(orgRect2.height).to.be.equals(cssRect2.height);
+
+      // rect1 != rect2
+      expect(rect1.width).to.be.not.equals(rect2.width);
+      expect(rect1.height).to.be.not.equals(rect2.height);
     });
   });
   describe("test setStatus, getStatus", () => {
