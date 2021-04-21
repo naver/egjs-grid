@@ -39,6 +39,9 @@
     "@egjs/grid": "~1.1.1"
   },
   "devDependencies": {
+    "@codeceptjs/configure": "^0.6.2",
+    "@codeceptjs/examples": "^1.2.1",
+    "@codeceptjs/ui": "^0.4.3",
     "@egjs/build-helper": "^0.1.2",
     "@storybook/addon-actions": "^6.0.21",
     "@storybook/addon-controls": "^6.0.21",

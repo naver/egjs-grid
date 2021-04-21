@@ -212,3 +212,4 @@ demo/storybook
 declaration/
 dist/
 packages/*/dist/
+test/e2e/log/

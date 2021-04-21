@@ -16,8 +16,11 @@
   "baseUrl": ".",
   "include": [
     "./src/**/*.ts",
-    "./test/**/*.ts",
+    "./test/unit/**/*.ts",
     "./stories/**/*.ts",
     "./global.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }
