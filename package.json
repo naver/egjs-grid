@@ -1,6 +1,6 @@
 {
 	"name": "@egjs/grid",
-	"version": "1.1.0-snapshot",
+	"version": "1.1.1",
 	"description": "A component that can arrange items according to the type of grids",
 	"main": "dist/grid.cjs.js",
 	"module": "dist/grid.esm.js",
