@@ -18,7 +18,7 @@ exports.config = {
     StorybookHelper: {
       require: './test/e2e/helper/StorybookHelper'
     },
-    ResembleHelper : {
+    ResembleHelper: {
       require: "codeceptjs-resemblehelper",
       screenshotFolder : "./test/e2e/screenshots/output/",
       baseFolder: "./test/e2e/screenshots/base/",
