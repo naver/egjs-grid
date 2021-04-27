@@ -8,9 +8,6 @@ module.exports = {
     alias["vue"] = require.resolve("vue");
     alias["@storybook/vue"] = require.resolve("@storybook/vue3");
 
-    console.log(require.resolve("vue"));
-    console.log(require.resolve("@storybook/vue3"));
-
     return config;
   },
   "stories": [

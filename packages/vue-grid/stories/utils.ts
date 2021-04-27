@@ -7,12 +7,6 @@ export function makeVueApp(AppComponent: any): any {
     setup() {
       return { ...args, args };
     },
-    computed: {
-      key() {
-        console.log(Math.random())
-        return Math.random();
-      },
-    },
     template: '<App v-bind="args || $props" :key="Math.random()" />',
   });
 }
