@@ -3,7 +3,7 @@
  * Copyright (c) 2021-present NAVER Corp.
  * MIT license
  */
-import Grid from "./Grid.vue";
+import Grid from "./Grid";
 
 export { Grid };
 export * from "./grids/MasonryGrid";
