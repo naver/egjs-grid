@@ -4,8 +4,9 @@ import RawPackingGridApp from "!!raw-loader!./apps/VuePackingGridApp.vue";
 import { PACKING_GRID_CONTROLS } from "../../../../stories/templates/controls";
 import { convertPath, convertVueTemplate, makeArgs } from "../../../../stories/utils";
 import "../../../../stories/templates/default.css";
+import { makeVueApp } from "../utils";
 
-export const PackingGridTemplate = () => PackingGridApp;
+export const PackingGridTemplate = makeVueApp(PackingGridApp);
 
 
 PackingGridTemplate.storyName = "PackingGrid";

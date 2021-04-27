@@ -4,9 +4,10 @@ import RawMaonsryGridApp from "!!raw-loader!./apps/VueMasonryGridApp.vue";
 import { MASONRY_GRID_CONTROLS } from "../../../../stories/templates/controls";
 import { convertPath, convertVueTemplate, makeArgs } from "../../../../stories/utils";
 import "../../../../stories/templates/default.css";
+import { makeVueApp } from "../utils";
 
-console.log(MasonryGridApp);
-export const MasonryGridTemplate = () => MasonryGridApp;
+
+export const MasonryGridTemplate = makeVueApp(MasonryGridApp);
 
 
 MasonryGridTemplate.storyName = "MasonryGrid";

@@ -4,8 +4,9 @@ import RawJustifiedGridApp from "!!raw-loader!./apps/VueJustifiedGridApp.vue";
 import { JUSTIFIED_GRID_CONTROLS } from "../../../../stories/templates/controls";
 import { convertPath, convertVueTemplate, makeArgs } from "../../../../stories/utils";
 import "../../../../stories/templates/default.css";
+import { makeVueApp } from "../utils";
 
-export const JustifiedGridTemplate = () => JustifiedGridApp;
+export const JustifiedGridTemplate = makeVueApp(JustifiedGridApp);
 
 
 JustifiedGridTemplate.storyName = "JustifiedGrid";

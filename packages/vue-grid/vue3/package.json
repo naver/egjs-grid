@@ -1,0 +1,49 @@
+{
+  "name": "vue3-storybook",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "storybook": "start-storybook -p 6011 -s public",
+    "build-storybook": "build-storybook -s public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/naver/egjs-grid/tree/main/packages/vue-grid"
+  },
+  "author": {
+    "name": "NAVER Corp."
+  },
+  "namespace": {
+    "eg": "eg"
+  },
+  "homepage": "https://naver.github.io/egjs-grid",
+  "bugs": {
+    "url": "https://github.com/naver/egjs-grid/issues"
+  },
+  "keywords": [
+    "vue",
+    "lazyloading",
+    "ready",
+    "grid",
+    "image",
+    "video",
+    "egjs",
+    "masonry",
+    "justified",
+    "packing",
+    "frame",
+    "layout"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.13.16",
+    "@storybook/vue3": "^6.2.9",
+    "babel-loader": "^8.2.2",
+    "vue": "^3.0.11",
+    "webpack-cli": "^4.6.0",
+    "webpack-command": "^0.5.1"
+  },
+  "dependencies": {
+    "@vue/compiler-sfc": "^3.0.11",
+    "vue-loader": "^16.2.0"
+  }
+}
