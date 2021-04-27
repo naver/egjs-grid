@@ -13,7 +13,7 @@ function hForVue3(instance: any) {
     }
     return {
       // https://github.com/vuejs/vue-next/blob/master/packages/shared/src/shapeFlags.ts
-      // ELEMENT 1, CHILDREN 16
+      // ELEMENT 1, ARRAY_CHILDREN 16
       shapeFlag: 17,
       type,
       props,
