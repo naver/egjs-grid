@@ -1,7 +1,7 @@
 import {
   MasonryGrid as VanillaMasonryGrid,
 } from "@egjs/grid";
-import Grid from "../Grid.vue";
+import Grid from "../Grid";
 import { makeGrid } from "../utils";
 import { VueGridInterface } from "../types";
 

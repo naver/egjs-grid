@@ -4,8 +4,9 @@ import RawFrameGridApp from "!!raw-loader!./apps/VueFrameGridApp.vue";
 import { FRAME_GRID_CONTROLS } from "../../../../stories/templates/controls";
 import { convertPath, convertVueTemplate, makeArgs } from "../../../../stories/utils";
 import "../../../../stories/templates/default.css";
+import { makeVueApp } from "../utils";
 
-export const FrameGridTemplate = () => FrameGridApp;
+export const FrameGridTemplate = makeVueApp(FrameGridApp);
 
 
 FrameGridTemplate.storyName = "FrameGrid";
