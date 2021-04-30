@@ -20,9 +20,9 @@ exports.config = {
     },
     ResembleHelper: {
       require: "codeceptjs-resemblehelper",
-      screenshotFolder : "./test/e2e/screenshots/output/",
-      baseFolder: "./test/e2e/screenshots/base/",
-      diffFolder: "./test/e2e/screenshots/diff/"
+      screenshotFolder : "./test/e2e/log/output/",
+      baseFolder: "./test/e2e/log/",
+      diffFolder: "./test/e2e/log/diff/"
     }
   },
   bootstrap: null,
