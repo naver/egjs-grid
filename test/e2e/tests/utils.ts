@@ -1,54 +1,56 @@
+import { GridFunction } from "../../../src/types";
+
 type CFCScenarioCallback = (e: {
   I: CodeceptJS.I,
+  updateArgs: (args: any) => any,
   seeVisualDiffWithScreenshot: (path: string, skipDiff?: boolean) => void,
 }) => any;
 
-export function CFCScenario(title: string, storyId: string, callback?: CFCScenarioCallback) {
+const FRAMEWORK_NAMES = ["vanilla", "react", "angular", "vue", "svelte", "vue3"];
 
-  if (!callback) {
-    Scenario(title);
-    return;
-  }
-  Scenario(`vanilla - ${title}`, async ({ I }) => {
-    I.amOnPage(`http://localhost:6006/iframe.html?id=${storyId}`);
-    return callback({
-      I,
-      seeVisualDiffWithScreenshot: seeVisualDiffWithScreenshot(I, ""),
-    });
+export function CFCScenario<T extends GridFunction>(storyId: string, defaultOptions: Partial<T["defaultOptions"]>) {
+  const frameworkInfos: Record<string, any[]> = {};
+
+  FRAMEWORK_NAMES.forEach((framework) => {
+    frameworkInfos[framework] = [];
   });
-  Scenario(`react - ${title}`, async ({ I }) => {
-    I.amOnPage(`http://localhost:6007/iframe.html?id=${storyId}`);
-    return callback({
-      I,
-      seeVisualDiffWithScreenshot: seeVisualDiffWithScreenshot(I, "react"),
-    });
-  });
-  // Scenario(`vue - ${title}`, async ({ I }) => {
-  //   I.amOnPage(`http://localhost:6008/iframe.html?id=${storyId}`);
-  //   return callback({ I });
-  // });
-  // Scenario(`angular - ${title}`, async ({ I }) => {
-  //   I.amOnPage(`http://localhost:6009/iframe.html?id=${storyId}`);
-  //   return callback({ I });
-  // });
-  // Scenario(`svelte - ${title}`, async ({ I }) => {
-  //   I.amOnPage(`http://localhost:6009/iframe.html?id=${storyId}`);
-  //   return callback({ I });
-  // });
+
+  return {
+    add(title: string, callback: CFCScenarioCallback) {
+      FRAMEWORK_NAMES.forEach((framework) => {
+        frameworkInfos[framework].push(() => {
+          Scenario(`${framework} - ${title}`, async ({ I }) => {
+            return callback({
+              I,
+              updateArgs: (args) => I.updateArgs(storyId, {...defaultOptions, ...args}),
+              seeVisualDiffWithScreenshot: seeVisualDiffWithScreenshot(I, framework),
+            });
+          });
+        });
+      });
+    },
+    execute() {
+      FRAMEWORK_NAMES.forEach((framework, i) => {
+        const scenarios = frameworkInfos[framework];
+
+        Scenario(`${framework} - load`, async ({ I }) => {
+          I.amOnPage(`http://localhost:${6006 + i}/iframe.html?id=${storyId}`);
+        });
+
+        scenarios.forEach((callback) => {
+          callback();
+        });
+      });
+    },
+  };
 }
 export function seeVisualDiffWithScreenshot(I: CodeceptJS.I, framework: string) {
-  return (path: string, skipDiff?: boolean) => {
+  return (path: string) => {
     I.saveElementScreenshot(".container", path);
 
-    if (skipDiff) {
+    if (framework === "vanilla") {
       return;
     }
-    if (framework) {
-      // framework
-      I.seeVisualDiffForElement(".container", path, { tolerance: 2, prepareBaseImage: false });
-    } else {
-      // vanilla
-      I.seeVisualDiff(path, { tolerance: 2, prepareBaseImage: false });
-    }
+    I.seeVisualDiffForElement(".container", path, { tolerance: 2, prepareBaseImage: false });
   };
 }
