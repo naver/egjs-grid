@@ -23,7 +23,7 @@
 		"e2e:storybook:vue": "cd packages/vue-grid/ && node_modules/@storybook/vue/bin/index.js -p 6009 --quiet --ci",
 		"e2e:storybook:svelte": "cd packages/svelte-grid/ && node_modules/@storybook/svelte/bin/index.js -p 6010 --quiet --ci",
 		"e2e:storybook:vue3": "cd packages/vue-grid/vue3/ && node_modules/@storybook/vue3/bin/index.js -p 6011 --quiet --ci",
-		"e2e:headless": "concurrently -r npm run e2e:storybook HEADLESS=true codeceptjs run --steps",
+		"e2e:headless": "concurrently -r \"npm run e2e:storybook\" \"HEADLESS=true codeceptjs run --steps\"",
 		"e2e:ui": "concurrently -k -r -s \"first\" npm:e2e:storybook \"npm:e2e:ui:app\"",
 		"e2e:ui:app": "codecept-ui --app --verbose",
 		"printsizes": "print-sizes ./dist --exclude=\\.map",
