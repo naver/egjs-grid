@@ -64,6 +64,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
       gap,
       align,
       columnSizeRatio,
+      columnSize: columnSizeOption,
     } = this.options;
     const outlineLength = outline.length;
     const itemsLength = items.length;
@@ -126,7 +127,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
           }
           ++itemColumn;
         }
-        if (itemColumn > 1 || isStretch) {
+        if (itemColumn > 1 || isStretch || columnSizeOption) {
           inlineSize = (itemColumn - 1) * columnDist + columnSize;
           item.cssInlineSize = inlineSize;
         }
