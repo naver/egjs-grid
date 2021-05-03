@@ -1,9 +1,12 @@
+// Set e2e config
 process.env.TS_NODE_PROJECT = "./test/e2e/tsconfig.json";
 require('ts-node/register')
+// Restore config
+process.env.TS_NODE_PROJECT = "";
+
 const { setHeadlessWhen } = require('@codeceptjs/configure');
 
 // turn on headless mode when running with HEADLESS=true environment variable
-// export HEADLESS=true && npx codeceptjs run
 setHeadlessWhen(process.env.HEADLESS);
 
 exports.config = {
@@ -20,12 +23,18 @@ exports.config = {
     },
     ResembleHelper: {
       require: "codeceptjs-resemblehelper",
-      screenshotFolder : "./test/e2e/log/output/",
+      screenshotFolder: "./test/e2e/log/output/",
       baseFolder: "./test/e2e/log/",
       diffFolder: "./test/e2e/log/diff/"
     }
   },
-  bootstrap: null,
+  async bootstrap() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve();
+      }, 60000);
+    });
+  },
   mocha: {},
   name: 'egjs-flicking',
   plugins: {

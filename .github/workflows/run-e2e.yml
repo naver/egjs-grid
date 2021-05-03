@@ -19,6 +19,9 @@ jobs:
       - name: install angular
         working-directory: ./packages/ngx-grid
         run: npm install
+      - name: install angular-project
+        working-directory: ./packages/ngx-grid/projects/ngx-grid
+        run: npm install
       - name: install svelte
         working-directory: ./packages/svelte-grid
         run: npm install
