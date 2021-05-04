@@ -5,7 +5,7 @@ addons.setConfig({
 });
 
 
-if (location.hostname.indexOf("localhost") > -1) {
-  window.STORYBOOK_GA_ID = "G-D9LV7W8GJF";
+if (location.hostname.indexOf("localhost") === -1) {
+  window.STORYBOOK_GA_ID = "UA-70842526-26";
   window.STORYBOOK_REACT_GA_OPTIONS = {};
 }
