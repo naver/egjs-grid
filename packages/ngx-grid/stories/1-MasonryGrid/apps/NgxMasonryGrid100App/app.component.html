@@ -5,7 +5,7 @@
   [column]="column"
   [columnSize]="columnSize"
   [columnSizeRatio]="columnSizeRatio"
-
+  *ngFor="let item of [0]; trackBy: trackBy;"
   >
   <div class="item" data-grid-column="0" style="width: 100%">1</div>
   <div class="item">2</div>

@@ -8,6 +8,7 @@ export default function App(props: Record<string, any>) {
     defaultDirection={props.defaultDirection}
     frame={props.frame}
     rectSize={props.rectSize}
+    useFrameFill={props.useFrameFill}
   >
     <div className={"item"}>1</div>
     <div className={"item"}>2</div>

@@ -1,5 +1,5 @@
 <script>
-  import { MasonryGrid } from "../../../src/";
+  import { PackingGrid } from "../../../src/";
 
   export let gap;
   export let defaultDirection;
@@ -9,7 +9,7 @@
   export let weightPriority;
 </script>
 
-<MasonryGrid
+<PackingGrid
   class="container"
   {defaultDirection}
   {gap}
@@ -28,4 +28,4 @@
   <div class="item">8</div>
   <div class="item">9</div>
   <div class="item">10</div>
-</MasonryGrid>
+</PackingGrid>

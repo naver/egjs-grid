@@ -9,7 +9,7 @@ export default function App(props: Record<string, any>) {
     columnSize: props.columnSize,
     columnSizeRatio: props.columnSizeRatio,
   });
-
+  document.body.insertAdjacentHTML("beforeend", `app: ${JSON.stringify(props)}`);
   grid.renderItems();
 
   return grid;

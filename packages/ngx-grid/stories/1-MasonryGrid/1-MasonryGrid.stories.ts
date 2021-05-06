@@ -8,7 +8,10 @@ import MODULE_TEMPLATE from '!!raw-loader!../apps/default/app.module.ts';
 
 export const MasonryGridTemplate = (props: any) => ({
   component: AppComponent,
-  props,
+  props: {
+    ...props,
+    key: JSON.stringify(props),
+  },
 });
 MasonryGridTemplate.storyName = "MasonryGrid";
 

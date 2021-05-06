@@ -11,4 +11,6 @@ export class AppComponent {
   @Input() columnRange: any;
   @Input() rowRange: any;
   @Input() sizeRange: any;
+  @Input() key: any;
+  trackBy = () => this.key;
 }

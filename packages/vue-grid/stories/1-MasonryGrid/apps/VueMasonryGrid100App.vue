@@ -8,7 +8,7 @@
     v-bind:columnSize="columnSize"
     v-bind:columnSizeRatio="columnSizeRatio"
   >
-    <div class="item" data-grid-column="4">1</div>
+    <div class="item" data-grid-column="0" style="width: 100%;">1</div>
     <div class="item">2</div>
     <div class="item">3</div>
     <div class="item">4</div>

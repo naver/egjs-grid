@@ -8,7 +8,10 @@ import MODULE_TEMPLATE from '!!raw-loader!../apps/default/app.module.ts';
 
 export const MasonryGridMultipleTemplate = (props: any) => ({
   component: AppComponent,
-  props,
+  props: {
+    ...props,
+    key: JSON.stringify(props),
+  },
 });
 MasonryGridMultipleTemplate.storyName = "MasonryGrid with item that place multiple columns";
 
