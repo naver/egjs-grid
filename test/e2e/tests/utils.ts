@@ -3,7 +3,7 @@ import { GridFunction } from "../../../src/types";
 type CFCScenarioCallback = (e: {
   I: CodeceptJS.I,
   updateArgs: (args: any) => any,
-  seeVisualDiffWithScreenshot: (path: string, skipDiff?: boolean) => void,
+  seeJSONDiffWithScreenshot: (path: string, skipDiff?: boolean) => void,
 }) => any;
 
 const FRAMEWORK_NAMES = ["vanilla", "react", "angular", "vue", "svelte", "vue3"];
@@ -22,8 +22,8 @@ export function CFCScenario<T extends GridFunction>(storyId: string, defaultOpti
           Scenario(`${framework} - ${title}`, async ({ I }) => {
             return callback({
               I,
-              updateArgs: (args) => I.updateArgs(storyId, {...defaultOptions, ...args}),
-              seeVisualDiffWithScreenshot: seeVisualDiffWithScreenshot(I, framework),
+              updateArgs: (args) => updateArgs(I, storyId, {...defaultOptions, ...args}),
+              seeJSONDiffWithScreenshot: seeJSONDiffWithScreenshot(I, framework),
             });
           });
         });
@@ -44,13 +44,23 @@ export function CFCScenario<T extends GridFunction>(storyId: string, defaultOpti
     },
   };
 }
-export function seeVisualDiffWithScreenshot(I: CodeceptJS.I, framework: string) {
-  return (path: string) => {
-    I.saveElementScreenshot(".container", path);
-
+export function wait(delay: number) {
+  return new Promise<any>((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, delay);
+  });
+}
+export async function updateArgs(I: CodeceptJS.I, storyId: string, args: any) {
+  await I.updateArgs(storyId, args);
+  await wait(60);
+}
+export function seeJSONDiffWithScreenshot(I: CodeceptJS.I, framework: string) {
+  return async (path: string) => {
     if (framework === "vanilla") {
+      await I.saveElementJSON(".container", path);
       return;
     }
-    I.seeVisualDiffForElement(".container", path, { tolerance: 2, prepareBaseImage: false });
+    await I.seeJSONDiffForElement(".container", path,);
   };
 }

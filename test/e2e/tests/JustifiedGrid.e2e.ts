@@ -16,26 +16,26 @@ const {
   sizeRange: [0, 1000],
 });
 
-add("JustifiedGrid Initialization", async ({ seeVisualDiffWithScreenshot }) => {
-  seeVisualDiffWithScreenshot("justifiedgrid-default.png");
+add("JustifiedGrid Initialization", async ({ seeJSONDiffWithScreenshot }) => {
+  seeJSONDiffWithScreenshot("justifiedgrid-default.png");
 });
 
 [[4, 4], [1, 4], [3, 8]].forEach((columnRange) => {
-  add(`test columnRange: ${columnRange}`, async ({ seeVisualDiffWithScreenshot, updateArgs }) => {
+  add(`test columnRange: ${columnRange}`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
     await updateArgs({ columnRange });
-    seeVisualDiffWithScreenshot(`justifiedgrid-columnRange-${columnRange.join("_")}.png`);
+    seeJSONDiffWithScreenshot(`justifiedgrid-columnRange-${columnRange.join("_")}.png`);
   });
 });
 ([0, [1, 4], [4, 4]] as const).forEach((rowRange) => {
-  add(`test rowRange: ${rowRange}`, async ({ seeVisualDiffWithScreenshot, updateArgs }) => {
+  add(`test rowRange: ${rowRange}`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
     await updateArgs({ rowRange });
-    seeVisualDiffWithScreenshot(`justifiedgrid-rowRange-${rowRange ? rowRange.join("_") : "none"}.png`);
+    seeJSONDiffWithScreenshot(`justifiedgrid-rowRange-${rowRange ? rowRange.join("_") : "none"}.png`);
   });
 });
 [[0, 1000], [600, 800], [700, 1000]].forEach((sizeRange) => {
-  add(`test sizeRange: ${sizeRange}`, async ({ seeVisualDiffWithScreenshot, updateArgs }) => {
+  add(`test sizeRange: ${sizeRange}`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
     await updateArgs({ sizeRange });
-    seeVisualDiffWithScreenshot(`justifiedgrid-sizeRange-${sizeRange.join("_")}.png`);
+    seeJSONDiffWithScreenshot(`justifiedgrid-sizeRange-${sizeRange.join("_")}.png`);
   });
 });
 
