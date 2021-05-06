@@ -24,7 +24,7 @@
 		"e2e:storybook:svelte": "cd packages/svelte-grid/ && node_modules/@storybook/svelte/bin/index.js -p 6010 --quiet --ci",
 		"e2e:storybook:vue3": "cd packages/vue-grid/vue3/ && node_modules/@storybook/vue3/bin/index.js -p 6011 --quiet --ci",
 		"e2e:headless": "concurrently -k -r -s \"first\" npm:e2e:storybook npm:e2e:steps",
-		"e2e:steps": "HEADLESS=true codeceptjs run-workers --suties 2",
+		"e2e:steps": "HEADLESS=true codeceptjs run-workers --suites 2",
 		"e2e:ui": "concurrently -k -r npm:e2e:storybook \"npm:e2e:ui:app\"",
 		"e2e:ui:app": "codecept-ui --app --verbose",
 		"printsizes": "print-sizes ./dist --exclude=\\.map",
