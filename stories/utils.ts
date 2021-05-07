@@ -67,10 +67,25 @@ export function convertSvelteTemplate(text: string, cssCode = "") {
   return convertTemplate(previewText, /([a-zA-Z_0-9]+) = ([a-zA-Z_0-9]+);/g, true);
 }
 
+export function convertAngularHTMLTemplate(text: string) {
+  const previewText = text.replace(/\n\s+\*ngFor="let item of \[0\]; trackBy: trackBy;"/g, "");
+
+  return convertTemplate(previewText);
+}
 export function convertAngularTemplate(text: string) {
-  const previewText = text.replace(/@Input\(\) ([a-zA-Z_0-9]+): any;/g, "$1 = $1;");
+  let previewText = text.replace(/\n\s+@Input\(\) key[^;]+;[^;]+;/g, "");
+
+  previewText = previewText.replace(/@Input\(\) ([a-zA-Z_0-9]+): any;/g, "$1 = $1;");
+
+
 
   return convertTemplate(previewText, /([a-zA-Z_0-9]+) = ([a-zA-Z_0-9]+);/g, true);
+}
+
+export function convertReactTemplate(text: string) {
+  const previewText = text.replace(/\n\s+key=\{Math.random\(\)\}/, "");
+
+  return convertTemplate(previewText);
 }
 
 export function convertTemplate(text: string, regex = /props\.([a-zA-Z0-9_]+)/g, includePrefix = false) {

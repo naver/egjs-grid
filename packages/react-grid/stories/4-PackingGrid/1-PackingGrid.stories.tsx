@@ -1,7 +1,7 @@
 import PackingGridApp from "./apps/ReactPackingGridApp";
 import RawPackingGridApp from "!!raw-loader!./apps/ReactPackingGridApp";
 import { PACKING_GRID_CONTROLS } from "../../../../stories/templates/controls";
-import { makeArgs, convertTemplate, convertPath } from "../../../../stories/utils";
+import { makeArgs, convertReactTemplate, convertPath } from "../../../../stories/utils";
 import "../../../../stories/templates/default.css";
 
 export const PackingGridTemplate = PackingGridApp as any;
@@ -17,7 +17,7 @@ PackingGridTemplate.parameters = {
   preview: [
     {
       tab: "React",
-      template: convertTemplate(convertPath(RawPackingGridApp, "react-grid", "@egjs/react-grid")),
+      template: convertReactTemplate(convertPath(RawPackingGridApp, "react-grid", "@egjs/react-grid")),
       language: "tsx",
     },
   ],
