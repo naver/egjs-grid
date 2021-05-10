@@ -8,7 +8,10 @@ import MODULE_TEMPLATE from '!!raw-loader!../apps/default/app.module.ts';
 
 export const FrameGridTemplate = (props: any) => ({
   component: AppComponent,
-  props,
+  props: {
+    ...props,
+    key: JSON.stringify(props),
+  },
 });
 FrameGridTemplate.storyName = "FrameGrid";
 

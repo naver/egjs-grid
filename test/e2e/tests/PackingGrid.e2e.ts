@@ -12,15 +12,15 @@ const {
   weightPriority: "custom",
 });
 
-add("PackingGrid Initialization", async ({ seeVisualDiffWithScreenshot }) => {
-  seeVisualDiffWithScreenshot("packinggrid-default.png");
+add("PackingGrid Initialization", async ({ seeJSONDiffWithScreenshot }) => {
+  seeJSONDiffWithScreenshot("packinggrid-default.png");
 });
 
 ["ratio", "size", "custom"].forEach((weightPriority) => {
   [0.5, 1, 1.5].forEach((aspectRatio) => {
-    add(`test weightPriority: ${weightPriority}, aspectRatio: ${aspectRatio}`, async ({ seeVisualDiffWithScreenshot, updateArgs }) => {
+    add(`test weightPriority: ${weightPriority}, aspectRatio: ${aspectRatio}`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
       await updateArgs({ weightPriority, aspectRatio });
-      seeVisualDiffWithScreenshot(`packinggrid-weightPriority-${weightPriority}-aspectRatio-${aspectRatio}.png`);
+      seeJSONDiffWithScreenshot(`packinggrid-weightPriority-${weightPriority}-aspectRatio-${aspectRatio}.png`);
     });
   });
 });

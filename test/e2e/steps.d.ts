@@ -1,15 +1,13 @@
 /// <reference types='codeceptjs' />
-// type CFCHelper = typeof import("./helper/CFCHelper")["default"]["prototype"];
+
+
+type StorybookHelper = typeof import("./helper/StorybookHelper")["default"]["prototype"];
+type HTMLHelper = typeof import("./helper/HTMLHelper")["default"]["prototype"];
 
 declare namespace CodeceptJS {
   interface SupportObject { I: I }
   interface Methods extends Playwright {}
-  interface I extends WithTranslation<Methods> {
-    setFramework(name: string);
-    seeVisualDiff(path: string, options: Record<string, any>);
-    seeVisualDiffWithScreenshot(path: string);
-    seeVisualDiffForElement(selector: string, path: string, options: Record<string, any>);
-    updateArgs(storyId: string, args: Record<string, any>): Promise<any>;
+  interface I extends WithTranslation<Methods>, StorybookHelper, HTMLHelper  {
   }
   namespace Translation {
     interface Actions {}

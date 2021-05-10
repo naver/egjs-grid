@@ -12,4 +12,6 @@ export class AppComponent {
   @Input() column: any;
   @Input() columnSize: any;
   @Input() columnSizeRatio: any;
+  @Input() key: any;
+  trackBy = () => this.key;
 }

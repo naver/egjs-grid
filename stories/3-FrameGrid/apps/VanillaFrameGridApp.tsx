@@ -6,6 +6,7 @@ export default function App(props: Record<string, any>) {
     gap: props.gap,
     frame: props.frame,
     rectSize: props.rectSize,
+    useFrameFill: props.useFrameFill,
   });
 
   grid.renderItems();

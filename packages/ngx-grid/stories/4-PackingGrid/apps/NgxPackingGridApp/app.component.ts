@@ -9,4 +9,6 @@ export class AppComponent {
   @Input() sizeWeight: any;
   @Input() ratioWeight: any;
   @Input() aspectRatio: any;
+  @Input() key: any;
+  trackBy = () => this.key;
 }

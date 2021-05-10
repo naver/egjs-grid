@@ -11,7 +11,7 @@
     "../projects/**/*.spec.ts"
   ],
   "include": [
-    "../global.d.ts",
+    "../stories/global.d.ts",
     "../src/**/*",
     "../stories/**/*",
     "../../../stories/templates/controls.ts",

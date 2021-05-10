@@ -21,12 +21,9 @@ exports.config = {
     StorybookHelper: {
       require: './test/e2e/helper/StorybookHelper'
     },
-    ResembleHelper: {
-      require: "codeceptjs-resemblehelper",
-      screenshotFolder: "./test/e2e/log/output/",
-      baseFolder: "./test/e2e/log/",
-      diffFolder: "./test/e2e/log/diff/"
-    }
+    HTMLHelper: {
+      require: './test/e2e/helper/HTMLHelper'
+    },
   },
   async bootstrap() {
     return new Promise(resolve => {

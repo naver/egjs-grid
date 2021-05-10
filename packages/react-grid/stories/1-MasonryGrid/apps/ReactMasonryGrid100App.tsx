@@ -10,6 +10,7 @@ export default function App(props: Record<string, any>) {
     column={props.column}
     columnSize={props.columnSize}
     columnSizeRatio={props.columnSizeRatio}
+    key={Math.random()}
   >
     <div className={"item"} data-grid-column="0" style={{
       width: "100%",

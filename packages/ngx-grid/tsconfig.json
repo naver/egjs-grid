@@ -34,7 +34,7 @@
     "strictTemplates": true
   },
   "include": [
-    "./global.d.ts"
+    "stories/global.d.ts"
   ],
   "exclude": [
     "node_modules"

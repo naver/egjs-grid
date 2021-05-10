@@ -7,6 +7,7 @@ import {
 } from "storybook-addon-preview";
 import {
   convertVanillaTemplate, convertPath, convertTemplate,
+  convertReactTemplate, convertAngularHTMLTemplate,
   convertSvelteTemplate, convertVueTemplate, convertAngularTemplate,
 } from "../utils";
 
@@ -46,14 +47,14 @@ export function getPreview(folderName: string, fileName: string, {
     },
     {
       tab: "React",
-      template: convertTemplate(convertPath(reactCode, "src", "@egjs/react-grid")),
+      template: convertReactTemplate(convertPath(reactCode, "src", "@egjs/react-grid")),
       language: "tsx",
       codesandbox: DEFAULT_REACT_CODESANDBOX(["@egjs/react-grid"]),
       copy: true,
     },
     {
       tab: "Angular",
-      template: convertTemplate(convertPath(ngxHTMLCode, "src", "@egjs/ngx-grid")),
+      template: convertAngularHTMLTemplate(convertPath(ngxHTMLCode, "src", "@egjs/ngx-grid")),
       language: "tsx",
       description: "app.component.html",
       codesandbox: DEFAULT_ANGULAR_CODESANDBOX(["@egjs/ngx-grid"]),

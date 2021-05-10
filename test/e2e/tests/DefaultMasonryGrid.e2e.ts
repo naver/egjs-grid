@@ -16,32 +16,32 @@ const {
   columnSizeRatio: 0,
 });
 
-add("Initialization", async ({ seeVisualDiffWithScreenshot }) => {
-  seeVisualDiffWithScreenshot("masonrygrid-default.png");
+add("Initialization", async ({ seeJSONDiffWithScreenshot }) => {
+  await seeJSONDiffWithScreenshot("masonrygrid-default.json");
 });
 
 ["start", "center", "end", "justify", "stretch"].forEach((align) => {
-  add(`test algin: "${align}"`, async ({ seeVisualDiffWithScreenshot, updateArgs }) => {
+  add(`test algin: "${align}"`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
     await updateArgs({ align });
-    seeVisualDiffWithScreenshot(`masonrygrid-align-${align}.png`);
+    await seeJSONDiffWithScreenshot(`masonrygrid-align-${align}.json`);
   });
 
   [1, 2, 3].forEach((column) => {
-    add(`test algin: "${align}", column: ${column}`, async ({ seeVisualDiffWithScreenshot, updateArgs }) => {
+    add(`test algin: "${align}", column: ${column}`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
       await updateArgs({ align, column });
-      seeVisualDiffWithScreenshot(`masonrygrid-align-${align}-column-${column}.png`);
+      await seeJSONDiffWithScreenshot(`masonrygrid-align-${align}-column-${column}.json`);
     });
   });
 });
 [0, 100].forEach((columnSize) => {
-  add(`test columnSize: ${columnSize}`, async ({ seeVisualDiffWithScreenshot, updateArgs }) => {
+  add(`test columnSize: ${columnSize}`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
     await updateArgs({ columnSize });
-    seeVisualDiffWithScreenshot(`masonrygrid-columnSize-${columnSize}.png`);
+    await seeJSONDiffWithScreenshot(`masonrygrid-columnSize-${columnSize}.json`);
   });
   [0, 0.5, 1, 2].forEach((columnSizeRatio) => {
-    add(`test columnSize: ${columnSize}, columnSizeRatio: ${columnSizeRatio}`, async ({ seeVisualDiffWithScreenshot, updateArgs }) => {
+    add(`test columnSize: ${columnSize}, columnSizeRatio: ${columnSizeRatio}`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
       await updateArgs({ columnSize, columnSizeRatio });
-      seeVisualDiffWithScreenshot(`masonrygrid-columnSize-${columnSize}-columnSizeRatio-${columnSizeRatio}.png`);
+      await seeJSONDiffWithScreenshot(`masonrygrid-columnSize-${columnSize}-columnSizeRatio-${columnSizeRatio}.json`);
     });
   });
 });

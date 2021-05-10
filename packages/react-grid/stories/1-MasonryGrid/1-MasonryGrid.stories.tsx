@@ -3,7 +3,7 @@ import MasonryGridApp from "./apps/ReactMasonryGridApp";
 import RawMaonsryGridApp from "!!raw-loader!./apps/ReactMasonryGridApp";
 import "../../../../stories/templates/default.css";
 import { MASONRY_GRID_CONTROLS } from "../../../../stories/templates/controls";
-import { convertPath, convertTemplate, makeArgs } from "../../../../stories/utils";
+import { convertPath, convertReactTemplate, makeArgs } from "../../../../stories/utils";
 
 export const MasonryGridTemplate = MasonryGridApp as any;
 
@@ -18,7 +18,7 @@ MasonryGridTemplate.parameters = {
   preview: [
     {
       tab: "React",
-      template: convertTemplate(convertPath(RawMaonsryGridApp, "react-grid", "@egjs/react-grid")),
+      template: convertReactTemplate(convertPath(RawMaonsryGridApp, "react-grid", "@egjs/react-grid")),
       language: "tsx",
     },
   ],

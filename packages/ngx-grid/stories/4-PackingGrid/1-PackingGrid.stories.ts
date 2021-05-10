@@ -8,7 +8,10 @@ import MODULE_TEMPLATE from '!!raw-loader!../apps/default/app.module.ts';
 
 export const PackingGridTemplate = (props: any) => ({
   component: AppComponent,
-  props,
+  props: {
+    ...props,
+    key: JSON.stringify(props),
+  },
 });
 PackingGridTemplate.storyName = "PackingGrid";
 

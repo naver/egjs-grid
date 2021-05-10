@@ -27,4 +27,5 @@ class StorybookHelper extends Helper {
   }
 }
 
+export default StorybookHelper;
 module.exports = StorybookHelper;

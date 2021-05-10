@@ -9,7 +9,6 @@ export default function App(props: Record<string, any>) {
     columnSize: props.columnSize,
     columnSizeRatio: props.columnSizeRatio,
   });
-
   grid.renderItems();
 
   return grid;
