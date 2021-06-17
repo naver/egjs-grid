@@ -61,6 +61,16 @@ export const JUSTIFIED_GRID_CONTROLS = {
     description: makeLink("JustifiedGrid", "sizeRange"),
     defaultValue: [0, 1000],
   }),
+  isCrop: makeArgType({
+    type: "boolean",
+    description: makeLink("JustifiedGrid", "isCrop"),
+    defaultValue: false,
+  }),
+  displayedRow: makeArgType({
+    type: "number",
+    description: makeLink("JustifiedGrid", "displayedRow"),
+    defaultValue: -1,
+  }),
 };
 
 export const FRAME_GRID_CONTROLS = {
@@ -110,5 +120,26 @@ export const PACKING_GRID_CONTROLS = {
     control: {
       options: ["ratio", "size", "custom"],
     },
+  }),
+};
+
+
+
+export const CROPPED_JUSTIFIED_GRID_CONTROLS = {
+  ...JUSTIFIED_GRID_CONTROLS,
+  rowRange: makeArgType({
+    type: "object",
+    description: makeLink("JustifiedGrid", "rowRange"),
+    defaultValue: 3,
+  }),
+  sizeRange: makeArgType({
+    type: "object",
+    description: makeLink("JustifiedGrid", "sizeRange"),
+    defaultValue: [290, 310],
+  }),
+  isCrop: makeArgType({
+    type: "boolean",
+    description: makeLink("JustifiedGrid", "isCrop"),
+    defaultValue: true,
   }),
 };

@@ -4,7 +4,9 @@ html, body {
   padding: 0!important;
   margin: 0!important;
 }
-
+.container {
+  overflow: hidden;
+}
 .item {
   position: absolute;
   width: 100px;
