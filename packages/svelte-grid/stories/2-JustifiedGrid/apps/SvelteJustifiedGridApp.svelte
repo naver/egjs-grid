@@ -6,7 +6,7 @@
   export let rowRange;
   export let columnRange;
   export let sizeRange;
-  export let isCrop;
+  export let isSizeCrop;
   export let displayedRow;
 </script>
 
@@ -17,7 +17,7 @@
   {rowRange}
   {columnRange}
   {sizeRange}
-  {isCrop}
+  {isSizeCrop}
   {displayedRow}
 >
   <div class="item">1</div>

@@ -61,9 +61,9 @@ export const JUSTIFIED_GRID_CONTROLS = {
     description: makeLink("JustifiedGrid", "sizeRange"),
     defaultValue: [0, 1000],
   }),
-  isCrop: makeArgType({
+  isSizeCrop: makeArgType({
     type: "boolean",
-    description: makeLink("JustifiedGrid", "isCrop"),
+    description: makeLink("JustifiedGrid", "isSizeCrop"),
     defaultValue: false,
   }),
   displayedRow: makeArgType({
@@ -137,9 +137,9 @@ export const CROPPED_JUSTIFIED_GRID_CONTROLS = {
     description: makeLink("JustifiedGrid", "sizeRange"),
     defaultValue: [290, 310],
   }),
-  isCrop: makeArgType({
+  isSizeCrop: makeArgType({
     type: "boolean",
-    description: makeLink("JustifiedGrid", "isCrop"),
+    description: makeLink("JustifiedGrid", "isSizeCrop"),
     defaultValue: true,
   }),
 };

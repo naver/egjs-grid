@@ -10,7 +10,7 @@ export default function App(props: Record<string, any>) {
     columnRange={props.columnRange}
     rowRange={props.rowRange}
     sizeRange={props.sizeRange}
-    isCrop={props.isCrop}
+    isSizeCrop={props.isSizeCrop}
     displayedRow={props.displayedRow}
   >
     <div className={"item"}>1</div>

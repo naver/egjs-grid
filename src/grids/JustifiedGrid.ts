@@ -45,7 +45,7 @@ export interface JustifiedGridOptions extends GridOptions {
   rowRange?: number | number[];
   sizeRange?: number | number[];
   displayedRow?: number;
-  isCrop?: boolean;
+  isSizeCrop?: boolean;
 }
 
 /**
@@ -62,7 +62,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     columnRange: PROPERTY_TYPE.RENDER_PROPERTY,
     rowRange: PROPERTY_TYPE.RENDER_PROPERTY,
     sizeRange: PROPERTY_TYPE.RENDER_PROPERTY,
-    isCrop: PROPERTY_TYPE.RENDER_PROPERTY,
+    isSizeCrop: PROPERTY_TYPE.RENDER_PROPERTY,
     displayedRow: PROPERTY_TYPE.RENDER_PROPERTY,
   };
   public static defaultOptions: Required<JustifiedGridOptions> = {
@@ -71,7 +71,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     rowRange: 0,
     sizeRange: [0, Infinity],
     displayedRow: -1,
-    isCrop: false,
+    isSizeCrop: false,
   };
 
   public applyGrid(items: GridItem[], direction: "start" | "end", outline: number[]): GridOutlines {
@@ -228,7 +228,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     const rowSize = this._getExpectedRowSize(lineItems);
     const [minSize, maxSize] = this._getSizeRange();
 
-    if (this.isCrop) {
+    if (this.isSizeCrop) {
       if (minSize <= rowSize && rowSize <= maxSize) {
         return 0;
       }
@@ -292,7 +292,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
   ) {
     const {
       gap,
-      isCrop,
+      isSizeCrop,
       displayedRow,
     } = this.options;
     const sizeRange = this._getSizeRange();
@@ -307,7 +307,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       const rowSize = this._getExpectedRowSize(groupItems);
       let contentSize = rowSize;
 
-      if (isCrop) {
+      if (isSizeCrop) {
         contentSize = Math.max(sizeRange[0], Math.min(rowSize, sizeRange[1]));
       }
       const expectedInlineSize = this._getExpectedInlineSize(groupItems, contentSize);
@@ -321,7 +321,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
           ? prevItem.cssInlinePos + prevItem.cssInlineSize + gap
           : 0;
 
-        if (isCrop) {
+        if (isSizeCrop) {
           inlineSize *= scale;
         }
         item.setCSSGridRect({
