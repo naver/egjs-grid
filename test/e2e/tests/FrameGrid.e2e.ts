@@ -16,7 +16,7 @@ const {
 });
 
 add("FrameGrid Initialization", async ({ seeJSONDiffWithScreenshot }) => {
-  seeJSONDiffWithScreenshot("framegrid-default.png");
+  seeJSONDiffWithScreenshot("framegrid-default.json");
 });
 [0, 100, { inlineSize: 100, contentSize: 50}].forEach((rectSize) => {
   add(`test rectSize: ${rectSize}`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {

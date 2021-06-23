@@ -19,7 +19,7 @@ const {
 
 
 add("Initialization", async ({ seeJSONDiffWithScreenshot }) => {
-  seeJSONDiffWithScreenshot("masonrygrid-multiple-columns-default.png");
+  seeJSONDiffWithScreenshot("masonrygrid-multiple-columns-default.json");
 });
 
 ["start", "center", "end", "justify", "stretch"].forEach((align) => {

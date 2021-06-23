@@ -17,7 +17,7 @@ const {
 });
 
 add("JustifiedGrid Initialization", async ({ seeJSONDiffWithScreenshot }) => {
-  seeJSONDiffWithScreenshot("justifiedgrid-default.png");
+  seeJSONDiffWithScreenshot("justifiedgrid-default.json");
 });
 
 [[4, 4], [1, 4], [3, 8]].forEach((columnRange) => {

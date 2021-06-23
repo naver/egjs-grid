@@ -37,6 +37,7 @@ class HTMLHelper extends Helper {
           offsetWidth: element.offsetWidth,
           offsetHeight: element.offsetHeight,
           children: [].slice.call(element.children).map((child) => convertElementToJSON(child)),
+          innerText: element.innerText.trim(),
         };
       }
       return convertElementToJSON(document.querySelector(${"`"}${selector}${"`"}));
