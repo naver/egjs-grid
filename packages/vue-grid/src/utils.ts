@@ -28,7 +28,7 @@ export function makeGrid<T extends GridFunction>(tagName: string, GridClass: T, 
 
   GRID_METHODS.forEach(name => {
     methods[name] = function (this: any, ...args: any[]) {
-      this.$_grid[name](...args);
+      return this.$_grid[name](...args);
     };
   });
 
