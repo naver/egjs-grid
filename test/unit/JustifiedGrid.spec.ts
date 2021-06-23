@@ -1,7 +1,7 @@
 import { JustifiedGrid } from "../../src/grids/JustifiedGrid";
 import {
   appendElements, cleanup, expectItemsPosition,
-  getRowCount, sandbox, waitEvent,
+  getRowCount, getRowPoses, sandbox, waitEvent,
 } from "./utils/utils";
 
 
@@ -268,6 +268,38 @@ describe("test JustifiedGrid", () => {
       // Then
       expectItemsPosition(items);
       expect(rowCount).to.be.equals(1);
+    });
+  });
+
+  describe("test isSizeCrop  option", () => {
+    it(`should check if the proportion is broken but the contentSize is constant`, async () => {
+      // Given
+      container!.style.cssText = "width: 1000px;";
+
+      grid = new JustifiedGrid(container!, {
+        gap: 5,
+        horizontal: false,
+        isSizeCrop: true,
+        sizeRange: [200, 200],
+        rowRange: [4, 4],
+      });
+
+      appendElements(container!, 18);
+
+      // When
+      grid.renderItems();
+
+      await waitEvent(grid, "renderComplete");
+
+      const items = grid.getItems();
+      const rowCount = getRowCount(items);
+
+      // Then
+      expect(rowCount).to.be.equals(4);
+      expectItemsPosition(items);
+      items.forEach((item) => {
+        expect(item.cssContentSize).to.be.equals(200);
+      });
     });
   });
 });

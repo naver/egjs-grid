@@ -63,9 +63,8 @@ export function expectItemsPosition(items: GridItem[]) {
     expect(item.cssContentPos).to.be.at.least(0);
   });
 }
-export function getRowCount(items: GridItem[]) {
-  const rowCountMap = {};
-  let count = 0;
+export function getRowPosMap(items: GridItem[]) {
+  const rowPosMap = {};
 
   items.forEach((item) => {
     const pos = item.cssContentPos;
@@ -73,12 +72,17 @@ export function getRowCount(items: GridItem[]) {
     if (pos == null) {
       return;
     }
-    if (!rowCountMap[pos]) {
-      rowCountMap[pos] = true;
-      ++count;
+    if (!rowPosMap[pos]) {
+      rowPosMap[pos] = true;
     }
   });
-  return count;
+  return rowPosMap;
+}
+export function getRowPoses(items: GridItem[]) {
+  return Object.keys(getRowPosMap(items)).map((num) => parseFloat(num));
+}
+export function getRowCount(items: GridItem[]) {
+  return getRowPoses(items).length;
 }
 
 export function chaseItem(
