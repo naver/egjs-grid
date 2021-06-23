@@ -269,6 +269,33 @@ describe("test JustifiedGrid", () => {
       expectItemsPosition(items);
       expect(rowCount).to.be.equals(1);
     });
+    it(`should check if it is visible less than the actual rendered rowCount`, async () => {
+      // Given
+      container!.style.cssText = "width: 1000px;";
+
+      grid = new JustifiedGrid(container!, {
+        gap: 5,
+        horizontal: false,
+        rowRange: [4, 4],
+        displayedRow: 2,
+      });
+
+      appendElements(container!, 18);
+
+      // When
+      grid.renderItems();
+
+      await waitEvent(grid, "renderComplete");
+
+      const items = grid.getItems();
+      const rowPoses = getRowPoses(items);
+
+      // Then
+      expectItemsPosition(items);
+      expect(rowPoses.length).to.be.equals(4);
+      // gap = 5
+      expect(rowPoses[2]).to.be.equals(grid.getOutlines().end[0]);
+    });
   });
 
   describe("test isSizeCrop  option", () => {
