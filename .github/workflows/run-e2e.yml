@@ -9,7 +9,7 @@ jobs:
         with:
           node-version: 14.15.4
       - uses: microsoft/playwright-github-action@v1.4.4
-      - run: npm install && npm run e2e:pre-build
+      - run: npm install
       - name: install react
         working-directory: ./packages/react-grid
         run: npm install
@@ -28,6 +28,7 @@ jobs:
       - name: install vue3
         working-directory: ./packages/vue-grid/vue3
         run: npm install
+      - run: npm run e2e:pre-build
       - run: npm run e2e:headless
       - name: Archive logs
         if: ${{ failure() }}
