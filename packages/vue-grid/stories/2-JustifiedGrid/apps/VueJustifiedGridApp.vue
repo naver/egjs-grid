@@ -6,7 +6,7 @@
     v-bind:columnRange="columnRange"
     v-bind:rowRange="rowRange"
     v-bind:sizeRange="sizeRange"
-    v-bind:isSizeCrop="isSizeCrop"
+    v-bind:isCroppedSize="isCroppedSize"
     v-bind:displayedRow="displayedRow"
   >
     <div class="item">1</div>
@@ -30,7 +30,7 @@ export default {
     "columnRange",
     "rowRange",
     "sizeRange",
-    "isSizeCrop",
+    "isCroppedSize",
     "displayedRow",
   ],
   components: {

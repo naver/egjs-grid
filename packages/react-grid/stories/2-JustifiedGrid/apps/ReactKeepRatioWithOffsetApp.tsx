@@ -10,7 +10,7 @@ export default function App(props: Record<string, any>) {
     columnRange={props.columnRange}
     rowRange={props.rowRange}
     sizeRange={props.sizeRange}
-    isSizeCrop={props.isSizeCrop}
+    isCroppedSize={props.isCroppedSize}
     displayedRow={props.displayedRow}
   >
     <div className="image" data-grid-content-offset="40">

@@ -356,7 +356,7 @@ describe("test JustifiedGrid", () => {
     });
   });
 
-  describe("test isSizeCrop  option", () => {
+  describe("test isCroppedSize  option", () => {
     it(`should check if the ratio is broken but the contentSize is constant`, async () => {
       // Given
       container!.style.cssText = "width: 1000px;";
@@ -364,7 +364,7 @@ describe("test JustifiedGrid", () => {
       grid = new JustifiedGrid(container!, {
         gap: 5,
         horizontal: false,
-        isSizeCrop: true,
+        isCroppedSize: true,
         sizeRange: [200, 200],
         rowRange: [4, 4],
       });

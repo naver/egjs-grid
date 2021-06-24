@@ -11,7 +11,7 @@ export class AppComponent {
   @Input() columnRange: any;
   @Input() rowRange: any;
   @Input() sizeRange: any;
-  @Input() isSizeCrop: any;
+  @Input() isCroppedSize: any;
   @Input() displayedRow: any;
   @Input() key: any;
   trackBy = () => this.key;

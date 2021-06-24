@@ -59,7 +59,7 @@ export interface JustifiedGridOptions extends GridOptions {
   rowRange?: number | number[];
   sizeRange?: number | number[];
   displayedRow?: number;
-  isSizeCrop?: boolean;
+  isCroppedSize?: boolean;
 }
 
 /**
@@ -78,7 +78,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     columnRange: PROPERTY_TYPE.RENDER_PROPERTY,
     rowRange: PROPERTY_TYPE.RENDER_PROPERTY,
     sizeRange: PROPERTY_TYPE.RENDER_PROPERTY,
-    isSizeCrop: PROPERTY_TYPE.RENDER_PROPERTY,
+    isCroppedSize: PROPERTY_TYPE.RENDER_PROPERTY,
     displayedRow: PROPERTY_TYPE.RENDER_PROPERTY,
   };
   public static defaultOptions: Required<JustifiedGridOptions> = {
@@ -87,7 +87,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     rowRange: 0,
     sizeRange: [0, Infinity],
     displayedRow: -1,
-    isSizeCrop: false,
+    isCroppedSize: false,
   };
 
   public applyGrid(items: GridItem[], direction: "start" | "end", outline: number[]): GridOutlines {
@@ -249,7 +249,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     const rowSize = this._getExpectedRowSize(lineItems);
     const [minSize, maxSize] = this._getSizeRange();
 
-    if (this.isSizeCrop) {
+    if (this.isCroppedSize) {
       if (minSize <= rowSize && rowSize <= maxSize) {
         return 0;
       }
@@ -313,7 +313,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
   ) {
     const {
       gap,
-      isSizeCrop,
+      isCroppedSize,
       displayedRow,
     } = this.options;
     const sizeRange = this._getSizeRange();
@@ -326,7 +326,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     groups.forEach((groupItems, rowIndex) => {
       const length = groupItems.length;
       let rowSize = this._getExpectedRowSize(groupItems);
-      if (isSizeCrop) {
+      if (isCroppedSize) {
         rowSize = Math.max(sizeRange[0], Math.min(rowSize, sizeRange[1]));
       }
       const expectedInlineSize = this._getExpectedInlineSize(groupItems, rowSize);
@@ -342,7 +342,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
           ? prevItem.cssInlinePos + prevItem.cssInlineSize + gap
           : 0;
 
-        if (isSizeCrop) {
+        if (isCroppedSize) {
           columnSize *= scale;
         }
         item.setCSSGridRect({
@@ -459,15 +459,15 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
 /**
  * Whether to crop when the row size is out of sizeRange. If set to true, this ratio can be broken. (default: false)
  * @ko - row 사이즈가 sizeRange에 벗어나면 크롭할지 여부. true로 설정하면 비율이 깨질 수 있다. (default: false)
- * @name Grid.JustifiedGrid#isSizeCrop
- * @type {$ts:Grid.JustifiedGrid.JustifiedGridOptions["isSizeCrop"]}
+ * @name Grid.JustifiedGrid#isCroppedSize
+ * @type {$ts:Grid.JustifiedGrid.JustifiedGridOptions["isCroppedSize"]}
  * @example
  * import { JustifiedGrid } from "@egjs/grid";
  *
  * const grid = new JustifiedGrid(container, {
  *   sizeRange: [200, 250],
- *   isSizeCrop: false,
+ *   isCroppedSize: false,
  * });
  *
- * grid.isSizeCrop = true;
+ * grid.isCroppedSize = true;
  */

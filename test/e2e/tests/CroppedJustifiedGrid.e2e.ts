@@ -12,7 +12,7 @@ const {
 } = CFCScenario<typeof JustifiedGrid>(storyId, {
   gap: 5,
   columnRange: [1, 8],
-  isSizeCrop: true,
+  isCroppedSize: true,
   sizeRange: [400, 400],
   rowRange: [4, 4],
 });
