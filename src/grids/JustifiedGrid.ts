@@ -51,6 +51,8 @@ function getExpectedColumnSize(item: GridItem, rowSize: number) {
  * @property - The minimum and maximum number of items per line. (default: [1, 8]) <ko> 한 줄에 들어가는 아이템의 최소, 최대 개수. (default: [1, 8]) </ko>
  * @property - The minimum and maximum number of rows in a group, 0 is not set. (default: 0) <ko> 한 그룹에 들어가는 행의 최소, 최대 개수, 0은 미설정이다. (default: 0) </ko>
  * @property - The minimum and maximum size by which the item is adjusted. If it is not calculated, it may deviate from the minimum and maximum sizes. (default: [0, Infinity]) <ko>아이템이 조정되는 최소, 최대 사이즈. 계산이 되지 않는 경우 최소, 최대 사이즈를 벗어날 수 있다. (default: [0, Infinity])</ko>
+ * @property - Maximum number of rows to be counted for container size. You can hide it on the screen by setting overflow: hidden. -1 is not set. (default: -1)<ko>컨테이너 크기에 계산될 최대 row 개수. overflow: hidden을 설정하면 화면에 가릴 수 있다. -1은 미설정이다. (default: -1)</ko>
+ * @property - Whether to crop when the row size is out of sizeRange. If set to true, this ratio can be broken. (default: false) <ko>row사이즈가 sizeRange에 벗어나면 크롭할지 여부. true로 설정하면 비율이 깨질 수 있다. (default: false)</ko>
  */
 export interface JustifiedGridOptions extends GridOptions {
   columnRange?: number | number[];
@@ -437,4 +439,35 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
  * });
  *
  * grid.sizeRange = [200, 800];
+ */
+
+/**
+ * Maximum number of rows to be counted for container size. You can hide it on the screen by setting overflow: hidden. -1 is not set. (default: -1)
+ * @ko - 컨테이너 크기에 계산될 최대 row 개수. overflow: hidden을 설정하면 화면에 가릴 수 있다. -1은 미설정이다. (default: -1)
+ * @name Grid.JustifiedGrid#displayedRow
+ * @type {$ts:Grid.JustifiedGrid.JustifiedGridOptions["displayedRow"]}
+ * @example
+ * import { JustifiedGrid } from "@egjs/grid";
+ *
+ * const grid = new JustifiedGrid(container, {
+ *   displayedRow: -1,
+ * });
+ *
+ * grid.displayedRow = 3;
+ */
+
+/**
+ * Whether to crop when the row size is out of sizeRange. If set to true, this ratio can be broken. (default: false)
+ * @ko - row 사이즈가 sizeRange에 벗어나면 크롭할지 여부. true로 설정하면 비율이 깨질 수 있다. (default: false)
+ * @name Grid.JustifiedGrid#isSizeCrop
+ * @type {$ts:Grid.JustifiedGrid.JustifiedGridOptions["isSizeCrop"]}
+ * @example
+ * import { JustifiedGrid } from "@egjs/grid";
+ *
+ * const grid = new JustifiedGrid(container, {
+ *   sizeRange: [200, 250],
+ *   isSizeCrop: false,
+ * });
+ *
+ * grid.isSizeCrop = true;
  */
