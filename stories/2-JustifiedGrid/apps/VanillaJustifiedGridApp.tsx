@@ -7,6 +7,8 @@ export default function App(props: Record<string, any>) {
     rowRange: props.rowRange,
     columnRange: props.columnRange,
     sizeRange: props.sizeRange,
+    isCroppedSize: props.isCroppedSize,
+    displayedRow: props.displayedRow,
   });
 
   grid.renderItems();

@@ -48,6 +48,7 @@ export function waitEvent(component: Component<any>, eventName: string): Promise
 
 export function appendElements(container: HTMLElement, count: number) {
   const length = SIZES.length;
+  const elements: HTMLElement[] = [];
 
   for (let i = 0; i < count; ++i) {
     const size = SIZES[i % length];
@@ -55,7 +56,9 @@ export function appendElements(container: HTMLElement, count: number) {
 
     element.style.cssText = `position: absolute; width: ${size[0]}px; height: ${size[1]}px;`;
     container.appendChild(element);
+    elements.push(element);
   }
+  return elements;
 }
 
 export function expectItemsPosition(items: GridItem[]) {
@@ -63,9 +66,8 @@ export function expectItemsPosition(items: GridItem[]) {
     expect(item.cssContentPos).to.be.at.least(0);
   });
 }
-export function getRowCount(items: GridItem[]) {
-  const rowCountMap = {};
-  let count = 0;
+export function getRowPosMap(items: GridItem[]) {
+  const rowPosMap = {};
 
   items.forEach((item) => {
     const pos = item.cssContentPos;
@@ -73,12 +75,17 @@ export function getRowCount(items: GridItem[]) {
     if (pos == null) {
       return;
     }
-    if (!rowCountMap[pos]) {
-      rowCountMap[pos] = true;
-      ++count;
+    if (!rowPosMap[pos]) {
+      rowPosMap[pos] = true;
     }
   });
-  return count;
+  return rowPosMap;
+}
+export function getRowPoses(items: GridItem[]) {
+  return Object.keys(getRowPosMap(items)).map((num) => parseFloat(num));
+}
+export function getRowCount(items: GridItem[]) {
+  return getRowPoses(items).length;
 }
 
 export function chaseItem(

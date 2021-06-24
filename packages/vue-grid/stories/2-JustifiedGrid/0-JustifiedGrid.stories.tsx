@@ -3,3 +3,5 @@ export default {
   title: "Examples/JustifiedGrid",
 };
 export * from "./1-JustifiedGrid.stories";
+export * from "./2-CroppedJustifiedGrid.stories";
+export * from "./3-KeepRatioWithOffset.stories";

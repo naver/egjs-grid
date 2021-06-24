@@ -15,6 +15,7 @@ module.exports = {
       },
     });
     config.resolve.extensions.push('.ts', '.tsx');
+    config.resolve.alias["@egjs/grid"] = path.resolve(__dirname, '../../../dist/grid.esm.js');
     return config;
   },
   stories: [

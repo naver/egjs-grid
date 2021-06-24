@@ -22,7 +22,7 @@ import { MOUNT_STATE, RECT_NAMES, UPDATE_STATE } from "./consts";
  * @property - Additional data of the item. <ko>item의 추가적인 데이터들.</ko>
  */
 export interface GridItemStatus {
-  key?: string;
+  key?: string | number;
   element?: HTMLElement | null;
   mountState?: MOUNT_STATE;
   updateState?: UPDATE_STATE;
@@ -32,7 +32,7 @@ export interface GridItemStatus {
   orgRect?: Required<DOMRect>;
   rect?: Required<DOMRect>;
   cssRect?: DOMRect;
-  data?: Record<string, string>;
+  data?: Record<string, any>;
 }
 
 

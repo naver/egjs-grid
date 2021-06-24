@@ -6,6 +6,8 @@
     v-bind:columnRange="columnRange"
     v-bind:rowRange="rowRange"
     v-bind:sizeRange="sizeRange"
+    v-bind:isCroppedSize="isCroppedSize"
+    v-bind:displayedRow="displayedRow"
   >
     <div class="item">1</div>
     <div class="item">2</div>
@@ -28,6 +30,8 @@ export default {
     "columnRange",
     "rowRange",
     "sizeRange",
+    "isCroppedSize",
+    "displayedRow",
   ],
   components: {
     JustifiedGrid,
@@ -38,6 +42,10 @@ export default {
 html, body {
   position: relative;
   height: 100%;
+}
+
+.container {
+  overflow: hidden;
 }
 
 .item {

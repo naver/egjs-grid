@@ -23,19 +23,19 @@ add("JustifiedGrid Initialization", async ({ seeJSONDiffWithScreenshot }) => {
 [[4, 4], [1, 4], [3, 8]].forEach((columnRange) => {
   add(`test columnRange: ${columnRange}`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
     await updateArgs({ columnRange });
-    seeJSONDiffWithScreenshot(`justifiedgrid-columnRange-${columnRange.join("_")}.png`);
+    seeJSONDiffWithScreenshot(`justifiedgrid-columnRange-${columnRange.join("_")}.json`);
   });
 });
 ([0, [1, 4], [4, 4]] as const).forEach((rowRange) => {
   add(`test rowRange: ${rowRange}`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
     await updateArgs({ rowRange });
-    seeJSONDiffWithScreenshot(`justifiedgrid-rowRange-${rowRange ? rowRange.join("_") : "none"}.png`);
+    seeJSONDiffWithScreenshot(`justifiedgrid-rowRange-${rowRange ? rowRange.join("_") : "none"}.json`);
   });
 });
 [[0, 1000], [600, 800], [700, 1000]].forEach((sizeRange) => {
   add(`test sizeRange: ${sizeRange}`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
     await updateArgs({ sizeRange });
-    seeJSONDiffWithScreenshot(`justifiedgrid-sizeRange-${sizeRange.join("_")}.png`);
+    seeJSONDiffWithScreenshot(`justifiedgrid-sizeRange-${sizeRange.join("_")}.json`);
   });
 });
 

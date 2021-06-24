@@ -25,6 +25,35 @@ class StorybookHelper extends Helper {
   window.postMessage(${"`"}${data}${"`"});
   `);
   }
+  public async waitImageLoaded() {
+    const I = this.helpers.Playwright as CodeceptJS.I;
+    await I.executeScript(`
+    window.isLoaded = false;
+
+    const imgs = document.querySelectorAll("img");
+    let loadCount = 0;
+    let imgsLengh = imgs.length;
+
+    function load() {
+      setTimeout(() => {
+        isLoaded = imgsLengh === ++loadCount;
+      }, 100);
+    }
+    imgs.forEach(img => {
+      if (img.complete) {
+        load();
+      } else {
+        img.addEventListener("load", () => {
+          load();
+        }, {
+          once: true,
+        });
+      }
+    });
+  `);
+
+    await I.waitForFunction(() => (window as any).isLoaded, 100);
+  }
 }
 
 export default StorybookHelper;

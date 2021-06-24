@@ -10,6 +10,8 @@ export default function App(props: Record<string, any>) {
     columnRange={props.columnRange}
     rowRange={props.rowRange}
     sizeRange={props.sizeRange}
+    isCroppedSize={props.isCroppedSize}
+    displayedRow={props.displayedRow}
   >
     <div className={"item"}>1</div>
     <div className={"item"}>2</div>

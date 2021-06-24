@@ -1,7 +1,7 @@
 import { JustifiedGrid } from "../../src/grids/JustifiedGrid";
 import {
   appendElements, cleanup, expectItemsPosition,
-  getRowCount, sandbox, waitEvent,
+  getRowCount, getRowPoses, sandbox, waitEvent,
 } from "./utils/utils";
 
 
@@ -39,6 +39,64 @@ describe("test JustifiedGrid", () => {
       end: [],
     });
     expect(container!.style.height).to.be.equals("0px");
+  });
+  it(`should check whether the ratio is maintained except for the offset when the inline offset is set`, async () => {
+    // Given
+    container!.style.cssText = "width: 1000px;";
+
+    grid = new JustifiedGrid(container!, {
+      gap: 5,
+      horizontal: false,
+    });
+
+    appendElements(container!, 18).forEach((element) => {
+      element.setAttribute("data-grid-inline-offset", "20");
+    });
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+    const items = grid.getItems();
+
+    // Then
+    expectItemsPosition(items);
+    items.forEach((item) => {
+      const cssRatio = (item.cssInlineSize - 20) / item.cssContentSize;
+      const orgRatio = (item.orgInlineSize - 20) / item.orgContentSize;
+
+      expect(cssRatio).to.be.closeTo(orgRatio, 0.00001);
+    });
+  });
+  it(`should check whether the ratio is maintained except for the offset when the content offset is set`, async () => {
+    // Given
+    container!.style.cssText = "width: 1000px;";
+
+    grid = new JustifiedGrid(container!, {
+      gap: 5,
+      horizontal: false,
+    });
+
+    appendElements(container!, 18).forEach((element) => {
+      element.setAttribute("data-grid-content-offset", "20");
+    });
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+    const items = grid.getItems();
+
+    // Then
+    expectItemsPosition(items);
+    items.forEach((item) => {
+      const cssRatio = item.cssInlineSize / (item.cssContentSize - 20);
+      const orgRatio = item.orgInlineSize / (item.orgContentSize - 20);
+
+      expect(cssRatio).to.be.closeTo(orgRatio, 0.00001);
+    });
   });
   describe("test columnRange option", () => {
     [0, 10, 20].forEach((gap) => {
@@ -268,6 +326,65 @@ describe("test JustifiedGrid", () => {
       // Then
       expectItemsPosition(items);
       expect(rowCount).to.be.equals(1);
+    });
+    it(`should check if it is visible less than the actual rendered rowCount`, async () => {
+      // Given
+      container!.style.cssText = "width: 1000px;";
+
+      grid = new JustifiedGrid(container!, {
+        gap: 5,
+        horizontal: false,
+        rowRange: [4, 4],
+        displayedRow: 2,
+      });
+
+      appendElements(container!, 18);
+
+      // When
+      grid.renderItems();
+
+      await waitEvent(grid, "renderComplete");
+
+      const items = grid.getItems();
+      const rowPoses = getRowPoses(items);
+
+      // Then
+      expectItemsPosition(items);
+      expect(rowPoses.length).to.be.equals(4);
+      // gap = 5
+      expect(rowPoses[2]).to.be.equals(grid.getOutlines().end[0]);
+    });
+  });
+
+  describe("test isCroppedSize  option", () => {
+    it(`should check if the ratio is broken but the contentSize is constant`, async () => {
+      // Given
+      container!.style.cssText = "width: 1000px;";
+
+      grid = new JustifiedGrid(container!, {
+        gap: 5,
+        horizontal: false,
+        isCroppedSize: true,
+        sizeRange: [200, 200],
+        rowRange: [4, 4],
+      });
+
+      appendElements(container!, 18);
+
+      // When
+      grid.renderItems();
+
+      await waitEvent(grid, "renderComplete");
+
+      const items = grid.getItems();
+      const rowCount = getRowCount(items);
+
+      // Then
+      expect(rowCount).to.be.equals(4);
+      expectItemsPosition(items);
+      items.forEach((item) => {
+        expect(item.cssContentSize).to.be.equals(200);
+      });
     });
   });
 });

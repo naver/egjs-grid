@@ -20,7 +20,7 @@ add("PackingGrid Initialization", async ({ seeJSONDiffWithScreenshot }) => {
   [0.5, 1, 1.5].forEach((aspectRatio) => {
     add(`test weightPriority: ${weightPriority}, aspectRatio: ${aspectRatio}`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
       await updateArgs({ weightPriority, aspectRatio });
-      seeJSONDiffWithScreenshot(`packinggrid-weightPriority-${weightPriority}-aspectRatio-${aspectRatio}.png`);
+      seeJSONDiffWithScreenshot(`packinggrid-weightPriority-${weightPriority}-aspectRatio-${aspectRatio}.json`);
     });
   });
 });
