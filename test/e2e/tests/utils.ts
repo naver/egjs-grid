@@ -3,7 +3,7 @@ import { GridFunction } from "../../../src/types";
 type CFCScenarioCallback = (e: {
   I: CodeceptJS.I,
   updateArgs: (args: any) => any,
-  seeJSONDiffWithScreenshot: (path: string, skipDiff?: boolean) => void,
+  seeJSONDiffWithScreenshot: (path: string, selector?: string) => void,
 }) => any;
 
 const FRAMEWORK_NAMES = ["vanilla", "react", "angular", "vue", "svelte", "vue3"];
@@ -56,11 +56,11 @@ export async function updateArgs(I: CodeceptJS.I, storyId: string, args: any) {
   await wait(60);
 }
 export function seeJSONDiffWithScreenshot(I: CodeceptJS.I, framework: string) {
-  return async (path: string) => {
+  return async (path: string, selector = ".container") => {
     if (framework === "vanilla") {
-      await I.saveElementJSON(".container", path);
+      await I.saveElementJSON(selector, path);
       return;
     }
-    await I.seeJSONDiffForElement(".container", path,);
+    await I.seeJSONDiffForElement(selector, path,);
   };
 }

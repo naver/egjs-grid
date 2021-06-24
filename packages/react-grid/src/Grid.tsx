@@ -6,7 +6,7 @@
 import * as React from "react";
 import VanillaGrid, { withGridMethods, GridOptions, GridMethods, GridFunction } from "@egjs/grid";
 import { ReactGridEvents } from "./types";
-import { REACT_GRID_EVENTS } from "./consts";
+import { REACT_GRID_EVENTS, REACT_GRID_EVENT_MAP } from "./consts";
 
 export abstract class Grid<T extends GridOptions>
   extends React.PureComponent<T & ReactGridEvents & { [key: string]: any }> {
@@ -21,7 +21,7 @@ export abstract class Grid<T extends GridOptions>
     const defaultOptions = GridClass.defaultOptions;
 
     for (const name in props) {
-      if (name in defaultOptions || name in REACT_GRID_EVENTS) {
+      if (name in defaultOptions || REACT_GRID_EVENTS.indexOf(name as any) > -1) {
         continue;
       }
       attributes[name] = props[name];
@@ -42,8 +42,20 @@ export abstract class Grid<T extends GridOptions>
       }
     }
 
-    this._grid = new GridClass(this._containerRef.current!, options);
-    this._grid.syncElements();
+    const grid = new GridClass(this._containerRef.current!, options);
+
+    for (const eventName in REACT_GRID_EVENT_MAP) {
+      const reactEventName = (REACT_GRID_EVENT_MAP as any)[eventName];
+
+      grid.on(eventName as any, (e: any) => {
+        const callback = props[reactEventName];
+
+        callback && callback({...e});
+      });
+    }
+    grid.syncElements();
+
+    this._grid = grid;
   }
   public componentDidUpdate() {
     const GridClass = (this.constructor as typeof Grid).GridClass;

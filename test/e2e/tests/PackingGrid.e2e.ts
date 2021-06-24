@@ -13,7 +13,7 @@ const {
 });
 
 add("PackingGrid Initialization", async ({ seeJSONDiffWithScreenshot }) => {
-  seeJSONDiffWithScreenshot("packinggrid-default.png");
+  seeJSONDiffWithScreenshot("packinggrid-default.json");
 });
 
 ["ratio", "size", "custom"].forEach((weightPriority) => {

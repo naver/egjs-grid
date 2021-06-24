@@ -1,0 +1,26 @@
+<div class="root">
+  <div class="result" #result></div>
+  <button class="button" (click)="onClick($event)">Resize Item 2</button>
+  <div class="container" NgxMasonryGrid
+    #grid
+    [gap]="gap"
+    [defaultDirection]="defaultDirection"
+    [align]="align"
+    [column]="column"
+    [columnSize]="columnSize"
+    [columnSizeRatio]="columnSizeRatio"
+    (renderComplete)="onRenderComplete($event)"
+    *ngFor="let item of [0]; trackBy: trackBy;"
+    >
+    <div class="item">1</div>
+    <div class="item item2">2</div>
+    <div class="item">3</div>
+    <div class="item">4</div>
+    <div class="item">5</div>
+    <div class="item">6</div>
+    <div class="item">7</div>
+    <div class="item">8</div>
+    <div class="item">9</div>
+    <div class="item">10</div>
+  </div>
+</div>

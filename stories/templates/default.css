@@ -40,3 +40,38 @@ html, body {
   background: #d5e;
   height: 130px;
 }
+
+.result {
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.button {
+  position: relative;
+  display: block;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background: white;
+  border: 1px solid #ccc;
+  appearance: none;
+  font-weight: bold;
+  width: 150px;
+  text-align: center;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  .result {
+    color: white;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .result {
+    color: black;
+  }
+}
