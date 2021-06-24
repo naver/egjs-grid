@@ -5,11 +5,11 @@
  */
 import * as React from "react";
 import VanillaGrid, { withGridMethods, GridOptions, GridMethods, GridFunction } from "@egjs/grid";
-import { ReactGridEvents } from "./types";
-import { REACT_GRID_EVENTS, REACT_GRID_EVENT_MAP } from "./consts";
+import { ReactGridProps } from "./types";
+import { REACT_GRID_PROPS, REACT_GRID_EVENT_MAP } from "./consts";
 
 export abstract class Grid<T extends GridOptions>
-  extends React.PureComponent<T & ReactGridEvents & { [key: string]: any }> {
+  extends React.PureComponent<T & ReactGridProps & { [key: string]: any }> {
   public static GridClass: GridFunction;
   @withGridMethods
   private _grid!: VanillaGrid;
@@ -19,16 +19,17 @@ export abstract class Grid<T extends GridOptions>
     const props = this.props;
     const GridClass = (this.constructor as typeof Grid).GridClass;
     const defaultOptions = GridClass.defaultOptions;
+    const Tag = props.tag as any || "div";
 
     for (const name in props) {
-      if (name in defaultOptions || REACT_GRID_EVENTS.indexOf(name as any) > -1) {
+      if (name in defaultOptions || REACT_GRID_PROPS.indexOf(name as any) > -1) {
         continue;
       }
       attributes[name] = props[name];
     }
-    return <div ref={this._containerRef} {...attributes}>
+    return <Tag ref={this._containerRef} {...attributes}>
       {this.props.children}
-    </div>;
+    </Tag>;
   }
   public componentDidMount() {
     const GridClass = (this.constructor as typeof Grid).GridClass;
