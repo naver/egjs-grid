@@ -91,6 +91,13 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     this._init();
   }
   /**
+   * Return Container Element.
+   * @ko 컨테이너 엘리먼트를 반환한다.
+   */
+  public getContainerElement(): HTMLElement {
+    return this.containerElement;
+  }
+  /**
    * Return items.
    * @ko 아이템들을 반환한다.
    */
