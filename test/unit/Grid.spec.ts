@@ -20,6 +20,15 @@ describe("test Grid", () => {
     container = null;
     cleanup();
   });
+  describe("Initialzation", () => {
+    it("should check if container elements are the same", () => {
+      // Given
+      grid = new SampleGrid(container!);
+
+      // When, Then
+      expect(grid.getContainerElement()).to.be.equals(container);
+    });
+  });
   describe("test rendering", () => {
     it("should check if items are rendered", async () => {
       // Given
@@ -141,9 +150,9 @@ describe("test Grid", () => {
 
       await waitEvent(grid, "renderComplete");
       const imgItem = grid.getItems()[1];
-      const orgRect1 = {...imgItem.orgRect};
-      const rect1 = {...imgItem.rect};
-      const cssRect1 = {...imgItem.cssRect};
+      const orgRect1 = { ...imgItem.orgRect };
+      const rect1 = { ...imgItem.rect };
+      const cssRect1 = { ...imgItem.cssRect };
 
       // When
       // loading is complete
@@ -152,9 +161,9 @@ describe("test Grid", () => {
       loadingImg.style.height = "200px";
 
       await waitEvent(grid, "renderComplete");
-      const orgRect2 = {...imgItem.orgRect};
-      const rect2 = {...imgItem.rect};
-      const cssRect2 = {...imgItem.cssRect};
+      const orgRect2 = { ...imgItem.orgRect };
+      const rect2 = { ...imgItem.rect };
+      const cssRect2 = { ...imgItem.cssRect };
 
       // Then
       // orgRect1 = rect1 = cssRect1
