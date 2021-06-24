@@ -35,7 +35,7 @@ export function makeGrid<T extends GridFunction>(tagName: string, GridClass: T, 
   return {
     ...VueComponent,
     name: tagName,
-    props: Object.keys(defaultOptions),
+    props: ["tag", ...Object.keys(defaultOptions)],
     watch,
     methods,
     mounted(this: any) {

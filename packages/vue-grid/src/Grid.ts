@@ -33,12 +33,14 @@ export default {
     const h = typeof h1 === "function" ? h1 : hForVue3(this);
 
     let slots = this.$slots.default;
+    const tag = this.$props.tag || "div";
 
     if (typeof slots === "function") {
       slots = slots();
     }
+
     return h(
-      "div",
+      tag,
       {
         ref: "container",
       },
