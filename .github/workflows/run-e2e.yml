@@ -30,8 +30,8 @@ jobs:
         run: npm install
       - run: npm run e2e:headless
       - name: Archive logs
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v2
-          if: ${{ failure() }}
           with:
             name: e2e log
             path: test/e2e/log
