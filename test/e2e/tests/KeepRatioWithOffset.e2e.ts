@@ -12,12 +12,12 @@ const {
 } = CFCScenario<typeof JustifiedGrid>(storyId, {
   gap: 5,
   columnRange: [1, 8],
-  isSizeCrop: true,
-  sizeRange: [400, 400],
+  sizeRange: [300, 400],
   rowRange: [4, 4],
 });
 
-add("JustifiedGrid KeepRatioWithOffet Initialization", async ({ seeJSONDiffWithScreenshot }) => {
+add("JustifiedGrid KeepRatioWithOffet Initialization", async ({ seeJSONDiffWithScreenshot, I }) => {
+  await I.waitImageLoaded();
   seeJSONDiffWithScreenshot("keep-ratio-with-offset-default.json");
 });
 
