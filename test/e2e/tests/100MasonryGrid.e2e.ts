@@ -25,25 +25,25 @@ add("Initialization", async ({ seeJSONDiffWithScreenshot }) => {
 ["start", "center", "end", "justify", "stretch"].forEach((align) => {
   add(`test algin: "${align}"`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
     await updateArgs({ align });
-    seeJSONDiffWithScreenshot(`masonrygrid-100-column-align-${align}.png`);
+    seeJSONDiffWithScreenshot(`masonrygrid-100-column-align-${align}.json`);
   });
 
   [1, 2, 3].forEach((column) => {
     add(`test algin: "${align}", column: ${column}`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
       await updateArgs({ align, column });
-      seeJSONDiffWithScreenshot(`masonrygrid-100-column-align-${align}-column-${column}.png`);
+      seeJSONDiffWithScreenshot(`masonrygrid-100-column-align-${align}-column-${column}.json`);
     });
   });
 });
 [0, 100].forEach((columnSize) => {
   add(`test columnSize: ${columnSize}`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
     await updateArgs({ columnSize });
-    seeJSONDiffWithScreenshot(`masonrygrid-100-column-columnSize-${columnSize}.png`);
+    seeJSONDiffWithScreenshot(`masonrygrid-100-column-columnSize-${columnSize}.json`);
   });
   [0, 0.5, 1, 2].forEach((columnSizeRatio) => {
     add(`test columnSize: ${columnSize}, columnSizeRatio: ${columnSizeRatio}`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
       await updateArgs({ columnSize, columnSizeRatio });
-      seeJSONDiffWithScreenshot(`masonrygrid-100-column-columnSize-${columnSize}-columnSizeRatio-${columnSizeRatio}.png`);
+      seeJSONDiffWithScreenshot(`masonrygrid-100-column-columnSize-${columnSize}-columnSizeRatio-${columnSizeRatio}.json`);
     });
   });
 });

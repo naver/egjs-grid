@@ -21,7 +21,7 @@ add("FrameGrid Initialization", async ({ seeJSONDiffWithScreenshot }) => {
 [0, 100, { inlineSize: 100, contentSize: 50}].forEach((rectSize) => {
   add(`test rectSize: ${rectSize}`, async ({ seeJSONDiffWithScreenshot, updateArgs }) => {
     await updateArgs({ rectSize });
-    seeJSONDiffWithScreenshot(`framegrid-rectSize-${JSON.stringify(rectSize)}.png`);
+    seeJSONDiffWithScreenshot(`framegrid-rectSize-${JSON.stringify(rectSize)}.json`);
   });
 });
 [true, false].forEach((useFrameFill) => {
@@ -30,7 +30,7 @@ add("FrameGrid Initialization", async ({ seeJSONDiffWithScreenshot }) => {
       [0, 1, 2, 3],
       [4, 0, 0, 0],
     ], useFrameFill });
-    seeJSONDiffWithScreenshot(`framegrid-useFrameFill-${useFrameFill}.png`);
+    seeJSONDiffWithScreenshot(`framegrid-useFrameFill-${useFrameFill}.json`);
   });
 });
 execute();
