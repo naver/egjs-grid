@@ -28,9 +28,12 @@ describe("test utils", () => {
       // this return type is grid
       const result2 = grid.setItems([]);
 
+      const sampleContainer = grid.getContainerElement();
+
       // Then
       expect(result1).to.be.deep.equals([]);
       expect(result2).to.be.equals(grid);
+      expect(sampleContainer).to.be.equals(container);
     });
   });
 });

@@ -52,6 +52,7 @@ export const GRID_METHODS = [
   "setItems",
   "renderItems",
   "getContainerInlineSize",
+  "getContainerElement",
 ] as const;
 
 export const GRID_EVENTS = [
