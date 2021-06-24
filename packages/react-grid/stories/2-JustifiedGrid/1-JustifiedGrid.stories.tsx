@@ -4,7 +4,7 @@ import { JUSTIFIED_GRID_CONTROLS } from "../../../../stories/templates/controls"
 import { makeArgs, convertReactTemplate, convertPath } from "../../../../stories/utils";
 import "../../../../stories/templates/default.css";
 
-export const JustifiedGridTemplate = JustifiedGridApp as any;
+export const JustifiedGridTemplate = JustifiedGridApp.bind({}) as any;
 
 
 JustifiedGridTemplate.storyName = "JustifiedGrid";

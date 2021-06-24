@@ -8,7 +8,7 @@ import { renderContainer } from "../templates/ReactJSX";
 import "../templates/default.css";
 import { getPreview } from "../templates/preview";
 
-export const CroppedTemplate = function App(props: Record<string, any>) {
+export const CroppedJustifiedGridTemplate = function App(props: Record<string, any>) {
   const gridRef = React.useRef<JustifiedGrid | null>(null);
 
   React.useEffect(() => {
@@ -33,10 +33,10 @@ export const CroppedTemplate = function App(props: Record<string, any>) {
 };
 
 
-CroppedTemplate.storyName = "Cropped JustifiedGrid";
-CroppedTemplate.argTypes = CROPPED_JUSTIFIED_GRID_CONTROLS;
-CroppedTemplate.args = { ...makeArgs(CroppedTemplate.argTypes) };
+CroppedJustifiedGridTemplate.storyName = "Cropped JustifiedGrid";
+CroppedJustifiedGridTemplate.argTypes = CROPPED_JUSTIFIED_GRID_CONTROLS;
+CroppedJustifiedGridTemplate.args = { ...makeArgs(CroppedJustifiedGridTemplate.argTypes) };
 
-CroppedTemplate.parameters = {
+CroppedJustifiedTemplate.parameters = {
   preview: getPreview("2-JustifiedGrid", "JustifiedGrid"),
 };

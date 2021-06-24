@@ -15,6 +15,7 @@
 		"test:chrome": "karma start --chrome",
 		"coverage": "karma start --coverage && print-coveralls --sort=desc",
 		"coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "e2e:pre-build": "npm run build && cpx 'declaration/**/*' packages/ngx-grid/projects/ngx-grid/node_modules/@egjs/grid/declaration --clean",
 		"e2e:storybook": "rm -rf node_modules/.cache/storybook/ && npm run e2e:storybook:all 2>&1 >/dev/null",
 		"e2e:storybook:all": "concurrently -k -r npm:e2e:storybook:vanilla npm:e2e:storybook:react npm:e2e:storybook:angular npm:e2e:storybook:vue npm:e2e:storybook:svelte npm:e2e:storybook:vue3",
 		"e2e:storybook:vanilla": "node_modules/@storybook/react/bin/index.js -p 6006 --quiet --ci",

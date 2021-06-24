@@ -1,10 +1,10 @@
 
-<p align="middle" ><img src="https://naver.github.io/egjs-grid/images/logo.png" /></p>
+<p align="middle" ><img src="https://naver.github.io/egjs-grid/images/logo.png" alt="item's image" /></p>
 <h2 align="middle">Angular Grid</h2>
 <p align="middle">
-<a href="https://www.npmjs.com/package/@egjs/ngx-grid" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/ngx-grid.svg?style=flat-square&color=007acc&label=version" alt="npm version" /></a>&nbsp;
-<img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square" />&nbsp;
-<a href="https://github.com/naver/egjs-grid/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/static/v1?style=flat-square&label=license&message=MIT&color=08CE5D" /></a>&nbsp;
+<a href="https://www.npmjs.com/package/@egjs/ngx-grid" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/ngx-grid.svg?style=flat-square&color=007acc&label=version" alt="npm version" alt="item's image" /></a>&nbsp;
+<img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square" alt="item's image" />&nbsp;
+<a href="https://github.com/naver/egjs-grid/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/static/v1?style=flat-square&label=license&message=MIT&color=08CE5D" alt="item's image" /></a>&nbsp;
 </p>
 <p align="middle">An Angular component that can arrange items according to the type of grids.</p>
 <p align="middle">
@@ -15,7 +15,7 @@
 
 ## Grids
 
-|<img src="https://naver.github.io/egjs-grid/images/MasonryGrid.png" />|<img src="https://naver.github.io/egjs-grid/images/JustifiedGrid.png" />|<img src="https://naver.github.io/egjs-grid/images/FrameGrid.png" />|<img src="https://naver.github.io/egjs-grid/images/PackingGrid.png" />|
+|<img src="https://naver.github.io/egjs-grid/images/MasonryGrid.png" alt="item's image" />|<img src="https://naver.github.io/egjs-grid/images/JustifiedGrid.png" alt="item's image" />|<img src="https://naver.github.io/egjs-grid/images/FrameGrid.png" alt="item's image" />|<img src="https://naver.github.io/egjs-grid/images/PackingGrid.png" alt="item's image" />|
 |:---:|:---:|:---:|:---:|
 |[**MasonryGrid**](http://naver.github.io/egjs-grid/storybook/?path=/story/examples-masonrygrid--masonry-grid-template)|[**JustifiedGrid**](http://naver.github.io/egjs-grid/storybook/?path=/story/examples-justifiedgrid--justified-grid-template)|[**FrameGrid**](http://naver.github.io/egjs-grid/storybook/?path=/story/examples-framegrid--frame-grid-template)|[**PackingGrid**](http://naver.github.io/egjs-grid/storybook/?path=/story/examples-packinggrid--packing-grid-template)|
 

@@ -4,9 +4,11 @@ html, body {
   padding: 0!important;
   margin: 0!important;
 }
+
 .container {
   overflow: hidden;
 }
+
 .item {
   position: absolute;
   width: 100px;
@@ -38,6 +40,7 @@ html, body {
   background: #ed5;
   height: 150px;
 }
+
 .item:nth-child(6n + 6) {
   background: #d5e;
   height: 130px;
@@ -50,6 +53,7 @@ html, body {
   box-sizing: border-box;
   font-size: 14px;
 }
+
 .button {
   position: relative;
   display: block;
@@ -65,15 +69,32 @@ html, body {
   font-size: 14px;
 }
 
+.image {
+  position: relative;
+  width: 100%;
+  font-size: 0;
+}
+
+.image img {
+  width: 100%;
+}
+
+.title {
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+}
 
 @media (prefers-color-scheme: dark) {
-  .result {
+  .title, .result {
     color: white;
   }
 }
 
 @media (prefers-color-scheme: light) {
-  .result {
+  .title, .result {
     color: black;
   }
 }

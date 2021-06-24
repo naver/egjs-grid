@@ -19,4 +19,6 @@ export class NgxJustifiedGridComponent
   @Input() columnRange!: Required<JustifiedGrid>['columnRange'];
   @Input() rowRange!: Required<JustifiedGrid>['rowRange'];
   @Input() sizeRange!: Required<JustifiedGrid>['sizeRange'];
+  @Input() isSizeCrop!: Required<JustifiedGrid>['isSizeCrop'];
+  @Input() displayedRow!: Required<JustifiedGrid>['displayedRow'];
 }

@@ -31,6 +31,18 @@ function splitItems(items: GridItem[], path: string[]) {
   }
   return groups;
 }
+function getExpectedColumnSize(item: GridItem, rowSize: number) {
+  const inlineSize = item.orgInlineSize;
+  const contentSize = item.orgContentSize;
+
+  if (!inlineSize || !contentSize) {
+    return 0;
+  }
+  const inlineOffset = parseFloat(item.attributes.inlineOffset) || 0;
+  const contentOffset = parseFloat(item.attributes.contentOffset) || 0;
+
+  return (inlineSize - inlineOffset) / (contentSize - contentOffset) * (rowSize - contentOffset) + inlineOffset;
+}
 
 /**
  * @typedef
@@ -191,30 +203,35 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     const {
       gap,
     } = this.options;
-    const size = items.reduce((sum, item) => {
+    let containerInlineSize = this.getContainerInlineSize()! - gap * (items.length - 1);
+    let ratioSum = 0;
+    let inlineSum = 0;
+
+    items.forEach((item) => {
       const inlineSize = item.orgInlineSize;
       const contentSize = item.orgContentSize;
 
       if (!inlineSize || !contentSize) {
-        return sum;
+        return;
       }
-      return sum + inlineSize / contentSize;
-    }, 0);
+      // sum((expect - offset) * ratio) = container inline size
+      const inlineOffset = parseFloat(item.attributes.inlineOffset) || 0;
+      const contentOffset = parseFloat(item.attributes.contentOffset) || 0;
+      const maintainedRatio = (inlineSize - inlineOffset) / (contentSize - contentOffset);
 
-    return size ? (this.getContainerInlineSize()! - gap * (items.length - 1)) / size : 0;
+      ratioSum += maintainedRatio;
+      inlineSum += contentOffset * maintainedRatio;
+      containerInlineSize -= inlineOffset;
+    });
+
+    return ratioSum ? (containerInlineSize + inlineSum) / ratioSum : 0;
   }
   private _getExpectedInlineSize(items: GridItem[], rowSize: number) {
     const {
       gap,
     } = this.options;
     const size = items.reduce((sum, item) => {
-      const inlineSize = item.orgInlineSize;
-      const contentSize = item.orgContentSize;
-
-      if (!inlineSize || !contentSize) {
-        return sum;
-      }
-      return sum + inlineSize / contentSize * rowSize;
+      return sum + getExpectedColumnSize(item, rowSize);
     }, 0);
 
     return size ? size +  gap * (items.length - 1) : 0;
@@ -304,34 +321,34 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
 
     groups.forEach((groupItems, rowIndex) => {
       const length = groupItems.length;
-      const rowSize = this._getExpectedRowSize(groupItems);
-      let contentSize = rowSize;
-
+      let rowSize = this._getExpectedRowSize(groupItems);
       if (isSizeCrop) {
-        contentSize = Math.max(sizeRange[0], Math.min(rowSize, sizeRange[1]));
+        rowSize = Math.max(sizeRange[0], Math.min(rowSize, sizeRange[1]));
       }
-      const expectedInlineSize = this._getExpectedInlineSize(groupItems, contentSize);
+      const expectedInlineSize = this._getExpectedInlineSize(groupItems, rowSize);
+
       const allGap = gap * (length - 1);
       const scale = (containerInlineSize - allGap) / (expectedInlineSize - allGap);
 
       groupItems.forEach((item, i)=> {
-        let inlineSize = item.orgInlineSize / item.orgContentSize * contentSize;
+        let columnSize = getExpectedColumnSize(item, rowSize);
+
         const prevItem = groupItems[i - 1];
         const inlinePos = prevItem
           ? prevItem.cssInlinePos + prevItem.cssInlineSize + gap
           : 0;
 
         if (isSizeCrop) {
-          inlineSize *= scale;
+          columnSize *= scale;
         }
         item.setCSSGridRect({
           inlinePos,
           contentPos,
-          inlineSize,
-          contentSize,
+          inlineSize: columnSize,
+          contentSize: rowSize,
         });
       });
-      contentPos += gap + contentSize;
+      contentPos += gap + rowSize;
       if (displayedRow < 0 || rowIndex < displayedRow) {
         displayedSize = contentPos;
       }

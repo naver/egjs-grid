@@ -59,7 +59,7 @@ export const JUSTIFIED_GRID_CONTROLS = {
   sizeRange: makeArgType({
     type: "object",
     description: makeLink("JustifiedGrid", "sizeRange"),
-    defaultValue: [0, 1000],
+    defaultValue: [200, 1000],
   }),
   isSizeCrop: makeArgType({
     type: "boolean",
