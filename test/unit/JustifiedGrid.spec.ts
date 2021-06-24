@@ -40,6 +40,64 @@ describe("test JustifiedGrid", () => {
     });
     expect(container!.style.height).to.be.equals("0px");
   });
+  it(`should check whether the ratio is maintained except for the offset when the inline offset is set`, async () => {
+    // Given
+    container!.style.cssText = "width: 1000px;";
+
+    grid = new JustifiedGrid(container!, {
+      gap: 5,
+      horizontal: false,
+    });
+
+    appendElements(container!, 18).forEach((element) => {
+      element.setAttribute("data-grid-inline-offset", "20");
+    });
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+    const items = grid.getItems();
+
+    // Then
+    expectItemsPosition(items);
+    items.forEach((item) => {
+      const cssRatio = (item.cssInlineSize - 20) / item.cssContentSize;
+      const orgRatio = (item.orgInlineSize - 20) / item.orgContentSize;
+
+      expect(cssRatio).to.be.closeTo(orgRatio, 0.00001);
+    });
+  });
+  it(`should check whether the ratio is maintained except for the offset when the content offset is set`, async () => {
+    // Given
+    container!.style.cssText = "width: 1000px;";
+
+    grid = new JustifiedGrid(container!, {
+      gap: 5,
+      horizontal: false,
+    });
+
+    appendElements(container!, 18).forEach((element) => {
+      element.setAttribute("data-grid-content-offset", "20");
+    });
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+    const items = grid.getItems();
+
+    // Then
+    expectItemsPosition(items);
+    items.forEach((item) => {
+      const cssRatio = item.cssInlineSize / (item.cssContentSize - 20);
+      const orgRatio = item.orgInlineSize / (item.orgContentSize - 20);
+
+      expect(cssRatio).to.be.closeTo(orgRatio, 0.00001);
+    });
+  });
   describe("test columnRange option", () => {
     [0, 10, 20].forEach((gap) => {
       it(`should check if there are 3 columns (gap = ${gap})`, async () => {
@@ -299,7 +357,7 @@ describe("test JustifiedGrid", () => {
   });
 
   describe("test isSizeCrop  option", () => {
-    it(`should check if the proportion is broken but the contentSize is constant`, async () => {
+    it(`should check if the ratio is broken but the contentSize is constant`, async () => {
       // Given
       container!.style.cssText = "width: 1000px;";
 

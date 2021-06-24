@@ -48,6 +48,7 @@ export function waitEvent(component: Component<any>, eventName: string): Promise
 
 export function appendElements(container: HTMLElement, count: number) {
   const length = SIZES.length;
+  const elements: HTMLElement[] = [];
 
   for (let i = 0; i < count; ++i) {
     const size = SIZES[i % length];
@@ -55,7 +56,9 @@ export function appendElements(container: HTMLElement, count: number) {
 
     element.style.cssText = `position: absolute; width: ${size[0]}px; height: ${size[1]}px;`;
     container.appendChild(element);
+    elements.push(element);
   }
+  return elements;
 }
 
 export function expectItemsPosition(items: GridItem[]) {
