@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Source: src/Grid.ts | egjs::Grid - API</title>
+    
+    <meta name="description" content=".." />
+    
+        <meta name="keywords" content="Grid, Masonry, Justified, Layout, Packing, Frame, Square" />
+        <meta name="keyword" content="Grid, Masonry, Justified, Layout, Packing, Frame, Square" />
+    
+    
+    
+    <meta property="og:title" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content=""/>
+    
+    <meta property="og:url" content=""/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <link rel="canonical" href="https://naver.github.io/egjs-grid/release/latest/doc/"/>
+    
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":true,"cleverLinks":true,"default":{"outputSourceFiles":true},"applicationName":"eg.Grid","disqus":"egjs","googleAnalytics":"G-4139M7LXY0","openGraph":{"title":"","type":"website","image":"","site_name":"","url":""},"meta":{"title":"egjs::Grid - API","description":"..","keyword":"Grid, Masonry, Justified, Layout, Packing, Frame, Square"},"linenums":true,"link":{"canonical":"https://naver.github.io/egjs-grid/release/latest/doc/"}};
+    </script>
+    
+
+    
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', config.googleAnalytics]);
+      _gaq.push(['_trackPageview']);
+    
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName">
+        <a href="//naver.github.io/egjs/"><img style="width:40px; height:20px;" src="img/type_white.svg"/></a>
+
+        <!-- Homepage link (prefer link.home than applicationName) -->
+        
+        <a href="//naver.github.io/egjs-grid/">Grid</a>
+        
+    </h3>
+
+    <div class="search">
+        <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
+    </div>
+    <ul class="list">
+        <li class="item">
+            <span class="title">
+                <a href="index.html">README</a>
+            </span>
+        </li>
+    
+        <!-- Non Grouping Version -->
+        
+            
+
+<li class="item" data-name="Grid.PackingGrid">
+    <span class="title">
+        <a href="Grid.PackingGrid.html">Grid.PackingGrid</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    <span class="subtitle">Members</span>
+    
+        <li data-name="Grid.PackingGrid#aspectRatio"><a href="Grid.PackingGrid.html#aspectRatio">aspectRatio</a></li>
+    
+        <li data-name="Grid.PackingGrid#defaultDirection"><a href="Grid.PackingGrid.html#defaultDirection">defaultDirection</a></li>
+    
+        <li data-name="Grid.PackingGrid#gap"><a href="Grid.PackingGrid.html#gap">gap</a></li>
+    
+        <li data-name="Grid.PackingGrid#preserveUIOnDestroy"><a href="Grid.PackingGrid.html#preserveUIOnDestroy">preserveUIOnDestroy</a></li>
+    
+        <li data-name="Grid.PackingGrid#ratioWeight"><a href="Grid.PackingGrid.html#ratioWeight">ratioWeight</a></li>
+    
+        <li data-name="Grid.PackingGrid#sizeWeight"><a href="Grid.PackingGrid.html#sizeWeight">sizeWeight</a></li>
+    
+        <li data-name="Grid.PackingGrid#weightPriority"><a href="Grid.PackingGrid.html#weightPriority">weightPriority</a></li>
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    <span class="subtitle">Typedefs</span>
+    
+        <li data-name="Grid.PackingGrid.PackingGridOptions"><a href="Grid.PackingGrid.html#.PackingGridOptions">PackingGridOptions</a></li>
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    <span class="subtitle">Methods</span>
+    
+        <li data-name="Grid.PackingGrid#applyGrid"><a href="Grid.PackingGrid.html#applyGrid">applyGrid</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.PackingGrid#destroy"><a href="Grid.PackingGrid.html#destroy">destroy</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.PackingGrid#getChildren"><a href="Grid.PackingGrid.html#getChildren">getChildren</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.PackingGrid#getContainerInlineSize"><a href="Grid.PackingGrid.html#getContainerInlineSize">getContainerInlineSize</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.PackingGrid#getItems"><a href="Grid.PackingGrid.html#getItems">getItems</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.PackingGrid#getOutlines"><a href="Grid.PackingGrid.html#getOutlines">getOutlines</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.PackingGrid#getStatus"><a href="Grid.PackingGrid.html#getStatus">getStatus</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.PackingGrid#renderItems"><a href="Grid.PackingGrid.html#renderItems">renderItems</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.PackingGrid#setItems"><a href="Grid.PackingGrid.html#setItems">setItems</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.PackingGrid#setOutlines"><a href="Grid.PackingGrid.html#setOutlines">setOutlines</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.PackingGrid#setStatus"><a href="Grid.PackingGrid.html#setStatus">setStatus</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.PackingGrid#syncElements"><a href="Grid.PackingGrid.html#syncElements">syncElements</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.PackingGrid#updateItems"><a href="Grid.PackingGrid.html#updateItems">updateItems</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    <span class="subtitle">Events</span>
+    
+        <li data-name="Grid.PackingGrid#event:contentError"><a href="Grid.PackingGrid.html#event:contentError">contentError</a></li>
+    
+        <li data-name="Grid.PackingGrid#event:renderComplete"><a href="Grid.PackingGrid.html#event:renderComplete">renderComplete</a></li>
+    
+    </ul>
+
+    
+</li>
+
+        
+            
+
+<li class="item" data-name="Grid.MasonryGrid">
+    <span class="title">
+        <a href="Grid.MasonryGrid.html">Grid.MasonryGrid</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    <span class="subtitle">Members</span>
+    
+        <li data-name="Grid.MasonryGrid#align"><a href="Grid.MasonryGrid.html#align">align</a></li>
+    
+        <li data-name="Grid.MasonryGrid#column"><a href="Grid.MasonryGrid.html#column">column</a></li>
+    
+        <li data-name="Grid.MasonryGrid#columnSize"><a href="Grid.MasonryGrid.html#columnSize">columnSize</a></li>
+    
+        <li data-name="Grid.MasonryGrid#columnSizeRatio"><a href="Grid.MasonryGrid.html#columnSizeRatio">columnSizeRatio</a></li>
+    
+        <li data-name="Grid.MasonryGrid#defaultDirection"><a href="Grid.MasonryGrid.html#defaultDirection">defaultDirection</a></li>
+    
+        <li data-name="Grid.MasonryGrid#gap"><a href="Grid.MasonryGrid.html#gap">gap</a></li>
+    
+        <li data-name="Grid.MasonryGrid#preserveUIOnDestroy"><a href="Grid.MasonryGrid.html#preserveUIOnDestroy">preserveUIOnDestroy</a></li>
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    <span class="subtitle">Typedefs</span>
+    
+        <li data-name="Grid.MasonryGrid.MasonryGridOptions"><a href="Grid.MasonryGrid.html#.MasonryGridOptions">MasonryGridOptions</a></li>
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    <span class="subtitle">Methods</span>
+    
+        <li data-name="Grid.MasonryGrid#applyGrid"><a href="Grid.MasonryGrid.html#applyGrid">applyGrid</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.MasonryGrid#destroy"><a href="Grid.MasonryGrid.html#destroy">destroy</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.MasonryGrid#getChildren"><a href="Grid.MasonryGrid.html#getChildren">getChildren</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.MasonryGrid#getContainerInlineSize"><a href="Grid.MasonryGrid.html#getContainerInlineSize">getContainerInlineSize</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.MasonryGrid#getItems"><a href="Grid.MasonryGrid.html#getItems">getItems</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.MasonryGrid#getOutlines"><a href="Grid.MasonryGrid.html#getOutlines">getOutlines</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.MasonryGrid#getStatus"><a href="Grid.MasonryGrid.html#getStatus">getStatus</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.MasonryGrid#renderItems"><a href="Grid.MasonryGrid.html#renderItems">renderItems</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.MasonryGrid#setItems"><a href="Grid.MasonryGrid.html#setItems">setItems</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.MasonryGrid#setOutlines"><a href="Grid.MasonryGrid.html#setOutlines">setOutlines</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.MasonryGrid#setStatus"><a href="Grid.MasonryGrid.html#setStatus">setStatus</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.MasonryGrid#syncElements"><a href="Grid.MasonryGrid.html#syncElements">syncElements</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.MasonryGrid#updateItems"><a href="Grid.MasonryGrid.html#updateItems">updateItems</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    <span class="subtitle">Events</span>
+    
+        <li data-name="Grid.MasonryGrid#event:contentError"><a href="Grid.MasonryGrid.html#event:contentError">contentError</a></li>
+    
+        <li data-name="Grid.MasonryGrid#event:renderComplete"><a href="Grid.MasonryGrid.html#event:renderComplete">renderComplete</a></li>
+    
+    </ul>
+
+    
+</li>
+
+        
+            
+
+<li class="item" data-name="Grid.JustifiedGrid">
+    <span class="title">
+        <a href="Grid.JustifiedGrid.html">Grid.JustifiedGrid</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    <span class="subtitle">Members</span>
+    
+        <li data-name="Grid.JustifiedGrid#columnRange"><a href="Grid.JustifiedGrid.html#columnRange">columnRange</a></li>
+    
+        <li data-name="Grid.JustifiedGrid#defaultDirection"><a href="Grid.JustifiedGrid.html#defaultDirection">defaultDirection</a></li>
+    
+        <li data-name="Grid.JustifiedGrid#gap"><a href="Grid.JustifiedGrid.html#gap">gap</a></li>
+    
+        <li data-name="Grid.JustifiedGrid#preserveUIOnDestroy"><a href="Grid.JustifiedGrid.html#preserveUIOnDestroy">preserveUIOnDestroy</a></li>
+    
+        <li data-name="Grid.JustifiedGrid#rowRange"><a href="Grid.JustifiedGrid.html#rowRange">rowRange</a></li>
+    
+        <li data-name="Grid.JustifiedGrid#sizeRange"><a href="Grid.JustifiedGrid.html#sizeRange">sizeRange</a></li>
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    <span class="subtitle">Typedefs</span>
+    
+        <li data-name="Grid.JustifiedGrid.JustifiedGridOptions"><a href="Grid.JustifiedGrid.html#.JustifiedGridOptions">JustifiedGridOptions</a></li>
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    <span class="subtitle">Methods</span>
+    
+        <li data-name="Grid.JustifiedGrid#applyGrid"><a href="Grid.JustifiedGrid.html#applyGrid">applyGrid</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.JustifiedGrid#destroy"><a href="Grid.JustifiedGrid.html#destroy">destroy</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.JustifiedGrid#getChildren"><a href="Grid.JustifiedGrid.html#getChildren">getChildren</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.JustifiedGrid#getContainerInlineSize"><a href="Grid.JustifiedGrid.html#getContainerInlineSize">getContainerInlineSize</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.JustifiedGrid#getItems"><a href="Grid.JustifiedGrid.html#getItems">getItems</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.JustifiedGrid#getOutlines"><a href="Grid.JustifiedGrid.html#getOutlines">getOutlines</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.JustifiedGrid#getStatus"><a href="Grid.JustifiedGrid.html#getStatus">getStatus</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.JustifiedGrid#renderItems"><a href="Grid.JustifiedGrid.html#renderItems">renderItems</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.JustifiedGrid#setItems"><a href="Grid.JustifiedGrid.html#setItems">setItems</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.JustifiedGrid#setOutlines"><a href="Grid.JustifiedGrid.html#setOutlines">setOutlines</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.JustifiedGrid#setStatus"><a href="Grid.JustifiedGrid.html#setStatus">setStatus</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.JustifiedGrid#syncElements"><a href="Grid.JustifiedGrid.html#syncElements">syncElements</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.JustifiedGrid#updateItems"><a href="Grid.JustifiedGrid.html#updateItems">updateItems</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    <span class="subtitle">Events</span>
+    
+        <li data-name="Grid.JustifiedGrid#event:contentError"><a href="Grid.JustifiedGrid.html#event:contentError">contentError</a></li>
+    
+        <li data-name="Grid.JustifiedGrid#event:renderComplete"><a href="Grid.JustifiedGrid.html#event:renderComplete">renderComplete</a></li>
+    
+    </ul>
+
+    
+</li>
+
+        
+            
+
+<li class="item" data-name="Grid.GridItem">
+    <span class="title">
+        <a href="Grid.GridItem.html">Grid.GridItem</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    <span class="subtitle">Members</span>
+    
+        <li data-name="Grid.GridItem#contentSize"><a href="Grid.GridItem.html#contentSize">contentSize</a></li>
+    
+        <li data-name="Grid.GridItem#cssContentPos"><a href="Grid.GridItem.html#cssContentPos">cssContentPos</a></li>
+    
+        <li data-name="Grid.GridItem#cssContentSize"><a href="Grid.GridItem.html#cssContentSize">cssContentSize</a></li>
+    
+        <li data-name="Grid.GridItem#cssInlinePos"><a href="Grid.GridItem.html#cssInlinePos">cssInlinePos</a></li>
+    
+        <li data-name="Grid.GridItem#cssInlineSize"><a href="Grid.GridItem.html#cssInlineSize">cssInlineSize</a></li>
+    
+        <li data-name="Grid.GridItem#inlineSize"><a href="Grid.GridItem.html#inlineSize">inlineSize</a></li>
+    
+        <li data-name="Grid.GridItem#orgContentSize"><a href="Grid.GridItem.html#orgContentSize">orgContentSize</a></li>
+    
+        <li data-name="Grid.GridItem#orgInlineSize"><a href="Grid.GridItem.html#orgInlineSize">orgInlineSize</a></li>
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    <span class="subtitle">Typedefs</span>
+    
+        <li data-name="Grid.GridItem.GridItemStatus"><a href="Grid.GridItem.html#.GridItemStatus">GridItemStatus</a></li>
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    <span class="subtitle">Methods</span>
+    
+        <li data-name="Grid.GridItem#getStatus"><a href="Grid.GridItem.html#getStatus">getStatus</a></li>
+    
+        <li data-name="Grid.GridItem#setCSSGridRect"><a href="Grid.GridItem.html#setCSSGridRect">setCSSGridRect</a></li>
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    </ul>
+
+    
+</li>
+
+        
+            
+
+<li class="item" data-name="Grid.FrameGrid">
+    <span class="title">
+        <a href="Grid.FrameGrid.html">Grid.FrameGrid</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    <span class="subtitle">Members</span>
+    
+        <li data-name="Grid.FrameGrid#defaultDirection"><a href="Grid.FrameGrid.html#defaultDirection">defaultDirection</a></li>
+    
+        <li data-name="Grid.FrameGrid#frame"><a href="Grid.FrameGrid.html#frame">frame</a></li>
+    
+        <li data-name="Grid.FrameGrid#gap"><a href="Grid.FrameGrid.html#gap">gap</a></li>
+    
+        <li data-name="Grid.FrameGrid#preserveUIOnDestroy"><a href="Grid.FrameGrid.html#preserveUIOnDestroy">preserveUIOnDestroy</a></li>
+    
+        <li data-name="Grid.FrameGrid#rectSize"><a href="Grid.FrameGrid.html#rectSize">rectSize</a></li>
+    
+        <li data-name="Grid.FrameGrid#useFrameFill"><a href="Grid.FrameGrid.html#useFrameFill">useFrameFill</a></li>
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    <span class="subtitle">Typedefs</span>
+    
+        <li data-name="Grid.FrameGrid.FrameGridOptions"><a href="Grid.FrameGrid.html#.FrameGridOptions">FrameGridOptions</a></li>
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    <span class="subtitle">Methods</span>
+    
+        <li data-name="Grid.FrameGrid#applyGrid"><a href="Grid.FrameGrid.html#applyGrid">applyGrid</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.FrameGrid#destroy"><a href="Grid.FrameGrid.html#destroy">destroy</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.FrameGrid#getChildren"><a href="Grid.FrameGrid.html#getChildren">getChildren</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.FrameGrid#getContainerInlineSize"><a href="Grid.FrameGrid.html#getContainerInlineSize">getContainerInlineSize</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.FrameGrid#getItems"><a href="Grid.FrameGrid.html#getItems">getItems</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.FrameGrid#getOutlines"><a href="Grid.FrameGrid.html#getOutlines">getOutlines</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.FrameGrid#getStatus"><a href="Grid.FrameGrid.html#getStatus">getStatus</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.FrameGrid#renderItems"><a href="Grid.FrameGrid.html#renderItems">renderItems</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.FrameGrid#setItems"><a href="Grid.FrameGrid.html#setItems">setItems</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.FrameGrid#setOutlines"><a href="Grid.FrameGrid.html#setOutlines">setOutlines</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.FrameGrid#setStatus"><a href="Grid.FrameGrid.html#setStatus">setStatus</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.FrameGrid#syncElements"><a href="Grid.FrameGrid.html#syncElements">syncElements</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+        <li data-name="Grid.FrameGrid#updateItems"><a href="Grid.FrameGrid.html#updateItems">updateItems</a> <img src="img/i.png" width="14" title="inherited" alt="inherited"></li>
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    <span class="subtitle">Events</span>
+    
+        <li data-name="Grid.FrameGrid#event:contentError"><a href="Grid.FrameGrid.html#event:contentError">contentError</a></li>
+    
+        <li data-name="Grid.FrameGrid#event:renderComplete"><a href="Grid.FrameGrid.html#event:renderComplete">renderComplete</a></li>
+    
+    </ul>
+
+    
+</li>
+
+        
+            
+
+<li class="item" data-name="Grid">
+    <span class="title">
+        <a href="Grid.html">Grid</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    <span class="subtitle">Members</span>
+    
+        <li data-name="Grid#defaultDirection"><a href="Grid.html#defaultDirection">defaultDirection</a></li>
+    
+        <li data-name="Grid#gap"><a href="Grid.html#gap">gap</a></li>
+    
+        <li data-name="Grid#preserveUIOnDestroy"><a href="Grid.html#preserveUIOnDestroy">preserveUIOnDestroy</a></li>
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    <span class="subtitle">Typedefs</span>
+    
+        <li data-name="Grid.DestroyOptions"><a href="Grid.html#.DestroyOptions">DestroyOptions</a></li>
+    
+        <li data-name="Grid.DOMRect"><a href="Grid.html#.DOMRect">DOMRect</a></li>
+    
+        <li data-name="Grid.GridAlign"><a href="Grid.html#.GridAlign">GridAlign</a></li>
+    
+        <li data-name="Grid.GridOptions"><a href="Grid.html#.GridOptions">GridOptions</a></li>
+    
+        <li data-name="Grid.GridOutlines"><a href="Grid.html#.GridOutlines">GridOutlines</a></li>
+    
+        <li data-name="Grid.GridRect"><a href="Grid.html#.GridRect">GridRect</a></li>
+    
+        <li data-name="Grid.GridStatus"><a href="Grid.html#.GridStatus">GridStatus</a></li>
+    
+        <li data-name="Grid.RenderOptions"><a href="Grid.html#.RenderOptions">RenderOptions</a></li>
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    <span class="subtitle">Methods</span>
+    
+        <li data-name="Grid#applyGrid"><a href="Grid.html#applyGrid">applyGrid</a></li>
+    
+        <li data-name="Grid#destroy"><a href="Grid.html#destroy">destroy</a></li>
+    
+        <li data-name="Grid#getChildren"><a href="Grid.html#getChildren">getChildren</a></li>
+    
+        <li data-name="Grid#getContainerInlineSize"><a href="Grid.html#getContainerInlineSize">getContainerInlineSize</a></li>
+    
+        <li data-name="Grid#getItems"><a href="Grid.html#getItems">getItems</a></li>
+    
+        <li data-name="Grid#getOutlines"><a href="Grid.html#getOutlines">getOutlines</a></li>
+    
+        <li data-name="Grid#getStatus"><a href="Grid.html#getStatus">getStatus</a></li>
+    
+        <li data-name="Grid#renderItems"><a href="Grid.html#renderItems">renderItems</a></li>
+    
+        <li data-name="Grid#setItems"><a href="Grid.html#setItems">setItems</a></li>
+    
+        <li data-name="Grid#setOutlines"><a href="Grid.html#setOutlines">setOutlines</a></li>
+    
+        <li data-name="Grid#setStatus"><a href="Grid.html#setStatus">setStatus</a></li>
+    
+        <li data-name="Grid#syncElements"><a href="Grid.html#syncElements">syncElements</a></li>
+    
+        <li data-name="Grid#updateItems"><a href="Grid.html#updateItems">updateItems</a></li>
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    <span class="subtitle">Events</span>
+    
+        <li data-name="Grid#event:contentError"><a href="Grid.html#event:contentError">contentError</a></li>
+    
+        <li data-name="Grid#event:renderComplete"><a href="Grid.html#event:renderComplete">renderComplete</a></li>
+    
+    </ul>
+
+    
+</li>
+
+        
+            
+
+<li class="item" data-name="ComponentEvent">
+    <span class="title">
+        <a href="ComponentEvent.html">ComponentEvent</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    <span class="subtitle">Members</span>
+    
+        <li data-name="ComponentEvent#currentTarget"><a href="ComponentEvent.html#currentTarget">currentTarget</a></li>
+    
+        <li data-name="ComponentEvent#eventType"><a href="ComponentEvent.html#eventType">eventType</a></li>
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    <span class="subtitle">Methods</span>
+    
+        <li data-name="ComponentEvent#isCanceled"><a href="ComponentEvent.html#isCanceled">isCanceled</a></li>
+    
+        <li data-name="ComponentEvent#stop"><a href="ComponentEvent.html#stop">stop</a></li>
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    </ul>
+
+    
+</li>
+
+        
+            
+
+<li class="item" data-name="Component">
+    <span class="title">
+        <a href="Component.html">Component</a>
+        
+    </span>
+    <ul class="members itemMembers expends">
+    
+    <span class="subtitle">Members</span>
+    
+        <li data-name="Component.VERSION"><a href="Component.html#.VERSION">VERSION</a></li>
+    
+    </ul>
+    <ul class="typedefs itemMembers expends">
+    
+    </ul>
+    <ul class="methods itemMembers expends">
+    
+    <span class="subtitle">Methods</span>
+    
+        <li data-name="Component#hasOn"><a href="Component.html#hasOn">hasOn</a></li>
+    
+        <li data-name="Component#off"><a href="Component.html#off">off</a></li>
+    
+        <li data-name="Component#on"><a href="Component.html#on">on</a></li>
+    
+        <li data-name="Component#once"><a href="Component.html#once">once</a></li>
+    
+        <li data-name="Component#trigger"><a href="Component.html#trigger">trigger</a></li>
+    
+    </ul>
+    <ul class="events itemMembers expends">
+    
+    </ul>
+
+    
+</li>
+
+        
+    
+    </ul>
+</div>
+
+    <div class="main">
+        <h1 class="page-title" data-filename="src_Grid.ts.html">Source: src/Grid.ts</h1>
+        
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * egjs-grid
+ * Copyright (c) 2021-present NAVER Corp.
+ * MIT license
+ */
+import Component from "@egjs/component";
+import { DEFAULT_GRID_OPTIONS, GRID_PROPERTY_TYPES, MOUNT_STATE, UPDATE_STATE } from "./consts";
+import { ContainerManager } from "./ContainerManager";
+import {
+  DestroyOptions, GridEvents, GridOptions,
+  GridOutlines, GridStatus, Properties, RenderOptions,
+  OnRenderComplete,
+} from "./types";
+import ImReady from "@egjs/imready";
+import { ItemRenderer } from "./ItemRenderer";
+import { GetterSetter, isNumber, isString } from "./utils";
+import { diff } from "@egjs/children-differ";
+import { GridItem } from "./GridItem";
+
+/**
+ * @extends eg.Component
+ */
+@GetterSetter
+abstract class Grid&lt;Options extends GridOptions = GridOptions> extends Component&lt;GridEvents> {
+  public static defaultOptions: Required&lt;GridOptions> = DEFAULT_GRID_OPTIONS;
+  public static propertyTypes = GRID_PROPERTY_TYPES;
+  public options: Required&lt;Options>;
+  protected containerElement: HTMLElement;
+  protected containerManager: ContainerManager;
+  protected itemRenderer!: ItemRenderer;
+  protected items: GridItem[] = [];
+  protected outlines: GridOutlines = {
+    start: [],
+    end: [],
+  };
+  private _renderTimer = 0;
+  private _resizeTimer = 0;
+  private _maxResizeDebounceTimer = 0;
+  private _im: ImReady;
+
+  /**
+  * Apply the CSS rect of items to fit the Grid and calculate the outline.
+  * @ko  Grid에 맞게 아이템들의 CSS rect를 적용하고 outline을 계산한다.
+  * @abstract
+  * @method Grid#applyGrid
+  * @param {"start" | "end"} direcion - The direction to apply the Grid. ("end": start to end, "start": end to start) &lt;ko>Grid를 적용할 방향. ("end": 시작에서 끝 방향, "start": 끝에서 시작 방향)&lt;/ko>
+  * @param {number[]} outline - The start outline to apply the Grid. &lt;ko>Grid를 적용할 시작 outline.&lt;/ko>
+  */
+  public abstract applyGrid(items: GridItem[], direction: "start" | "end", outline: number[]): GridOutlines;
+
+  /**
+   * @param - A base element for a module &lt;ko>모듈을 적용할 기준 엘리먼트&lt;/ko>
+   * @param - The option object of the Grid module &lt;ko>Grid 모듈의 옵션 객체&lt;/ko>
+   */
+  constructor(containerElement: HTMLElement | string, options: Partial&lt;Options> = {}) {
+    super();
+
+    this.options = {
+      ...((this.constructor as typeof Grid)
+        .defaultOptions as Required&lt;Options>),
+      ...options,
+    };
+
+    this.containerElement = isString(containerElement)
+      ? document.querySelector&lt;HTMLElement>(containerElement)!
+      : containerElement;
+
+    const {
+      isEqualSize,
+      isConstantSize,
+      useTransform,
+      horizontal,
+      percentage,
+      externalContainerManager,
+      externalItemRenderer,
+    } = this.options;
+
+    // TODO: 테스트용 설정
+    this.containerManager = externalContainerManager!
+      || new ContainerManager(this.containerElement, {
+        horizontal,
+      });
+    this.itemRenderer = externalItemRenderer!
+      || new ItemRenderer({
+        useTransform,
+        isEqualSize,
+        isConstantSize,
+        percentage,
+      });
+
+    this._init();
+  }
+  /**
+   * Return items.
+   * @ko 아이템들을 반환한다.
+   */
+  public getItems(): GridItem[] {
+    return this.items;
+  }
+  /**
+   * Returns the children of the container element.
+   * @ko 컨테이너 엘리먼트의 children을 반환한다.
+   */
+  public getChildren(): HTMLElement[] {
+    return [].slice.call(this.containerElement.children);
+  }
+  /**
+   * Set items.
+   * @ko 아이템들을 설정한다.
+   * @param items - The items to set. &lt;ko>설정할 아이템들&lt;/ko>
+   */
+  public setItems(items: GridItem[]): this {
+    this.items = items;
+    return this;
+  }
+  /**
+   * Gets the container's inline size. ("width" if horizontal is false, otherwise "height")
+   * @ko container의 inline 사이즈를 가져온다. (horizontal이 false면 "width", 아니면 "height")
+   */
+  public getContainerInlineSize(): number {
+    return this.containerManager.getInlineSize()!;
+  }
+  /**
+   * Returns the outlines of the start and end of the Grid.
+   * @ko Grid의 처음과 끝의 outline을 반환한다.
+   */
+  public getOutlines(): GridOutlines {
+    return this.outlines;
+  }
+  /**
+   * Set outlines.
+   * @ko 아웃라인을 설정한다.
+   * @param outlines - The outlines to set. &lt;ko>설정할 아웃라인.&lt;/ko>
+   */
+  public setOutlines(outlines: GridOutlines) {
+    this.outlines = outlines;
+    return this;
+  }
+  /**
+   * When elements change, it synchronizes and renders items.
+   * @ko elements가 바뀐 경우 동기화를 하고 렌더링을 한다.
+   * @param - Options for rendering. &lt;ko>렌더링을 하기 위한 옵션.&lt;/ko>
+   */
+  public syncElements(options: RenderOptions = {}) {
+    const items = this.items;
+    const horizontal = this.options.horizontal;
+    const elements: HTMLElement[] = this.getChildren();
+    const { added, maintained, changed, removed } = diff(this.items.map((item) => item.element!), elements);
+
+    const nextItems: GridItem[] = [];
+
+    maintained.forEach(([beforeIndex, afterIndex]) => {
+      nextItems[afterIndex] = items[beforeIndex];
+    });
+    added.forEach((index) => {
+      nextItems[index] = new GridItem(horizontal!, {
+        element: elements[index],
+      });
+    });
+
+    this.setItems(nextItems);
+
+    if (added.length || removed.length || changed.length) {
+      this.renderItems(options);
+    }
+    return this;
+  }
+  /**
+   * Update the size of the items and render them.
+   * @ko 아이템들의 사이즈를 업데이트하고 렌더링을 한다.
+   * @param - Items to be updated. &lt;ko>업데이트할 아이템들.&lt;/ko>
+   * @param - Options for rendering. &lt;ko>렌더링을 하기 위한 옵션.&lt;/ko>
+   */
+  public updateItems(items: GridItem[] = this.items, options: RenderOptions = {}) {
+    items.forEach((item) => {
+      item.updateState = UPDATE_STATE.NEED_UPDATE;
+    });
+    this.checkReady(options);
+    return this;
+  }
+  /**
+   * Rearrange items to fit the grid and render them. When rearrange is complete, the `renderComplete` event is fired.
+   * @ko grid에 맞게 아이템을 재배치하고 렌더링을 한다. 배치가 완료되면 `renderComplete` 이벤트가 발생한다.
+   * @param - Options for rendering. &lt;ko>렌더링을 하기 위한 옵션.&lt;/ko>
+   * @example
+   * import { MasonryGrid } from "@egjs/grid";
+   * const grid = new MasonryGrid();
+   *
+   * grid.on("renderComplete", e => {
+   *   console.log(e);
+   * });
+   * grid.renderItems();
+   */
+  public renderItems(options: RenderOptions = {}) {
+    this._clearRenderTimer();
+
+    if (!this.getItems().length &amp;&amp; this.getChildren().length) {
+      this.syncElements(options);
+    } else if (options.useResize) {
+      // Resize container and Update all items
+      this._resizeContainer();
+      this.updateItems(this.items, options);
+    } else {
+      // Update only items that need to be updated.
+      this.checkReady(options);
+    }
+    return this;
+  }
+  /**
+   * Returns current status such as item's position, size. The returned status can be restored with the setStatus() method.
+   * @ko 아이템의 위치, 사이즈 등 현재 상태를 반환한다. 반환한 상태는 setStatus() 메서드로 복원할 수 있다.
+   */
+  public getStatus(): GridStatus {
+    return {
+      outlines: this.outlines,
+      items: this.items.map((item) => item.getStatus()),
+      containerManager: this.containerManager.getStatus(),
+      itemRenderer: this.itemRenderer.getStatus(),
+    };
+  }
+  /**
+   * Set status of the Grid module with the status returned through a call to the getStatus() method.
+   * @ko getStatus() 메서드에 대한 호출을 통해 반환된 상태로 Grid 모듈의 상태를 설정한다.
+   */
+  public setStatus(status: GridStatus) {
+    const horizontal = this.options.horizontal;
+    const containerManager = this.containerManager;
+    const prevInlineSize = containerManager.getInlineSize();
+    const children = this.getChildren();
+
+    this.itemRenderer.setStatus(status.itemRenderer);
+    containerManager.setStatus(status.containerManager);
+    this.outlines = status.outlines;
+    this.items = status.items.map((item, i) => new GridItem(horizontal!, {
+      ...item,
+      element: children[i],
+    }));
+
+    this.itemRenderer.renderItems(this.items);
+
+    if (prevInlineSize !== containerManager.getInlineSize()) {
+      this.renderItems({
+        useResize: true,
+      });
+    } else {
+      window.setTimeout(() => {
+        this._renderComplete({
+          mounted: this.items,
+          updated: [],
+          isResize: false,
+        });
+      });
+    }
+    return this;
+  }
+  /**
+   * Releases the instnace and events and returns the CSS of the container and elements.
+   * @ko 인스턴스와 이벤트를 해제하고 컨테이너와 엘리먼트들의 CSS를 되돌린다.
+   * @param Options for destroy. &lt;ko>destory()를 위한 옵션&lt;/ko>
+   */
+  public destroy(options: DestroyOptions = {}) {
+    const {
+      preserveUI = this.options.preserveUIOnDestroy,
+    } = options;
+    this.containerManager.destroy({
+      preserveUI,
+    });
+
+    if (!preserveUI) {
+      this.items.forEach(({ element, orgCSSText }) => {
+        if (element) {
+          element.style.cssText = orgCSSText;
+        }
+      });
+    }
+    window.removeEventListener("resize", this._scheduleResize);
+    this._im?.destroy();
+  }
+  protected checkReady(options: RenderOptions = {}) {
+    // Grid: renderItems => checkItems => _renderItems
+    const items = this.items;
+    const updated = items.filter((item) => item.element &amp;&amp; item.updateState !== UPDATE_STATE.UPDATED);
+    const mounted: GridItem[] = updated.filter((item) => item.mountState !== MOUNT_STATE.MOUNTED);
+    const moreUpdated: GridItem[] = [];
+
+    this._im?.destroy();
+    this._im = new ImReady({
+      prefix: this.options.attributePrefix,
+    }).on("preReadyElement", (e) => {
+      updated[e.index].updateState = UPDATE_STATE.WAIT_LOADING;
+    }).on("preReady", () => {
+      this.itemRenderer.updateItems(updated);
+      this._renderItems(mounted, updated, options);
+    }).on("readyElement", (e) => {
+      const item = updated[e.index];
+
+      item.updateState = UPDATE_STATE.NEED_UPDATE;
+
+      // after preReady
+      if (e.isPreReadyOver) {
+        item.element!.style.cssText = item.orgCSSText;
+        this.itemRenderer.updateItems([item]);
+        this._renderItems([], [item], options);
+      }
+    }).on("error", (e) => {
+      const item = items[e.index];
+      /**
+       * This event is fired when an error occurs in the content.
+       * @ko 콘텐츠 로드에 에러가 날 때 발생하는 이벤트.
+       * @event Grid#contentError
+       * @param {Grid.OnContentError} e - The object of data to be sent to an event &lt;ko>이벤트에 전달되는 데이터 객체&lt;/ko>
+       * @param {HTMLElement} [e.element] - The item's element.&lt;ko>아이템의 엘리먼트.&lt;/ko>
+       * @param {HTMLElement} [e.target] - The content element with error.&lt;ko>에러난 발생한 콘텐츠 엘리먼트.&lt;/ko>
+       * @param {Grid.GridItem} [e.item] - The item with error content.&lt;ko>에러난 콘텐츠를 가지고 있는 아이템&lt;/ko>
+       * @param {function} [e.update] - If you have fixed the error and want to recheck it, call update(). If you remove an element, call the syncElements() method.&lt;ko>에러를 해결했고 재검사하고 싶으면 update()를 호출해라. 만약 엘리먼트를 삭제한 경우 syncElements() 메서드를 호출해라.&lt;/ko>
+       * @example
+grid.on("contentError", e => {
+  e.update();
+});
+      */
+      this.trigger("contentError", {
+        element: e.element,
+        target: e.target,
+        item,
+        update: () => {
+          moreUpdated.push(item);
+        },
+      });
+    }).on("ready", () => {
+      if (moreUpdated.length) {
+        this.updateItems(moreUpdated);
+      }
+    }).check(updated.map((item) => item.element!));
+  }
+
+  protected scheduleRender() {
+    this._clearRenderTimer();
+    this._renderTimer = window.setTimeout(() => {
+      this.renderItems();
+    });
+  }
+  private _fit() {
+    const outlines = this.outlines;
+    const startOutline = outlines.start;
+    const endOutline = outlines.end;
+    const outlineOffset = startOutline.length ? Math.min(...startOutline) : 0;
+
+    outlines.start = startOutline.map((point) => point - outlineOffset);
+    outlines.end = endOutline.map((point) => point - outlineOffset);
+
+    this.items.forEach((item) => {
+      const contentPos = item.cssContentPos;
+
+      if (!isNumber(contentPos)) {
+        return;
+      }
+      item.cssContentPos = contentPos - outlineOffset;
+    });
+  }
+  private _renderItems(mounted: GridItem[], updated: GridItem[], options: RenderOptions) {
+    const prevOutlines = this.outlines;
+    const direction = options.direction || this.options.defaultDirection!;
+    const prevOutline = options.outline || prevOutlines[direction === "end" ? "start" : "end"];
+    const items = this.items;
+    let nextOutlines = {
+      start: [...prevOutline],
+      end: [...prevOutline],
+    };
+    if (items.length) {
+      nextOutlines = this.applyGrid(this.items, direction, prevOutline);
+    }
+    this.setOutlines(nextOutlines);
+    this._fit();
+    this.itemRenderer.renderItems(this.items);
+    this._refreshContainerContentSize();
+    this._renderComplete({
+      mounted,
+      updated,
+      isResize: !!options.useResize,
+    });
+  }
+  private _renderComplete(e: OnRenderComplete) {
+    /**
+     * This event is fired when the Grid has completed rendering.
+     * @ko Grid가 렌더링이 완료됐을 때  발생하는 이벤트이다.
+     * @event Grid#renderComplete
+     * @param {Grid.OnRenderComplete} e - The object of data to be sent to an event &lt;ko>이벤트에 전달되는 데이터 객체&lt;/ko>
+     * @param {function} [e.mounted] - The items rendered for the first time &lt;ko>처음 렌더링한 아이템들&lt;/ko>
+     * @param {function} [e.updated] - The items updated in size.&lt;ko>사이즈 업데이트한 아이템들.&lt;/ko>
+     * @param {function} [e.useResize] - Whether rendering was done using the resize event or the useResize option. &lt;ko>resize 이벤트 또는 useResize 옵션을 사용하여 렌더링를 했는지 여부.&lt;/ko>
+     * @example
+grid.on("renderComplete", e => {
+console.log(e.mounted, e.updated, e.useResize);
+});
+      */
+    this.trigger("renderComplete", e);
+  }
+  private _clearRenderTimer() {
+    clearTimeout(this._renderTimer);
+    this._renderTimer = 0;
+  }
+  private _refreshContainerContentSize() {
+    const {
+      start: startOutline,
+      end: endOutline,
+    } = this.outlines;
+    const gap = this.options.gap!;
+
+    const endPoint = endOutline.length ? Math.max(...endOutline) : 0;
+    const startPoint = startOutline.length ? Math.max(...startOutline) : 0;
+    const contentSize = Math.max(startPoint, endPoint - gap);
+
+    this.containerManager.setContentSize(contentSize);
+  }
+  private _resizeContainer() {
+    this.containerManager.resize();
+    this.itemRenderer.setContainerRect(this.containerManager.getRect());
+  }
+  private _onResize = () => {
+    clearTimeout(this._resizeTimer);
+    clearTimeout(this._maxResizeDebounceTimer);
+
+    this._maxResizeDebounceTimer = 0;
+    this._resizeTimer = 0;
+    this.renderItems({
+      useResize: true,
+    });
+  }
+  private _scheduleResize = () => {
+    const {
+      resizeDebounce,
+      maxResizeDebounce,
+    } = this.options;
+
+
+    if (!this._maxResizeDebounceTimer &amp;&amp; maxResizeDebounce >= resizeDebounce) {
+      this._maxResizeDebounceTimer = window.setTimeout(this._onResize, maxResizeDebounce);
+    }
+    if (this._resizeTimer) {
+      clearTimeout(this._resizeTimer);
+      this._resizeTimer = 0;
+    }
+    this._resizeTimer = window.setTimeout(this._onResize, resizeDebounce);
+  }
+
+  private _init() {
+    this._resizeContainer();
+    if (this.options.autoResize) {
+      window.addEventListener("resize", this._scheduleResize);
+    }
+  }
+}
+
+interface Grid extends Properties&lt;typeof Grid> { }
+
+export default Grid;
+
+/**
+ * Gap used to create space around items.
+ * @ko 아이템들 사이의 공간.
+ * @name Grid#gap
+ * @type {$ts:Grid.GridOptions["gap"]}
+ * @example
+ * import { MasonryGrid } from "@egjs/grid";
+ *
+ * const grid = new MasonryGrid(container, {
+ *   gap: 0,
+ * });
+ *
+ * grid.gap = 5;
+ */
+
+/**
+ * The default direction value when direction is not set in the render option.
+ * @ko render옵션에서 direction을 미설정시의 기본 방향값.
+ * @name Grid#defaultDirection
+ * @type {$ts:Grid.GridOptions["defaultDirection"]}
+ * @example
+ * import { MasonryGrid } from "@egjs/grid";
+ *
+ * const grid = new MasonryGrid(container, {
+ *   defaultDirection: "end",
+ * });
+ *
+ * grid.defaultDirection = "start";
+ */
+
+/**
+ * Whether to preserve the UI of the existing container or item when destroying.
+ * @ko destroy 시 기존 컨테이너, 아이템의 UI를 보존할지 여부.
+ * @name Grid#preserveUIOnDestroy
+ * @type {$ts:Grid.GridOptions["preserveUIOnDestroy"]}
+ * @example
+ * import { MasonryGrid } from "@egjs/grid";
+ *
+ * const grid = new MasonryGrid(container, {
+ *   preserveUIOnDestroy: false,
+ * });
+ *
+ * grid.preserveUIOnDestroy = true;
+ */
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+
+        
+        <!-- disqus code -->
+        <div id="disqus_thread"></div>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="//disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        <!-- // disqus code -->
+        
+
+        <footer>
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 0.3.10</a> on Thu Jun 17 2021 17:57:10 GMT+0900 (대한민국 표준시)
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/main.js"></script>
+</body>
+</html>
