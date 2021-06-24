@@ -2,33 +2,13 @@
 import * as React from "react";
 import { makeArgs } from "../utils";
 import JustifiedGridApp from "./apps/VanillaJustifiedGridApp";
-import { CROPPED_JUSTIFIED_GRID_CONTROLS, JUSTIFIED_GRID_CONTROLS } from "../templates/controls";
+import { JUSTIFIED_GRID_CONTROLS } from "../templates/controls";
 import { JustifiedGrid } from "../../src";
-import { renderContainer } from "../templates/ReactJSX";
+import { getApp } from "../templates/ReactJSX";
 import "../templates/default.css";
 import { getPreview } from "../templates/preview";
 
-export const KeepRatioWithOffsetTemplate = function App(props: Record<string, any>) {
-  const gridRef = React.useRef<JustifiedGrid | null>(null);
-
-  React.useEffect(() => {
-    gridRef.current = JustifiedGridApp(props);
-
-    return () => {
-      gridRef.current!.destroy();
-    };
-  }, []);
-
-  React.useEffect(() => {
-    if (!gridRef.current) {
-      return;
-    }
-    for (const name in JustifiedGrid.propertyTypes) {
-      if (name in props) {
-        gridRef.current[name] = props[name];
-      }
-    }
-  });
+export const KeepRatioWithOffsetTemplate = getApp(JustifiedGrid, JustifiedGridApp, () => {
   return <div className="container">
     <div className="image" data-grid-content-offset="40">
       <img src="https://naver.github.io/egjs-infinitegrid/assets/image/1.jpg" alt="image1" />
@@ -71,7 +51,7 @@ export const KeepRatioWithOffsetTemplate = function App(props: Record<string, an
       <div className="title">Item 10</div>
     </div>
   </div>;
-};
+});
 
 
 KeepRatioWithOffsetTemplate.storyName = "Keep ratio width offset";
