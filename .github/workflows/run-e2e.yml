@@ -29,4 +29,9 @@ jobs:
         working-directory: ./packages/vue-grid/vue3
         run: npm install
       - run: npm run e2e:headless
+      - name: Archive logs
+        uses: actions/upload-artifact@v2
+        with:
+          name: e2e log
+          path: test/e2e/log
 
