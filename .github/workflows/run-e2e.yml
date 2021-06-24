@@ -32,7 +32,7 @@ jobs:
       - name: Archive logs
         if: ${{ failure() }}
         uses: actions/upload-artifact@v2
-          with:
-            name: e2e log
-            path: test/e2e/log
+        with:
+          name: e2e log
+          path: test/e2e/log
 
