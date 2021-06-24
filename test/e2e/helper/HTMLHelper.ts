@@ -2,15 +2,18 @@ import fs from "fs";
 import path from "path";
 import assert from "assert";
 
+function getPath(fileName: string) {
+  return path.resolve("./test/e2e/log", fileName.replace(/[,:<>"|*?{}]/g, ""));
+}
 
 class HTMLHelper extends Helper {
   public async saveElementJSON(selector: string, fileName: string) {
     const json = await this._readElementJSON(selector);
-    fs.writeFileSync(path.resolve("./test/e2e/log", fileName), JSON.stringify(json, null, 2));
+    fs.writeFileSync(getPath(fileName), JSON.stringify(json, null, 2));
   }
   public async seeJSONDiffForElement(selector: string, fileName: string) {
     const targetJSON = await this._readElementJSON(selector);
-    const baseJSON = fs.readFileSync(path.resolve("./test/e2e/log", fileName), { encoding: "utf-8" });
+    const baseJSON = fs.readFileSync(getPath(fileName), { encoding: "utf-8" });
 
 
     assert.deepStrictEqual(targetJSON, JSON.parse(baseJSON), "jsons are not same");
