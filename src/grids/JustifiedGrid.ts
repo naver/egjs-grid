@@ -5,7 +5,7 @@
  */
 import Grid from "../Grid";
 import { PROPERTY_TYPE } from "../consts";
-import { GridOptions, Properties, GridOutlines } from "../types";
+import { GridOptions, Properties, GridOutlines, RenderOptions } from "../types";
 import { getRangeCost, GetterSetter, isObject } from "../utils";
 import { find_path } from "./lib/dijkstra";
 import { GridItem } from "../GridItem";
@@ -38,8 +38,8 @@ function getExpectedColumnSize(item: GridItem, rowSize: number) {
   if (!inlineSize || !contentSize) {
     return 0;
   }
-  const inlineOffset = parseFloat(item.attributes.inlineOffset) || 0;
-  const contentOffset = parseFloat(item.attributes.contentOffset) || 0;
+  const inlineOffset = parseFloat(item.gridData.inlineOffset) || 0;
+  const contentOffset = parseFloat(item.gridData.contentOffset) || 0;
 
   return (inlineSize - inlineOffset) / (contentSize - contentOffset) * (rowSize - contentOffset) + inlineOffset;
 }
@@ -65,8 +65,10 @@ export interface JustifiedGridOptions extends GridOptions {
 /**
  * 'justified' is a printing term with the meaning that 'it fits in one row wide'. JustifiedGrid is a grid that the item is filled up on the basis of a line given a size.
  * If 'data-grid-inline-offset' or 'data-grid-content-offset' are set for item element, the ratio is maintained except for the offset value.
+ * If 'data-grid-maintained-target' is set for an element whose ratio is to be maintained, the item is rendered while maintaining the ratio of the element.
  * @ko 'justified'는 '1행의 너비에 맞게 꼭 들어찬'이라는 의미를 가진 인쇄 용어다. JustifiedGrid는 용어의 의미대로 너비가 주어진 사이즈를 기준으로 아이템가 가득 차도록 배치하는 Grid다.
  * 아이템 엘리먼트에 'data-grid-inline-offset' 또는 'data-grid-content-offset'를 설정하면 offset 값을 제외하고 비율을 유지한다.
+ * 비율을 유지하고 싶은 엘리먼트에 'data-grid-maintained-target'을 설정한다면 해당 엘리먼트의 비율을 유지하면서 아이템이 렌더링이 된다.
  * @memberof Grid
  * @param {HTMLElement | string} container - A base element for a module <ko>모듈을 적용할 기준 엘리먼트</ko>
  * @param {Grid.JustifiedGrid.JustifiedGridOptions} options - The option object of the JustifiedGrid module <ko>JustifiedGrid 모듈의 옵션 객체</ko>
@@ -89,7 +91,6 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     displayedRow: -1,
     isCroppedSize: false,
   };
-
   public applyGrid(items: GridItem[], direction: "start" | "end", outline: number[]): GridOutlines {
     const rowRange = this.options.rowRange;
     let path: string[] = [];
@@ -99,6 +100,42 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     }
 
     return this._setStyle(items, path, outline, direction === "end");
+  }
+  protected readyItems(mounted: GridItem[], updated: GridItem[], options: RenderOptions) {
+    const {
+      attributePrefix,
+      horizontal,
+    } = this.options;
+
+    updated.forEach((item) => {
+      const element = item.element;
+      const attributes = item.attributes;
+      const gridData = item.gridData;
+      let inlineOffset = parseFloat(attributes.inlineOffset) || 0;
+      let contentOffset = parseFloat(attributes.contentOffset) || 0;
+
+      if (element && !("inlineOffset" in attributes) && !("contentOffset" in attributes)) {
+        const maintainedTarget = element.querySelector(`[${attributePrefix}maintained-target]`);
+
+        if (maintainedTarget) {
+          const widthOffset = element.offsetWidth - element.clientWidth
+            + element.scrollWidth - maintainedTarget.clientWidth;
+          const heightOffset = element.offsetHeight - element.clientHeight
+            + element.scrollHeight - maintainedTarget.clientHeight;
+
+          if (horizontal) {
+            inlineOffset = heightOffset;
+            contentOffset = widthOffset;
+          } else {
+            inlineOffset = widthOffset;
+            contentOffset = heightOffset;
+          }
+        }
+      }
+      gridData.inlineOffset = inlineOffset;
+      gridData.contentOffset = contentOffset;
+    });
+    super.readyItems(mounted, updated, options);
   }
   private _getRowPath(items: GridItem[]) {
     const columnRange = this._getColumnRange();
@@ -219,8 +256,8 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
         return;
       }
       // sum((expect - offset) * ratio) = container inline size
-      const inlineOffset = parseFloat(item.attributes.inlineOffset) || 0;
-      const contentOffset = parseFloat(item.attributes.contentOffset) || 0;
+      const inlineOffset = parseFloat(item.gridData.inlineOffset) || 0;
+      const contentOffset = parseFloat(item.gridData.contentOffset) || 0;
       const maintainedRatio = (inlineSize - inlineOffset) / (contentSize - contentOffset);
 
       ratioSum += maintainedRatio;
