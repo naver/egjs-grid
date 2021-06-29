@@ -1,0 +1,63 @@
+<script>
+  import { JustifiedGrid } from "../../../src/";
+
+  export let gap;
+  export let defaultDirection;
+  export let rowRange;
+  export let columnRange;
+  export let sizeRange;
+  export let isCroppedSize;
+  export let displayedRow;
+</script>
+
+<JustifiedGrid
+  class="container"
+  {defaultDirection}
+  {gap}
+  {rowRange}
+  {columnRange}
+  {sizeRange}
+  {isCroppedSize}
+  {displayedRow}
+>
+  <div class="image">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/1.jpg" data-grid-maintained-target="" alt="image1" />
+    <div class="title">Item 1</div>
+  </div>
+  <div class="image">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/2.jpg" data-grid-maintained-target="" alt="image2" />
+    <div class="title">Item 2</div>
+  </div>
+  <div class="image">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/3.jpg" data-grid-maintained-target="" alt="image3" />
+    <div class="title">Item 3</div>
+  </div>
+  <div class="image">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/4.jpg" data-grid-maintained-target="" alt="image4" />
+    <div class="title">Item 4</div>
+  </div>
+  <div class="image">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/5.jpg" data-grid-maintained-target="" alt="image5" />
+    <div class="title">Item 5</div>
+  </div>
+  <div class="image">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/6.jpg" data-grid-maintained-target="" alt="image6" />
+    <div class="title">Item 6</div>
+  </div>
+  <div class="image">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/7.jpg" data-grid-maintained-target="" alt="image7" />
+    <div class="title">Item 7</div>
+  </div>
+  <div class="image">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/8.jpg" data-grid-maintained-target="" alt="image8" />
+    <div class="title">Item 8</div>
+  </div>
+  <div class="image">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/9.jpg" data-grid-maintained-target="" alt="image9" />
+    <div class="title">Item 9</div>
+  </div>
+  <div class="image">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/10.jpg" data-grid-maintained-target="" alt="image10" />
+    <div class="title">Item 10</div>
+  </div>
+</JustifiedGrid>

@@ -1,27 +1,27 @@
-import { AppComponent } from './apps/NgxKeepRatioWithOffsetApp/app.component';
+import { AppComponent } from './apps/NgxKeepRatioWithMaintainedTargetApp/app.component';
 import { JUSTIFIED_GRID_CONTROLS } from '../../../../stories/templates/controls';
 import { convertPath, convertAngularTemplate, makeArgs } from '../../../../stories/utils';
-import HTML_TEMPLATE from '!!raw-loader!./apps/NgxKeepRatioWithOffsetApp/app.component.html';
+import HTML_TEMPLATE from '!!raw-loader!./apps/NgxKeepRatioWithMaintainedTargetApp/app.component.html';
 import CSS_TEMPLATE from '!!raw-loader!../../../../stories/templates/default.css';
-import RawApp from '!!raw-loader!./apps/NgxKeepRatioWithOffsetApp/app.component.ts';
+import RawApp from '!!raw-loader!./apps/NgxKeepRatioWithMaintainedTargetApp/app.component.ts';
 import MODULE_TEMPLATE from '!!raw-loader!../apps/default/app.module.ts';
 
-export const KeepRatioWithOffsetTemplate = (props: any) => ({
+export const KeepRatioWithMaintainedTargetTemplate = (props: any) => ({
   component: AppComponent,
   props: {
     ...props,
     key: JSON.stringify(props),
   },
 });
-KeepRatioWithOffsetTemplate.storyName = "Keep ratio with offset";
+KeepRatioWithMaintainedTargetTemplate.storyName = "Keep ratio with maintained target";
 
 
-KeepRatioWithOffsetTemplate.argTypes = JUSTIFIED_GRID_CONTROLS;
-KeepRatioWithOffsetTemplate.args = {
-  ...makeArgs(KeepRatioWithOffsetTemplate.argTypes),
+KeepRatioWithMaintainedTargetTemplate.argTypes = JUSTIFIED_GRID_CONTROLS;
+KeepRatioWithMaintainedTargetTemplate.args = {
+  ...makeArgs(KeepRatioWithMaintainedTargetTemplate.argTypes),
 };
 
-KeepRatioWithOffsetTemplate.parameters = {
+KeepRatioWithMaintainedTargetTemplate.parameters = {
   preview: [
     {
       tab: "CSS",
