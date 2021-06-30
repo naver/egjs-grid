@@ -92,6 +92,47 @@ describe("test Grid", () => {
       expect(renderCompleteSpy.callCount).to.be.equals(2);
       expect(errorSpy.callCount).to.be.equals(1);
     });
+    it("should check if empty space is rendered if useFit is false", async () => {
+      // Given
+      container!.innerHTML = `
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      `;
+      grid = new SampleGrid(container!);
+
+      grid.renderItems({
+        outline: [100],
+      });
+
+      await waitEvent(grid, "renderComplete");
+
+      // useFit true
+      const outline1 = grid.getOutlines().start;
+
+      // When
+      // useFit false
+      grid.useFit = false;
+      grid.renderItems({
+        outline: [100],
+      });
+
+      await waitEvent(grid, "renderComplete");
+      const outline2 = grid.getOutlines().start;
+
+      //  If the outline is less than 0, a fit occurs forcibly.
+      grid.renderItems({
+        outline: [-100],
+      });
+
+      await waitEvent(grid, "renderComplete");
+      const outline3 = grid.getOutlines().start;
+
+      // Then
+      expect(outline1).to.be.deep.equals([0]);
+      expect(outline2).to.be.deep.equals([100]);
+      expect(outline3).to.be.deep.equals([0]);
+    });
     it(`should test lazyloading`, async () => {
       // Given
       container!.innerHTML = `
