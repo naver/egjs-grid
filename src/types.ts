@@ -22,6 +22,7 @@ import { ItemRenderer, ItemRendererStatus } from "./ItemRenderer";
  * @property - The prefix to use element's data attribute. (default: "data-grid-")<ko>엘리먼트의 데이타 속성에 사용할 접두사. (default: "data-grid-")</ko>
  * @property - Debounce time to set in the resize event. (default: 100)<ko>리사이즈 이벤트에 설정할 디바운스 시간. (default: 100)</ko>
  * @property - Maximum time to debounce the resize event(0 is not set). (default: 0)<ko>리사이즈 이벤트를 디바운스할 수 있는 최대 시간(0은 미설정이다). (default: 0)</ko>
+ * @property - Whether to move the outline to 0 when the top is empty when rendering. However, if it overflows above the top, the outline is forced to 0. (default: true) <ko>렌더링시 상단이 비어있을 때 아웃라인을 0으로 이동시킬지 여부. 하지만 상단보다 넘치는 경우 아웃라인을 0으로 강제 이동한다. (default: true)</ko>
  * @property - Whether the resize method should be called automatically after a window resize event. (default: true)<ko>window의 resize 이벤트 이후 자동으로 resize()메소드를 호출할지의 여부. (default: true)</ko>
  * @property - Whether to use transform property instead of using left and top css properties. <ko>left, top css 속성 쓰는 대신 transform 속성을 사용할지 여부.</ko>
  * @property - Whether to automatically render through property change. <ko>property의 변화를 통해 자동으로 render를 할지 여부.</ko>
@@ -40,6 +41,7 @@ export interface GridOptions {
   resizeDebounce?: number;
   maxResizeDebounce?: number;
   autoResize?: boolean;
+  useFit?: boolean;
   useTransform?: boolean;
   renderOnPropertyChange?: boolean;
   preserveUIOnDestroy?: boolean;
