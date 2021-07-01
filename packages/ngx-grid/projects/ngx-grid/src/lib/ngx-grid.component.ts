@@ -34,6 +34,7 @@ export class NgxGridComponent
   @Input() resizeDebounce!: Required<GridOptions>['resizeDebounce'];
   @Input() maxResizeDebounce!: Required<GridOptions>['maxResizeDebounce'];
   @Input() autoResize!: Required<GridOptions>['autoResize'];
+  @Input() useFit!: Required<GridOptions>['useFit'];
   @Input() useTransform!: Required<GridOptions>['useTransform'];
   @Input() renderOnPropertyChange!: Required<GridOptions>['renderOnPropertyChange'];
   @Input() preserveUIOnDestroy!: Required<GridOptions>['preserveUIOnDestroy'];

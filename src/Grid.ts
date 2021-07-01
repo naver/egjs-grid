@@ -346,11 +346,16 @@ grid.on("contentError", e => {
       this.renderItems();
     });
   }
-  private _fit() {
+  protected fitOutlines(useFit = this.useFit) {
     const outlines = this.outlines;
     const startOutline = outlines.start;
     const endOutline = outlines.end;
     const outlineOffset = startOutline.length ? Math.min(...startOutline) : 0;
+
+    // If the outline is less than 0, a fit occurs forcibly.
+    if (!useFit && outlineOffset > 0) {
+      return;
+    }
 
     outlines.start = startOutline.map((point) => point - outlineOffset);
     outlines.end = endOutline.map((point) => point - outlineOffset);
@@ -377,7 +382,7 @@ grid.on("contentError", e => {
       nextOutlines = this.applyGrid(this.items, direction, prevOutline);
     }
     this.setOutlines(nextOutlines);
-    this._fit();
+    this.fitOutlines();
     this.itemRenderer.renderItems(this.items);
     this._refreshContainerContentSize();
     this._renderComplete({
@@ -491,6 +496,21 @@ export default Grid;
  *
  * grid.defaultDirection = "start";
  */
+
+
+/**
+ * Whether to move the outline to 0 when the top is empty when rendering. However, if it overflows above the top, the outline is forced to 0. (default: true)
+ * @ko 렌더링시 상단이 비어있을 때 아웃라인을 0으로 이동시킬지 여부. 하지만 상단보다 넘치는 경우 아웃라인을 0으로 강제 이동한다. (default: true)
+ * @name Grid#useFit
+ * @type {$ts:Grid.GridOptions["useFit"]}
+ * @example
+ * import { MasonryGrid } from "@egjs/grid";
+ *
+ * const grid = new MasonryGrid(container, {
+ *   useFit: true,
+ * });
+ *
+ * grid.useFit = false;
 
 /**
  * Whether to preserve the UI of the existing container or item when destroying.

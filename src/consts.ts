@@ -21,6 +21,7 @@ export const DEFAULT_GRID_OPTIONS: Required<GridOptions> = {
   externalContainerManager: null,
   externalItemRenderer: null,
   renderOnPropertyChange: true,
+  useFit: true,
 };
 
 export enum PROPERTY_TYPE {
@@ -43,6 +44,7 @@ export const GRID_PROPERTY_TYPES = {
   defaultDirection: PROPERTY_TYPE.PROPERTY,
   renderOnPropertyChange: PROPERTY_TYPE.PROPERTY,
   preserveUIOnDestroy: PROPERTY_TYPE.PROPERTY,
+  useFit: PROPERTY_TYPE.PROPERTY,
 };
 
 export const GRID_METHODS = [
