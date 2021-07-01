@@ -96,6 +96,35 @@ describe("test JustifiedGrid", () => {
       const orgRatio = item.orgInlineSize / (item.orgContentSize - 20);
 
       expect(cssRatio).to.be.closeTo(orgRatio, 0.00001);
+      expect(item.element!.clientHeight).to.be.closeTo(item.element!.scrollHeight, 0.00001);
+    });
+  });
+  it(`should check whether the ratio is maintained except for the offset when the content offset is set`, async () => {
+    // Given
+    container!.style.cssText = "width: 1000px;";
+
+    grid = new JustifiedGrid(container!, {
+      gap: 5,
+      horizontal: false,
+    });
+
+    appendElements(container!, 18).forEach((element) => {
+      element.style.width = "100%";
+      element.style.height = "auto";
+      element.innerHTML += `<div data-grid-maintained-target style="padding-top: 40%;width: 100%;"></div>content...`;
+    });
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+    const items = grid.getItems();
+
+    // Then
+    expectItemsPosition(items);
+    items.forEach((item) => {
+      expect(item.element!.clientHeight).to.be.closeTo(item.element!.scrollHeight, 0.00001);
     });
   });
   describe("test columnRange option", () => {

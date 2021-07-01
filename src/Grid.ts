@@ -284,7 +284,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     this._im?.destroy();
   }
   protected checkReady(options: RenderOptions = {}) {
-    // Grid: renderItems => checkItems => _renderItems
+    // Grid: renderItems => checkReady => readyItems => applyGrid
     const items = this.items;
     const updated = items.filter((item) => item.element && item.updateState !== UPDATE_STATE.UPDATED);
     const mounted: GridItem[] = updated.filter((item) => item.mountState !== MOUNT_STATE.MOUNTED);
@@ -297,7 +297,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
       updated[e.index].updateState = UPDATE_STATE.WAIT_LOADING;
     }).on("preReady", () => {
       this.itemRenderer.updateItems(updated);
-      this._renderItems(mounted, updated, options);
+      this.readyItems(mounted, updated, options);
     }).on("readyElement", (e) => {
       const item = updated[e.index];
 
@@ -307,7 +307,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
       if (e.isPreReadyOver) {
         item.element!.style.cssText = item.orgCSSText;
         this.itemRenderer.updateItems([item]);
-        this._renderItems([], [item], options);
+        this.readyItems([], [item], options);
       }
     }).on("error", (e) => {
       const item = items[e.index];
@@ -369,7 +369,7 @@ grid.on("contentError", e => {
       item.cssContentPos = contentPos - outlineOffset;
     });
   }
-  private _renderItems(mounted: GridItem[], updated: GridItem[], options: RenderOptions) {
+  protected readyItems(mounted: GridItem[], updated: GridItem[], options: RenderOptions) {
     const prevOutlines = this.outlines;
     const direction = options.direction || this.options.defaultDirection!;
     const prevOutline = options.outline || prevOutlines[direction === "end" ? "start" : "end"];

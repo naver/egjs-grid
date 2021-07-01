@@ -71,6 +71,12 @@ class GridItem {
     }
   }
   /**
+   * Grid ready data for rendering
+   * @ko 렌더링을 하기 위한 grid의 준비 데이타
+   * @member Grid.GridItem#gridData
+   */
+  public gridData: Record<string, any> = {};
+  /**
    * The size in inline direction before first rendering. "width" if horizontal is false, "height" otherwise.
    * @ko 첫 렌더링 되기 전의 inline 방향의 사이즈. horizontal이 false면 "width", 아니면 "height".
    * @member Grid.GridItem#orgInlineSize
