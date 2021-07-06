@@ -1,6 +1,21 @@
-name: Run e2e tests
+name: Run tests
 on: [push, pull_request]
 jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14.15.4
+      - name: install
+        run: npm install
+      - name: lint
+        run: npm run lint
+      - name: test
+        run: npm run coverage
+      - name: coveralls
+        run: npm run coveralls
   e2e:
     runs-on: ubuntu-latest
     steps:
