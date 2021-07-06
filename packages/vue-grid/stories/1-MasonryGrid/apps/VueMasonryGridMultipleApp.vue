@@ -15,7 +15,7 @@
     <div class="item">5</div>
     <div class="item">6</div>
     <div class="item">7</div>
-    <div class="item">8</div>
+    <div class="item" data-grid-column="3">8</div>
     <div class="item">9</div>
     <div class="item">10</div>
   </masonry-grid>
