@@ -10,6 +10,26 @@ import { range, GetterSetter } from "../utils";
 import { GridItem } from "../GridItem";
 
 
+function getColumnPoint(
+  outline: number[],
+  columnIndex: number,
+  columnCount: number,
+  pointCaculationName: "max" | "min",
+) {
+  return Math[pointCaculationName](...outline.slice(columnIndex, columnIndex + columnCount));
+}
+
+function getColumnIndex(outline: number[], columnCount: number, nearestCalculationName: "max" | "min") {
+  const length = outline.length - columnCount + 1;
+  const pointCaculationName = nearestCalculationName === "max" ? "min" : "max";
+  const indexCaculationName = nearestCalculationName === "max" ? "lastIndexOf" : "indexOf";
+  const points = range(length).map((index) => {
+    return getColumnPoint(outline, index, columnCount, pointCaculationName);
+  });
+
+  return points[indexCaculationName](Math[nearestCalculationName](...points));
+}
+
 /**
  * @typedef
  * @memberof Grid.MasonryGrid
@@ -70,14 +90,14 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     const itemsLength = items.length;
     const alignPoses = this._getAlignPoses();
     const isEndDirection = direction === "end";
-    const pointCalculateName = isEndDirection ? "min" : "max";
-    const indexCalculateName = isEndDirection ? "indexOf" : "lastIndexOf";
+    const nearestCalculationName = isEndDirection ? "min" : "max";
+    const pointCalculationName = isEndDirection ? "max" : "min";
     let startOutline = [0];
 
     if (outlineLength === column) {
       startOutline = outline.slice();
     } else {
-      const point = outlineLength ? Math[pointCalculateName](...outline) : 0;
+      const point = outlineLength ? Math[nearestCalculationName](...outline) : 0;
 
       startOutline = range(column).map(() => point);
     }
@@ -86,66 +106,52 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     const isStretch = align === "stretch";
 
     for (let i = 0; i < itemsLength; ++i) {
-      const point = Math[pointCalculateName](...endOutline) || 0;
-      let columnIndex = endOutline[indexCalculateName](point);
       const item = items[isEndDirection ? i : itemsLength - 1 - i];
       const columnAttribute = parseInt(item.attributes.column || "1", 10);
+      const maxColumnAttribute = parseInt(item.attributes.maxColumn || "1", 10);
       let inlineSize = item.inlineSize;
       let contentSize = item.contentSize;
-      const maxColumn = Math.min(column, parseInt(item.attributes.maxColumn || "1", 10));
-      let itemColumn = Math.min(column, columnAttribute || Math.max(1, Math.ceil((inlineSize + gap) / columnDist)));
+      let columnCount = Math.min(column, columnAttribute || Math.max(1, Math.ceil((inlineSize + gap) / columnDist)));
+      const maxColumnCount = Math.min(column, Math.max(columnCount, maxColumnAttribute));
+      let columnIndex = getColumnIndex(endOutline, columnCount, nearestCalculationName);
+      let contentPos = getColumnPoint(endOutline, columnIndex, columnCount, pointCalculationName);
 
-      if (columnIndex === -1) {
-        columnIndex = 0;
+      while (columnCount < maxColumnCount) {
+        const nextEndColumnIndex = columnIndex + columnCount;
+        const nextColumnIndex = columnIndex - 1;
+
+        if (isEndDirection && (nextEndColumnIndex >= column || endOutline[nextEndColumnIndex] > contentPos)) {
+          break;
+        }
+        if (!isEndDirection && (nextColumnIndex < 0 || endOutline[nextColumnIndex]) < contentPos) {
+          break;
+        }
+        if (!isEndDirection) {
+          --columnIndex;
+        }
+        ++columnCount;
       }
-      if (column > 1 && itemColumn > 1) {
-        if (isEndDirection) {
-          // 0   columnIndex(+itemColumn)  column
-          columnIndex = Math.min(columnIndex, Math.max(0, column - itemColumn));
-        } else {
-          // 0   columnIndex(-itemColumn)  column
-          columnIndex = Math.max(columnIndex, Math.min(column - 1, itemColumn));
-        }
+
+      columnIndex = Math.max(0, columnIndex);
+      columnCount = Math.min(column - columnIndex, columnCount);
+
+      if (columnAttribute > 0 && (columnCount > 1 || isStretch || columnSizeOption)) {
+        inlineSize = (columnCount - 1) * columnDist + columnSize;
+        item.cssInlineSize = inlineSize;
       }
-      if (columnAttribute > 0) {
-        const endColumnIndex = columnIndex + (isEndDirection ? itemColumn : -itemColumn);
-        const columnOutline = outline.slice(
-          Math.min(columnIndex, endColumnIndex), Math.max(columnIndex, endColumnIndex));
-        const columnPoint = isEndDirection ? Math.max(...columnOutline) : Math.min(...columnOutline);
-
-        while (itemColumn < maxColumn) {
-          const nextEndColumnIndex = columnIndex + (isEndDirection ? itemColumn + 1 : -itemColumn - 1);
-
-          if (nextEndColumnIndex < 0 || nextEndColumnIndex > column) {
-            break;
-          }
-          if (
-            (isEndDirection && outline[nextEndColumnIndex - 1] > columnPoint)
-            || (!isEndDirection && outline[nextEndColumnIndex] < columnPoint)
-          ) {
-            break;
-          }
-          ++itemColumn;
-        }
-        if (itemColumn > 1 || isStretch || columnSizeOption) {
-          inlineSize = (itemColumn - 1) * columnDist + columnSize;
-          item.cssInlineSize = inlineSize;
-        }
-        if (columnSizeRatio > 0) {
-          contentSize = inlineSize / columnSizeRatio;
-          item.cssContentSize = contentSize;
-        }
+      if (columnSizeRatio > 0) {
+        contentSize = inlineSize / columnSizeRatio;
+        item.cssContentSize = contentSize;
       }
       const inlinePos = alignPoses[columnIndex];
-      const contentPos = isEndDirection ? point : point - gap - contentSize;
-      const endContentPos = contentPos + contentSize + gap;
+      contentPos = isEndDirection ? contentPos : contentPos - gap - contentSize;
 
       item.cssInlinePos = inlinePos;
       item.cssContentPos = contentPos;
-      const endPoint = isEndDirection ? endContentPos : contentPos;
+      const nextOutlinePoint = isEndDirection ? contentPos + contentSize + gap : contentPos;
 
-      range(itemColumn).forEach((indexOffset) => {
-        endOutline[columnIndex + (isEndDirection ? indexOffset : -indexOffset)] = endPoint;
+      range(columnCount).forEach((indexOffset) => {
+        endOutline[columnIndex + indexOffset] = nextOutlinePoint;
       });
     }
 
@@ -175,7 +181,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     } else {
       for (const item of items) {
         const attributes = item.attributes;
-        if (item.updateState !== UPDATE_STATE.UPDATED || !item.rect || attributes.column || attributes.maxColumn) {
+        if (item.updateState !== UPDATE_STATE.UPDATED || !item.rect || attributes.column || attributes.maxColumnCount) {
           continue;
         }
         const inlineSize = item.inlineSize;
