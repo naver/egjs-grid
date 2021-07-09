@@ -3,7 +3,7 @@
 <p align="middle">
 <a href="https://www.npmjs.com/package/@egjs/grid" target="_blank"><img src="https://img.shields.io/npm/v/@egjs/grid.svg?style=flat-square&color=007acc&label=version" alt="npm version" /></a>&nbsp;
 <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square" />&nbsp;
-<a href="https://travis-ci.org/naver/egjs-grid" target="_blank"><img alt="Travis (.org)" src="https://img.shields.io/travis/naver/egjs-grid.svg?style=flat-square&label=build" /></a>&nbsp;
+<a href="https://github.com/naver/egjs-grid/actions" target="_blank"><img alt="Github actions" src="https://img.shields.io/github/workflow/status/naver/egjs-grid/Run%20tests?style=flat-square" /></a>&nbsp;
 <a href="https://coveralls.io/github/naver/egjs-grid?branch=main&style=flat-square" target="_blank"><img alt="Coveralls github" src="https://img.shields.io/coveralls/github/naver/egjs-grid.svg?style=flat-square&label=%E2%9C%85%20coverage" /></a>&nbsp;
 <a href="https://github.com/naver/egjs-grid/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/static/v1?style=flat-square&label=license&message=MIT&color=08CE5D" /></a>&nbsp;
 <a href="https://github.com/naver/egjs-grid/tree/main/packages/react-grid" target="_blank"><img alt="React" src="https://img.shields.io/static/v1.svg?label=&message=React&style=flat-square&color=61daeb" /></a>&nbsp;
