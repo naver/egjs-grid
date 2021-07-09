@@ -184,6 +184,41 @@ describe("test MasonryGrid", () => {
     ]);
     expect(container!.style.height).to.be.deep.equals("805px");
   });
+  it(`should check whether multiple columns are used when data-grid-column="2"`, async () => {
+    // Given
+    container!.style.cssText = "width: 660px; height: 660px;";
+    container!.innerHTML = `
+      <div style="position: absolute;width: 500px; height: 300px;" data-grid-column="2"></div>
+      <div style="position: absolute;width: 200px; height: 200px;" ></div>
+      <div style="position: absolute;width: 500px; height: 500px;" data-grid-column="2"></div>
+      <div style="position: absolute;width: 250px; height: 250px;"></div>
+    `;
+    grid = new MasonryGrid(container!, {
+      gap: 10,
+    });
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+    // Then
+    expect(grid.getOutlines()).to.be.deep.equals({
+      start: [0, 0, 0],
+      end: [820, 820, 470],
+    });
+    expect(grid.getItems().map((item) => item.cssRect)).to.be.deep.equals([
+      // column: 2
+      { width: 430, left: 0, top: 0 },
+      // column: 1
+      { left: 460, top: 0 },
+      // column: 2
+      { width: 430, left: 0, top: 310 },
+      // column: 1
+      { left: 460, top: 210 },
+    ]);
+    expect(container!.style.height).to.be.deep.equals("810px");
+  });
   it(`should check whether multiple columns are used when data-grid-max-column="3"`, async () => {
     // Given
     container!.style.cssText = "width: 660px; height: 660px;";
