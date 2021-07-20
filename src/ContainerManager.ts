@@ -32,8 +32,8 @@ export class ContainerManager {
     const container = this.container;
 
     this.setRect({
-      width: container.offsetWidth,
-      height: container.offsetHeight,
+      width: container.clientWidth,
+      height: container.clientHeight,
     });
   }
   public getRect() {
