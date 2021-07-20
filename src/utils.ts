@@ -52,25 +52,30 @@ export function GetterSetter(component: {
   } = component;
   for (const name in propertyTypes) {
     const shouldRender = propertyTypes[name] === PROPERTY_TYPE.RENDER_PROPERTY;
+
+    const descriptor = Object.getOwnPropertyDescriptor(prototype, name) || {};
+
+    const getter = descriptor.get || function get(this: Grid) {
+      return this.options[name];
+    };
+    const setter = descriptor.set || function set(this: Grid, value: any) {
+      const options = this.options;
+      const prevValue = options[name];
+
+      if (prevValue === value) {
+        return;
+      }
+      options[name] = value;
+
+      if (shouldRender && options.renderOnPropertyChange) {
+        this.scheduleRender();
+      }
+    };
     const attributes: Record<string, any> = {
       enumerable: true,
       configurable: true,
-      get(this: Grid) {
-        return this.options[name];
-      },
-      set(this: Grid, value: any) {
-        const options = this.options;
-        const prevValue = options[name];
-
-        if (prevValue === value) {
-          return;
-        }
-        options[name] = value;
-
-        if (shouldRender && options.renderOnPropertyChange) {
-          this.scheduleRender();
-        }
-      },
+      get: getter,
+      set: setter,
     };
     Object.defineProperty(prototype, name, attributes);
   }
