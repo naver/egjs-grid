@@ -57,6 +57,25 @@ describe("test Grid", () => {
       expect(children[1].style.top).to.be.equals("18px");
       expect(children[2].style.top).to.be.equals("36px");
     });
+    (["start", "end"] as const).forEach((direction) => {
+      it(`should check if the event also changes when direction is ${direction}`, async () => {
+        // Given
+        container!.innerHTML = `
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        `;
+        grid = new SampleGrid(container!);
+
+
+        // When
+        grid.renderItems({ direction });
+
+        const e = await waitEvent(grid, "renderComplete");
+
+        expect(e.direction).to.be.equals(direction);
+      });
+    });
     it("should check if items are re-rendered if errors are included", async () => {
       // Given
       container!.innerHTML = `

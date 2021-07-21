@@ -252,6 +252,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     } else {
       window.setTimeout(() => {
         this._renderComplete({
+          direction: this.defaultDirection,
           mounted: this.items,
           updated: [],
           isResize: false,
@@ -316,10 +317,6 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
        * @ko 콘텐츠 로드에 에러가 날 때 발생하는 이벤트.
        * @event Grid#contentError
        * @param {Grid.OnContentError} e - The object of data to be sent to an event <ko>이벤트에 전달되는 데이터 객체</ko>
-       * @param {HTMLElement} [e.element] - The item's element.<ko>아이템의 엘리먼트.</ko>
-       * @param {HTMLElement} [e.target] - The content element with error.<ko>에러난 발생한 콘텐츠 엘리먼트.</ko>
-       * @param {Grid.GridItem} [e.item] - The item with error content.<ko>에러난 콘텐츠를 가지고 있는 아이템</ko>
-       * @param {function} [e.update] - If you have fixed the error and want to recheck it, call update(). If you remove an element, call the syncElements() method.<ko>에러를 해결했고 재검사하고 싶으면 update()를 호출해라. 만약 엘리먼트를 삭제한 경우 syncElements() 메서드를 호출해라.</ko>
        * @example
 grid.on("contentError", e => {
   e.update();
@@ -386,6 +383,7 @@ grid.on("contentError", e => {
     this.itemRenderer.renderItems(this.items);
     this._refreshContainerContentSize();
     this._renderComplete({
+      direction,
       mounted,
       updated,
       isResize: !!options.useResize,
@@ -397,9 +395,6 @@ grid.on("contentError", e => {
      * @ko Grid가 렌더링이 완료됐을 때  발생하는 이벤트이다.
      * @event Grid#renderComplete
      * @param {Grid.OnRenderComplete} e - The object of data to be sent to an event <ko>이벤트에 전달되는 데이터 객체</ko>
-     * @param {function} [e.mounted] - The items rendered for the first time <ko>처음 렌더링한 아이템들</ko>
-     * @param {function} [e.updated] - The items updated in size.<ko>사이즈 업데이트한 아이템들.</ko>
-     * @param {function} [e.useResize] - Whether rendering was done using the resize event or the useResize option. <ko>resize 이벤트 또는 useResize 옵션을 사용하여 렌더링를 했는지 여부.</ko>
      * @example
 grid.on("renderComplete", e => {
 console.log(e.mounted, e.updated, e.useResize);
