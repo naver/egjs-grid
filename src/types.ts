@@ -97,10 +97,10 @@ export interface OnRenderComplete {
 /**
  * @typedef
  * @memberof Grid
- * @param {HTMLElement} [e.element] - The item's element.<ko>아이템의 엘리먼트.</ko>
- * @param {HTMLElement} [e.target] - The content element with error.<ko>에러난 발생한 콘텐츠 엘리먼트.</ko>
- * @param {Grid.GridItem} [e.item] - The item with error content.<ko>에러난 콘텐츠를 가지고 있는 아이템</ko>
- * @param {function} [e.update] - If you have fixed the error and want to recheck it, call update(). If you remove an element, call the syncElements() method.<ko>에러를 해결했고 재검사하고 싶으면 update()를 호출해라. 만약 엘리먼트를 삭제한 경우 syncElements() 메서드를 호출해라.</ko>
+ * @property - The item's element.<ko>아이템의 엘리먼트.</ko>
+ * @property - The content element with error.<ko>에러난 발생한 콘텐츠 엘리먼트.</ko>
+ * @property - The item with error content.<ko>에러난 콘텐츠를 가지고 있는 아이템</ko>
+ * @property - If you have fixed the error and want to recheck it, call update(). If you remove an element, call the syncElements() method.<ko>에러를 해결했고 재검사하고 싶으면 update()를 호출해라. 만약 엘리먼트를 삭제한 경우 syncElements() 메서드를 호출해라.</ko>
  */
 export interface OnContentError {
   element: HTMLElement;
