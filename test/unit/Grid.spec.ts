@@ -426,7 +426,30 @@ describe("test Grid", () => {
       expect(outerHTML1).to.be.equals(outerHTML2);
     });
   });
-  describe("test resizeDebounce, maxResizeDebounce options", () => {
+  describe("test autoResize, resizeDebounce, maxResizeDebounce options", () => {
+    it(`should check if renderComplete does not trigger when autoResize is disabled`, async () => {
+      // Given
+      container!.innerHTML = `
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      `;
+      const spy = sinon.spy();
+      grid = new SampleGrid(container!, {
+        autoResize: false,
+      });
+
+      grid.on("renderComplete", spy);
+
+      // When
+      window.dispatchEvent(new Event("resize"));
+
+
+      await waitFor(100);
+
+      // Then
+      expect(spy.callCount).to.be.equals(0);
+    });
     [50, 100, 150].forEach((resizeDebounce) => {
       it(`should check if it keeps debounce (resizeDebounce: ${resizeDebounce})`, (done) => {
         // Given
