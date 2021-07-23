@@ -79,12 +79,29 @@ export interface GridStatus {
   containerManager: ContainerManagerStatus;
   itemRenderer: ItemRendererStatus;
 }
-
+/**
+ * @typedef
+ * @memberof Grid
+ * @property - The direction the grid was rendered. <ko>Grid가 렌더링된 방향.</ko>
+ * @property - The items rendered for the first time. <ko>처음 렌더링한 아이템들,</ko>
+ * @property - The items updated in size. <ko>사이즈 업데이트한 아이템들.</ko>
+ * @property - Whether rendering was done using the resize event or the useResize option. <ko>resize 이벤트 또는 useResize 옵션을 사용하여 렌더링를 했는지 여부.</ko>
+ */
 export interface OnRenderComplete {
+  direction: "start" | "end";
   isResize: boolean;
   mounted: GridItem[];
   updated: GridItem[];
 }
+
+/**
+ * @typedef
+ * @memberof Grid
+ * @property - The item's element.<ko>아이템의 엘리먼트.</ko>
+ * @property - The content element with error.<ko>에러난 발생한 콘텐츠 엘리먼트.</ko>
+ * @property - The item with error content.<ko>에러난 콘텐츠를 가지고 있는 아이템</ko>
+ * @property - If you have fixed the error and want to recheck it, call update(). If you remove an element, call the syncElements() method.<ko>에러를 해결했고 재검사하고 싶으면 update()를 호출해라. 만약 엘리먼트를 삭제한 경우 syncElements() 메서드를 호출해라.</ko>
+ */
 export interface OnContentError {
   element: HTMLElement;
   target: HTMLElement;
