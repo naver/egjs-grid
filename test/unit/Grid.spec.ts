@@ -92,6 +92,27 @@ describe("test Grid", () => {
       expect(renderCompleteSpy.callCount).to.be.equals(2);
       expect(errorSpy.callCount).to.be.equals(1);
     });
+    it("should check if inlineSize is reduced if there is a border", async () => {
+      // Given
+      container!.innerHTML = `
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      `;
+      grid = new SampleGrid(container!);
+      grid.renderItems();
+      await waitEvent(grid, "renderComplete");
+      const inlineSize1 = grid.getContainerInlineSize();
+
+      // When
+      container!.style.border = "2px solid black";
+      grid.renderItems({ useResize: true });
+      await waitEvent(grid, "renderComplete");
+      const inlineSize2 = grid.getContainerInlineSize();
+
+      // Then
+      expect(inlineSize2).to.be.equals(inlineSize1 - 4);
+    });
     it("should check if empty space is rendered if useFit is false", async () => {
       // Given
       container!.innerHTML = `
