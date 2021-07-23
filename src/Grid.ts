@@ -34,8 +34,6 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     end: [],
   };
   private _renderTimer = 0;
-  private _resizeTimer = 0;
-  private _maxResizeDebounceTimer = 0;
   private _im: ImReady;
 
   /**
@@ -73,13 +71,19 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
       percentage,
       externalContainerManager,
       externalItemRenderer,
+      resizeDebounce,
+      maxResizeDebounce,
+      autoResize,
     } = this.options;
 
     // TODO: 테스트용 설정
     this.containerManager = externalContainerManager!
       || new ContainerManager(this.containerElement, {
         horizontal,
-      });
+        resizeDebounce,
+        maxResizeDebounce,
+        autoResize,
+      }).on("resize", this._onResize);
     this.itemRenderer = externalItemRenderer!
       || new ItemRenderer({
         useTransform,
@@ -281,9 +285,10 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
         }
       });
     }
-    window.removeEventListener("resize", this._scheduleResize);
+
     this._im?.destroy();
   }
+
   protected checkReady(options: RenderOptions = {}) {
     // Grid: renderItems => checkReady => readyItems => applyGrid
     const items = this.items;
@@ -424,37 +429,13 @@ console.log(e.mounted, e.updated, e.useResize);
     this.itemRenderer.setContainerRect(this.containerManager.getRect());
   }
   private _onResize = () => {
-    clearTimeout(this._resizeTimer);
-    clearTimeout(this._maxResizeDebounceTimer);
-
-    this._maxResizeDebounceTimer = 0;
-    this._resizeTimer = 0;
     this.renderItems({
       useResize: true,
     });
   }
-  private _scheduleResize = () => {
-    const {
-      resizeDebounce,
-      maxResizeDebounce,
-    } = this.options;
-
-
-    if (!this._maxResizeDebounceTimer && maxResizeDebounce >= resizeDebounce) {
-      this._maxResizeDebounceTimer = window.setTimeout(this._onResize, maxResizeDebounce);
-    }
-    if (this._resizeTimer) {
-      clearTimeout(this._resizeTimer);
-      this._resizeTimer = 0;
-    }
-    this._resizeTimer = window.setTimeout(this._onResize, resizeDebounce);
-  }
 
   private _init() {
     this._resizeContainer();
-    if (this.options.autoResize) {
-      window.addEventListener("resize", this._scheduleResize);
-    }
   }
 }
 
