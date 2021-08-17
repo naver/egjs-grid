@@ -1,3 +1,4 @@
+import { GridItem } from "../../src";
 import { MasonryGrid } from "../../src/grids/MasonryGrid";
 import { cleanup, sandbox, waitEvent } from "./utils/utils";
 
@@ -483,6 +484,37 @@ describe("test MasonryGrid", () => {
       { width: 295, height: 590, left: 305, top: 600 },
     ]);
     expect(container!.style.height).to.be.deep.equals("1190px");
+  });
+  it(`should check whether the column is calculated as the first item`, async () => {
+    // Given
+    container!.style.cssText = "width: 600px; height: 600px;";
+    grid = new MasonryGrid(container!, {
+      gap: 5,
+    });
+
+    // When
+    grid.setItems([
+      new GridItem(false, {
+        rect: { width: 150, height: 150, top: 0, left: 0 },
+      }),
+      new GridItem(false, {
+        rect: { width: 150, height: 150, top: 0, left: 0 },
+      }),
+      new GridItem(false, {
+        rect: { width: 150, height: 150, top: 0, left: 0 },
+      }),
+    ]);
+
+
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+    // Then
+    expect(grid.getOutlines()).to.be.deep.equals({
+      start: [0, 0, 0],
+      end: [155, 155, 155],
+    });
   });
 });
 
