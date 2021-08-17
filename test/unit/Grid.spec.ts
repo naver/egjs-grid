@@ -265,7 +265,7 @@ describe("test Grid", () => {
     });
   });
   describe("test setStatus, getStatus", () => {
-    it("Check whether the items are recovered when you call setStatus().", async () => {
+    it("should check whether the items are recovered when you call setStatus().", async () => {
       // Given
       container!.innerHTML = `
       <div>1</div>
@@ -304,7 +304,46 @@ describe("test Grid", () => {
       expect(outerHTML1).to.be.equals(outerHTML2);
       expect(result.isResize).to.be.equals(false);
     });
-    it(`Check whether the items are recovered but re-rendered when you call setStatus() with resized container.`, async () => {
+    it(`should check whether the items are recovered when you call setStatus() with minimized status.`, async () => {
+      // Given
+      container!.innerHTML = `
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      `;
+      grid = new SampleGrid(container!);
+
+
+
+      grid.renderItems();
+
+      await waitEvent(grid, "renderComplete");
+
+      const outerHTML1 = container!.outerHTML;
+      const status = grid.getStatus(true);
+
+      grid.destroy();
+
+      container!.innerHTML = `
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      `;
+
+      grid = new SampleGrid(container!);
+
+      // When
+      grid.setStatus(status);
+      const outerHTML2 = container!.outerHTML;
+
+
+      const result = await waitEvent(grid, "renderComplete");
+
+      // Then
+      expect(outerHTML1).to.be.equals(outerHTML2);
+      expect(result.isResize).to.be.equals(false);
+    });
+    it(`should check whether the items are recovered but re-rendered when you call setStatus() with resized container.`, async () => {
       // Given
       container!.innerHTML = `
       <div>1</div>
