@@ -4,7 +4,7 @@
  * MIT license
  */
 import Grid from "../Grid";
-import { PROPERTY_TYPE } from "../consts";
+import { MOUNT_STATE, PROPERTY_TYPE } from "../consts";
 import { GridOptions, Properties, GridOutlines, RenderOptions } from "../types";
 import { getRangeCost, GetterSetter, isObject } from "../utils";
 import { find_path } from "./lib/dijkstra";
@@ -111,10 +111,13 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       const element = item.element;
       const attributes = item.attributes;
       const gridData = item.gridData;
-      let inlineOffset = parseFloat(attributes.inlineOffset) || 0;
-      let contentOffset = parseFloat(attributes.contentOffset) || 0;
+      let inlineOffset = parseFloat(attributes.inlineOffset) || gridData.inlineOffset || 0;
+      let contentOffset = parseFloat(attributes.contentOffset) || gridData.contentOffset | 0;
 
-      if (element && !("inlineOffset" in attributes) && !("contentOffset" in attributes)) {
+      if (
+        element && !("inlineOffset" in attributes) && !("contentOffset" in attributes)
+        && item.mountState === MOUNT_STATE.MOUNTED
+      ) {
         const maintainedTarget = element.querySelector(`[${attributePrefix}maintained-target]`);
 
         if (maintainedTarget) {

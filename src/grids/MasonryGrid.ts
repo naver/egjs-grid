@@ -178,19 +178,29 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
       this._columnSize = (this.getContainerInlineSize() + gap) / (column || 1) - gap;
     } else if (columnSizeOption) {
       this._columnSize = columnSizeOption;
-    } else {
+    } else if (items.length) {
+      let checkedItem = items[0];
+
       for (const item of items) {
         const attributes = item.attributes;
-        if (item.updateState !== UPDATE_STATE.UPDATED || !item.rect || attributes.column || attributes.maxColumnCount) {
+        if (
+          item.updateState !== UPDATE_STATE.UPDATED
+          || !item.inlineSize
+          || attributes.column
+          || attributes.maxColumnCount
+        ) {
           continue;
         }
-        const inlineSize = item.inlineSize;
-
-        this._columnSize = inlineSize;
-        return inlineSize;
+        checkedItem = item;
+        break;
       }
-      this._columnSize = this._columnSize || 0;
+      const inlineSize = checkedItem.inlineSize || 0;
+
+      this._columnSize = inlineSize;
+      return inlineSize;
     }
+    this._columnSize = this._columnSize || 0;
+
     return this._columnSize;
   }
   private _calculateColumn(items: GridItem[]) {
