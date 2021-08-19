@@ -451,7 +451,7 @@ describe("test MasonryGrid", () => {
     ]);
     expect(container!.style.height).to.be.deep.equals("460px");
   });
-  it(`should check if Check if the ratio of the size of all items is 1:2`, async () => {
+  it(`should check if the ratio of the size of all items is 1:2`, async () => {
     // Given
     container!.style.cssText = "width: 600px; height: 600px;";
     container!.innerHTML = `
@@ -484,6 +484,35 @@ describe("test MasonryGrid", () => {
       { width: 295, height: 590, left: 305, top: 600 },
     ]);
     expect(container!.style.height).to.be.deep.equals("1190px");
+  });
+  it(`should Check if the outline is set to the maximum when recalculating the outline`, async () => {
+    // Given
+    container!.style.cssText = "width: 600px; height: 600px;";
+    container!.innerHTML = `
+      <div style="position: absolute;width: 100px; height: 200px;"></div>
+      <div style="position: absolute;width: 100px; height: 150px;"></div>
+      <div style="position: absolute;width: 100px; height: 300px;"></div>
+      <div style="position: absolute;width: 100px; height: 250px;"></div>
+    `;
+    grid = new MasonryGrid(container!, {
+      gap: 5,
+      useFit: false,
+    });
+
+    // When
+    // [0, 0, 0, 0]
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+    grid.renderItems({
+      outline: [0, 100, 50],
+    });
+
+    await waitEvent(grid, "renderComplete");
+
+    // Then
+    expect(grid.getOutlines().start).to.be.deep.equals([100, 100, 100, 100]);
   });
   it(`should check whether the column is calculated as the first item`, async () => {
     // Given
