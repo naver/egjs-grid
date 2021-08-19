@@ -97,7 +97,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     if (outlineLength === column) {
       startOutline = outline.slice();
     } else {
-      const point = outlineLength ? Math[nearestCalculationName](...outline) : 0;
+      const point = outlineLength ? Math[pointCalculationName](...outline) : 0;
 
       startOutline = range(column).map(() => point);
     }
