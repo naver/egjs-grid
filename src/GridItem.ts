@@ -20,6 +20,7 @@ import { MOUNT_STATE, RECT_NAMES, UPDATE_STATE } from "./consts";
  * @property - The updated element's rect before rendering. <ko>렌더링 하기 전 업데이트 된 엘리먼트의 rect.</ko>
  * @property - The CSS rect of the item to be rendered by being applied to the Grid. <ko>Grid에 적용되어 렌더링을 하기 위한 item의 CSS rect</ko>
  * @property - Additional data of the item. <ko>item의 추가적인 데이터들.</ko>
+ * @property - Grid ready data for rendering. <ko>렌더링을 하기 위한 grid의 준비 데이터.</ko>
  */
 export interface GridItemStatus {
   key?: string | number;
@@ -33,8 +34,8 @@ export interface GridItemStatus {
   rect?: Required<DOMRect>;
   cssRect?: DOMRect;
   data?: Record<string, any>;
+  gridData?: Record<string, any>;
 }
-
 
 /**
  * @memberof Grid
@@ -63,6 +64,7 @@ class GridItem {
       updateState: UPDATE_STATE.NEED_UPDATE,
       element: element || null,
       orgCSSText: element?.style.cssText ?? "",
+      gridData: {},
       ...itemStatus,
     };
 
@@ -70,12 +72,6 @@ class GridItem {
       this[name] = status[name];
     }
   }
-  /**
-   * Grid ready data for rendering
-   * @ko 렌더링을 하기 위한 grid의 준비 데이타
-   * @member Grid.GridItem#gridData
-   */
-  public gridData: Record<string, any> = {};
   /**
    * The size in inline direction before first rendering. "width" if horizontal is false, "height" otherwise.
    * @ko 첫 렌더링 되기 전의 inline 방향의 사이즈. horizontal이 false면 "width", 아니면 "height".
@@ -207,8 +203,38 @@ class GridItem {
       orgRect: this.orgRect,
       rect: this.rect,
       cssRect: this.cssRect,
+      gridData: this.gridData,
       data: this.data,
     };
+  }
+  /**
+   * Returns minimized status of the item.
+   * @ko 아이템의 간소화된 상태를 반환한다.
+   */
+  public getMinimizedStatus(): Partial<GridItemStatus> {
+    const status: Partial<GridItemStatus> = {
+      orgRect: this.orgRect,
+      rect: this.rect,
+      cssRect: this.cssRect,
+      attributes: this.attributes,
+      gridData: this.gridData,
+    };
+    if (typeof this.key !== "undefined") {
+      status.key = this.key;
+    }
+    if (this.mountState !== MOUNT_STATE.UNCHECKED) {
+      status.mountState = this.mountState;
+    }
+    if (this.updateState !== UPDATE_STATE.NEED_UPDATE) {
+      status.updateState = this.updateState;
+    }
+    if (this.isFirstUpdate) {
+      status.isFirstUpdate = true;
+    }
+    if (this.orgCSSText) {
+      status.orgCSSText = this.orgCSSText;
+    }
+    return status;
   }
 }
 
