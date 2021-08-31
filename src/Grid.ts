@@ -220,11 +220,12 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
   /**
    * Returns current status such as item's position, size. The returned status can be restored with the setStatus() method.
    * @ko 아이템의 위치, 사이즈 등 현재 상태를 반환한다. 반환한 상태는 setStatus() 메서드로 복원할 수 있다.
+   * @param - Whether to minimize the status of the item. (default: false) <ko>item의 status를 최소화할지 여부. (default: false)</ko>
    */
-  public getStatus(): GridStatus {
+  public getStatus(minimize?: boolean): GridStatus {
     return {
       outlines: this.outlines,
-      items: this.items.map((item) => item.getStatus()),
+      items: this.items.map((item) => minimize ? item.getMinimizedStatus() : item.getStatus()),
       containerManager: this.containerManager.getStatus(),
       itemRenderer: this.itemRenderer.getStatus(),
     };

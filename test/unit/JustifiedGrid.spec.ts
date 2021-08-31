@@ -1,3 +1,4 @@
+import { GridItem } from "../../src";
 import { JustifiedGrid } from "../../src/grids/JustifiedGrid";
 import {
   appendElements, cleanup, expectItemsPosition,
@@ -382,6 +383,35 @@ describe("test JustifiedGrid", () => {
       expect(rowPoses.length).to.be.equals(4);
       // gap = 5
       expect(rowPoses[2]).to.be.equals(grid.getOutlines().end[0]);
+    });
+    it("should check if rendering with cached data", async () => {
+      // Given
+      container!.style.cssText = "width: 500px;";
+
+      grid = new JustifiedGrid(container!, {
+        gap: 0,
+        horizontal: false,
+      });
+
+      // When
+      grid.setItems([
+        new GridItem(false, {
+          orgRect: { left: 0, top: 0, width: 100, height: 100 },
+          gridData: { inlineOffset: 50, contentOffset: 80 },
+        }),
+      ]);
+      grid.renderItems();
+
+      await waitEvent(grid, "renderComplete");
+
+      const items = grid.getItems();
+
+      // Then
+      // (100 - 50) : (100 - 80) = 5 : 2
+      // 5 : 2 = (500 - 50) : 180
+      // height = 180 + 80
+      expect(items[0].cssRect.width).to.be.equals(500);
+      expect(items[0].cssRect.height).to.be.equals(260);
     });
   });
 
