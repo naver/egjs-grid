@@ -189,7 +189,7 @@ export class FrameGrid extends Grid<FrameGridOptions> {
     }
     const isDirectionEnd = direction === "end";
 
-    let gridOutline = outline;
+    let gridOutline = outline.length ? outline : [0];
 
     if (gridOutline.length !== frameInlineSize) {
       const point = isDirectionEnd ? Math.max(...gridOutline) : Math.min(...gridOutline);
@@ -199,8 +199,8 @@ export class FrameGrid extends Grid<FrameGridOptions> {
     startOutline = startOutline.map((point) => isFinite(point) ? point : 0);
     endOutline = endOutline.map((point) => isFinite(point) ? point : 0);
     const outlineDist = isDirectionEnd
-      ? getOutlineDist(startOutline, gridOutline, useFrameFill)
-      : getOutlineDist(gridOutline, endOutline, useFrameFill);
+      ? getOutlinePoint(gridOutline, startOutline, useFrameFill)
+      : getOutlinePoint(endOutline, gridOutline, useFrameFill);
 
     items.forEach((item) => {
       item.cssContentPos += outlineDist;
