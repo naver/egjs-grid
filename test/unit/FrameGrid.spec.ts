@@ -167,4 +167,32 @@ describe("test FrameGrid", () => {
       { left: 505, top: 1515, width: 495, height: 495 },
     ]);
   });
+  it("should check if rendering is done properly according to the standard outline", async () => {
+    // Given
+    container!.style.cssText = "width: 1000px;";
+    grid = new FrameGrid(container!, {
+      gap: 10,
+      frame: [
+        [1, 0],
+        [0, 2],
+      ],
+      useFit: false,
+      useFrameFill: false,
+    });
+
+    appendElements(container!, 4);
+
+    // When
+    grid.renderItems({
+      outline: [100, 100],
+    });
+
+    await waitEvent(grid, "renderComplete");
+
+    // Then
+    expect(grid.getOutlines()).to.be.deep.equals({
+      start: [100, 605],
+      end: [1615, 2120],
+    });
+  });
 });
