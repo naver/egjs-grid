@@ -381,9 +381,16 @@ grid.on("contentError", e => {
       start: [...prevOutline],
       end: [...prevOutline],
     };
+
+    updated.forEach((item) => {
+      item.isUpdate = true;
+    });
     if (items.length) {
       nextOutlines = this.applyGrid(this.items, direction, prevOutline);
     }
+    updated.forEach((item) => {
+      item.isUpdate = false;
+    });
     this.setOutlines(nextOutlines);
     this.fitOutlines();
     this.itemRenderer.renderItems(this.items);

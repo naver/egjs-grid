@@ -5,7 +5,7 @@
  */
 import Grid from "../Grid";
 import { MOUNT_STATE, PROPERTY_TYPE } from "../consts";
-import { GridOptions, Properties, GridOutlines, RenderOptions } from "../types";
+import { GridOptions, Properties, GridOutlines } from "../types";
 import { getRangeCost, GetterSetter, isObject } from "../utils";
 import { find_path } from "./lib/dijkstra";
 import { GridItem } from "../GridItem";
@@ -92,22 +92,15 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     isCroppedSize: false,
   };
   public applyGrid(items: GridItem[], direction: "start" | "end", outline: number[]): GridOutlines {
-    const rowRange = this.options.rowRange;
-    let path: string[] = [];
-
-    if (items.length) {
-      path = rowRange ? this._getRowPath(items) : this._getPath(items);
-    }
-
-    return this._setStyle(items, path, outline, direction === "end");
-  }
-  protected readyItems(mounted: GridItem[], updated: GridItem[], options: RenderOptions) {
     const {
       attributePrefix,
       horizontal,
     } = this.options;
 
-    updated.forEach((item) => {
+    items.forEach((item) => {
+      if (!item.isUpdate) {
+        return;
+      }
       const element = item.element;
       const attributes = item.attributes;
       const gridData = item.gridData;
@@ -138,7 +131,14 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       gridData.inlineOffset = inlineOffset;
       gridData.contentOffset = contentOffset;
     });
-    super.readyItems(mounted, updated, options);
+    const rowRange = this.options.rowRange;
+    let path: string[] = [];
+
+    if (items.length) {
+      path = rowRange ? this._getRowPath(items) : this._getPath(items);
+    }
+
+    return this._setStyle(items, path, outline, direction === "end");
   }
   private _getRowPath(items: GridItem[]) {
     const columnRange = this._getColumnRange();
