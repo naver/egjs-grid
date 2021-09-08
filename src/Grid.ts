@@ -295,7 +295,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
   protected checkReady(options: RenderOptions = {}) {
     // Grid: renderItems => checkReady => readyItems => applyGrid
     const items = this.items;
-    const updated = items.filter((item) => item.element && item.updateState !== UPDATE_STATE.UPDATED);
+    const updated = items.filter((item) => item.element?.parentNode && item.updateState !== UPDATE_STATE.UPDATED);
     const mounted: GridItem[] = updated.filter((item) => item.mountState !== MOUNT_STATE.MOUNTED);
     const moreUpdated: GridItem[] = [];
 
