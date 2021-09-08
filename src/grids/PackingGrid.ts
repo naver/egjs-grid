@@ -229,6 +229,7 @@ export interface PackingGrid extends Properties<typeof PackingGrid> {
  * @name Grid.PackingGrid#aspectRatio
  * @type {$ts:Grid.PackingGrid.PackingGridOptions["aspectRatio"]}
  * @example
+ * ```js
  * import { PackingGrid } from "@egjs/grid";
  *
  * const grid = new PackingGrid(container, {
@@ -236,6 +237,7 @@ export interface PackingGrid extends Properties<typeof PackingGrid> {
  * });
  *
  * grid.aspectRatio = 1.5;
+ * ```
  */
 
 /**
@@ -245,6 +247,7 @@ export interface PackingGrid extends Properties<typeof PackingGrid> {
  * @name Grid.PackingGrid#weightPriority
  * @type {$ts:Grid.PackingGrid.PackingGridOptions["weightPriority"]}
  * @example
+ * ```js
  * import { PackingGrid } from "@egjs/grid";
  *
  * const grid = new PackingGrid(container, {
@@ -256,6 +259,7 @@ export interface PackingGrid extends Properties<typeof PackingGrid> {
  * grid.weightPriority = "size";
  * // or
  * grid.weightPriority = "ratio";
+ * ```
  */
 
 /**
@@ -264,6 +268,7 @@ export interface PackingGrid extends Properties<typeof PackingGrid> {
  * @name Grid.PackingGrid#sizeWeight
  * @type {$ts:Grid.PackingGrid.PackingGridOptions["sizeWeight"]}
  * @example
+ * ```js
  * import { PackingGrid } from "@egjs/grid";
  *
  * const grid = new PackingGrid(container, {
@@ -271,6 +276,7 @@ export interface PackingGrid extends Properties<typeof PackingGrid> {
  * });
  *
  * grid.sizeWeight = 10;
+ * ```
  */
 
 
@@ -280,6 +286,7 @@ export interface PackingGrid extends Properties<typeof PackingGrid> {
  * @name Grid.PackingGrid#ratioWeight
  * @type {$ts:Grid.PackingGrid.PackingGridOptions["ratioWeight"]}
  * @example
+ * ```js
  * import { PackingGrid } from "@egjs/grid";
  *
  * const grid = new PackingGrid(container, {
@@ -287,4 +294,5 @@ export interface PackingGrid extends Properties<typeof PackingGrid> {
  * });
  *
  * grid.ratioWeight = 10;
+ * ```
  */

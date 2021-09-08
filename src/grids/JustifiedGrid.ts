@@ -441,6 +441,7 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
  * @name Grid.JustifiedGrid#columnRange
  * @type {$ts:Grid.JustifiedGrid.JustifiedGridOptions["columnRange"]}
  * @example
+ * ```js
  * import { JustifiedGrid } from "@egjs/grid";
  *
  * const grid = new JustifiedGrid(container, {
@@ -448,6 +449,7 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
  * });
  *
  * grid.columnRange = [3, 6];
+ * ```
  */
 
 
@@ -457,6 +459,7 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
  * @name Grid.JustifiedGrid#rowRange
  * @type {$ts:Grid.JustifiedGrid.JustifiedGridOptions["rowRange"]}
  * @example
+ * ```js
  * import { JustifiedGrid } from "@egjs/grid";
  *
  * const grid = new JustifiedGrid(container, {
@@ -464,6 +467,7 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
  * });
  *
  * grid.rowRange = [3, 4];
+ * ```
  */
 
 /**
@@ -472,6 +476,7 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
  * @name Grid.JustifiedGrid#sizeRange
  * @type {$ts:Grid.JustifiedGrid.JustifiedGridOptions["sizeRange"]}
  * @example
+ * ```js
  * import { JustifiedGrid } from "@egjs/grid";
  *
  * const grid = new JustifiedGrid(container, {
@@ -479,6 +484,7 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
  * });
  *
  * grid.sizeRange = [200, 800];
+ * ```
  */
 
 /**
@@ -487,6 +493,7 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
  * @name Grid.JustifiedGrid#displayedRow
  * @type {$ts:Grid.JustifiedGrid.JustifiedGridOptions["displayedRow"]}
  * @example
+ * ```js
  * import { JustifiedGrid } from "@egjs/grid";
  *
  * const grid = new JustifiedGrid(container, {
@@ -494,6 +501,7 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
  * });
  *
  * grid.displayedRow = 3;
+ * ```
  */
 
 /**
@@ -502,6 +510,7 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
  * @name Grid.JustifiedGrid#isCroppedSize
  * @type {$ts:Grid.JustifiedGrid.JustifiedGridOptions["isCroppedSize"]}
  * @example
+ * ```js
  * import { JustifiedGrid } from "@egjs/grid";
  *
  * const grid = new JustifiedGrid(container, {
@@ -510,4 +519,5 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
  * });
  *
  * grid.isCroppedSize = true;
+ * ```
  */

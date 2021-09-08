@@ -194,6 +194,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
    * @ko grid에 맞게 아이템을 재배치하고 렌더링을 한다. 배치가 완료되면 `renderComplete` 이벤트가 발생한다.
    * @param - Options for rendering. <ko>렌더링을 하기 위한 옵션.</ko>
    * @example
+   * ```js
    * import { MasonryGrid } from "@egjs/grid";
    * const grid = new MasonryGrid();
    *
@@ -201,6 +202,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
    *   console.log(e);
    * });
    * grid.renderItems();
+   * ```
    */
   public renderItems(options: RenderOptions = {}) {
     this._clearRenderTimer();
@@ -324,9 +326,11 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
        * @event Grid#contentError
        * @param {Grid.OnContentError} e - The object of data to be sent to an event <ko>이벤트에 전달되는 데이터 객체</ko>
        * @example
-grid.on("contentError", e => {
-  e.update();
-});
+       * ```js
+       * grid.on("contentError", e => {
+       *   e.update();
+       * });
+       * ```
       */
       this.trigger("contentError", {
         element: e.element,
@@ -409,10 +413,12 @@ grid.on("contentError", e => {
      * @event Grid#renderComplete
      * @param {Grid.OnRenderComplete} e - The object of data to be sent to an event <ko>이벤트에 전달되는 데이터 객체</ko>
      * @example
-grid.on("renderComplete", e => {
-console.log(e.mounted, e.updated, e.useResize);
-});
-      */
+     * ```js
+     * grid.on("renderComplete", e => {
+     *   console.log(e.mounted, e.updated, e.useResize);
+     * });
+     * ```
+     */
     this.trigger("renderComplete", e);
   }
   private _clearRenderTimer() {
@@ -457,6 +463,7 @@ export default Grid;
  * @name Grid#gap
  * @type {$ts:Grid.GridOptions["gap"]}
  * @example
+ * ```js
  * import { MasonryGrid } from "@egjs/grid";
  *
  * const grid = new MasonryGrid(container, {
@@ -464,6 +471,7 @@ export default Grid;
  * });
  *
  * grid.gap = 5;
+ * ```
  */
 
 /**
@@ -472,6 +480,7 @@ export default Grid;
  * @name Grid#defaultDirection
  * @type {$ts:Grid.GridOptions["defaultDirection"]}
  * @example
+ * ```js
  * import { MasonryGrid } from "@egjs/grid";
  *
  * const grid = new MasonryGrid(container, {
@@ -479,6 +488,7 @@ export default Grid;
  * });
  *
  * grid.defaultDirection = "start";
+ * ```
  */
 
 
@@ -488,6 +498,7 @@ export default Grid;
  * @name Grid#useFit
  * @type {$ts:Grid.GridOptions["useFit"]}
  * @example
+ * ```js
  * import { MasonryGrid } from "@egjs/grid";
  *
  * const grid = new MasonryGrid(container, {
@@ -495,6 +506,8 @@ export default Grid;
  * });
  *
  * grid.useFit = false;
+ * ```
+ */
 
 /**
  * Whether to preserve the UI of the existing container or item when destroying.
@@ -502,6 +515,7 @@ export default Grid;
  * @name Grid#preserveUIOnDestroy
  * @type {$ts:Grid.GridOptions["preserveUIOnDestroy"]}
  * @example
+ * ```js
  * import { MasonryGrid } from "@egjs/grid";
  *
  * const grid = new MasonryGrid(container, {
@@ -509,4 +523,5 @@ export default Grid;
  * });
  *
  * grid.preserveUIOnDestroy = true;
+ * ```
  */
