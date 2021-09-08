@@ -1,4 +1,6 @@
 import * as sinon from "sinon";
+import { MOUNT_STATE } from "../../src";
+import { GridItem } from "../../src/GridItem";
 import { SampleGrid } from "./samples/SampleGrid";
 import { cleanup, sandbox, waitEvent, waitFor } from "./utils/utils";
 
@@ -262,6 +264,24 @@ describe("test Grid", () => {
       // rect1 != rect2
       expect(rect1.width).to.be.not.equals(rect2.width);
       expect(rect1.height).to.be.not.equals(rect2.height);
+    });
+    it("should check if it is not mounted if there is no parent", async () => {
+      // Given
+      container!.innerHTML = ``;
+      grid = new SampleGrid(container!);
+
+      const item = new GridItem(false, {
+        element: document.createElement("div"),
+      });
+
+      // When
+      grid.setItems([item]);
+      grid.renderItems();
+
+      await waitEvent(grid, "renderComplete");
+
+      // Then
+      expect(item.mountState).to.be.equals(MOUNT_STATE.UNCHECKED);
     });
   });
   describe("test setStatus, getStatus", () => {

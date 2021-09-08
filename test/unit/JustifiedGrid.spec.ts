@@ -70,7 +70,7 @@ describe("test JustifiedGrid", () => {
       expect(cssRatio).to.be.closeTo(orgRatio, 0.00001);
     });
   });
-  it.only(`should check whether the offset of the updated items is recalculated`, async () => {
+  it(`should check whether the offset of the updated items is recalculated`, async () => {
     // Given
     container!.style.cssText = "width: 1000px;";
 
