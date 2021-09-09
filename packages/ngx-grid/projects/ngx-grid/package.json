@@ -1,6 +1,6 @@
 {
   "name": "@egjs/ngx-grid",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "An Angular component that can arrange items according to the type of grids",
   "author": {
     "name": "NAVER Corp."
@@ -30,7 +30,7 @@
     "@angular/core": ">=8.0.0"
   },
   "dependencies": {
-    "@egjs/grid": "~1.4.0",
+    "@egjs/grid": "~1.5.0",
     "tslib": "^2.0.0"
   }
 }
