@@ -268,6 +268,7 @@ export interface MasonryGrid extends Properties<typeof MasonryGrid> {
  * @name Grid.MasonryGrid#align
  * @type {$ts:Grid.MasonryGrid.MasonryGridOptions["align"]}
  * @example
+ * ```js
  * import { MasonryGrid } from "@egjs/grid";
  *
  * const grid = new MasonryGrid(container, {
@@ -275,6 +276,7 @@ export interface MasonryGrid extends Properties<typeof MasonryGrid> {
  * });
  *
  * grid.align = "justify";
+ * ```
  */
 
 
@@ -284,6 +286,7 @@ export interface MasonryGrid extends Properties<typeof MasonryGrid> {
  * @name Grid.MasonryGrid#column
  * @type {$ts:Grid.MasonryGrid.MasonryGridOptions["column"]}
  * @example
+ * ```js
  * import { MasonryGrid } from "@egjs/grid";
  *
  * const grid = new MasonryGrid(container, {
@@ -291,6 +294,7 @@ export interface MasonryGrid extends Properties<typeof MasonryGrid> {
  * });
  *
  * grid.column = 4;
+ * ```
  */
 
 
@@ -300,6 +304,7 @@ export interface MasonryGrid extends Properties<typeof MasonryGrid> {
  * @name Grid.MasonryGrid#columnSize
  * @type {$ts:Grid.MasonryGrid.MasonryGridOptions["columnSize"]}
  * @example
+ * ```js
  * import { MasonryGrid } from "@egjs/grid";
  *
  * const grid = new MasonryGrid(container, {
@@ -307,6 +312,7 @@ export interface MasonryGrid extends Properties<typeof MasonryGrid> {
  * });
  *
  * grid.columnSize = 200;
+ * ```
  */
 
 
@@ -316,6 +322,7 @@ export interface MasonryGrid extends Properties<typeof MasonryGrid> {
  * @name Grid.MasonryGrid#columnSizeRatio
  * @type {$ts:Grid.MasonryGrid.MasonryGridOptions["columnSizeRatio"]}
  * @example
+ * ```js
  * import { MasonryGrid } from "@egjs/grid";
  *
  * const grid = new MasonryGrid(container, {
@@ -323,4 +330,5 @@ export interface MasonryGrid extends Properties<typeof MasonryGrid> {
  * });
  *
  * grid.columnSizeRatio = 0.5;
+ * ```
  */

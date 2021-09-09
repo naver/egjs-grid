@@ -70,7 +70,7 @@ describe("test JustifiedGrid", () => {
       expect(cssRatio).to.be.closeTo(orgRatio, 0.00001);
     });
   });
-  it(`should check whether the ratio is maintained except for the offset when the content offset is set`, async () => {
+  it(`should check whether the offset of the updated items is recalculated`, async () => {
     // Given
     container!.style.cssText = "width: 1000px;";
 
@@ -79,25 +79,36 @@ describe("test JustifiedGrid", () => {
       horizontal: false,
     });
 
-    appendElements(container!, 18).forEach((element) => {
-      element.setAttribute("data-grid-content-offset", "20");
-    });
-
-    // When
+    appendElements(container!, 8);
     grid.renderItems();
 
     await waitEvent(grid, "renderComplete");
 
     const items = grid.getItems();
 
+    // When
+    items.slice(0, 4).forEach((item) => {
+      item.isUpdate = true;
+      item.attributes = {
+        contentOffset: "20",
+      };
+    });
+
+    grid.applyGrid(grid.getItems(), "end", [0]);
+
     // Then
     expectItemsPosition(items);
-    items.forEach((item) => {
+    items.forEach((item, i) => {
       const cssRatio = item.cssInlineSize / (item.cssContentSize - 20);
       const orgRatio = item.orgInlineSize / (item.orgContentSize - 20);
 
-      expect(cssRatio).to.be.closeTo(orgRatio, 0.00001);
-      expect(item.element!.clientHeight).to.be.closeTo(item.element!.scrollHeight, 0.00001);
+      if (i < 4) {
+        // update
+        expect(cssRatio).to.be.closeTo(orgRatio, 0.00001, `index: ${i}`);
+      } else {
+        // not update
+        expect(cssRatio).to.be.not.closeTo(orgRatio, 0.00001, `index: ${i}`);
+      }
     });
   });
   it(`should check whether the ratio is maintained except for the offset when the content offset is set`, async () => {

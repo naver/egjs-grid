@@ -189,7 +189,7 @@ export class FrameGrid extends Grid<FrameGridOptions> {
     }
     const isDirectionEnd = direction === "end";
 
-    let gridOutline = outline;
+    let gridOutline = outline.length ? outline : [0];
 
     if (gridOutline.length !== frameInlineSize) {
       const point = isDirectionEnd ? Math.max(...gridOutline) : Math.min(...gridOutline);
@@ -199,8 +199,8 @@ export class FrameGrid extends Grid<FrameGridOptions> {
     startOutline = startOutline.map((point) => isFinite(point) ? point : 0);
     endOutline = endOutline.map((point) => isFinite(point) ? point : 0);
     const outlineDist = isDirectionEnd
-      ? getOutlineDist(startOutline, gridOutline, useFrameFill)
-      : getOutlineDist(gridOutline, endOutline, useFrameFill);
+      ? getOutlinePoint(gridOutline, startOutline, useFrameFill)
+      : getOutlinePoint(endOutline, gridOutline, useFrameFill);
 
     items.forEach((item) => {
       item.cssContentPos += outlineDist;
@@ -318,6 +318,7 @@ export interface FrameGrid extends Properties<typeof FrameGrid> {
  * @name Grid.FrameGrid#frame
  * @type {$ts:Grid.FrameGrid.FrameGridOptions["frame"]}
  * @example
+ * ```js
  * import { FrameGrid } from "@egjs/grid";
  *
  * // Item 1 : 2 x 2
@@ -338,6 +339,7 @@ export interface FrameGrid extends Properties<typeof FrameGrid> {
  *   [1, 1, 0, 0, 2, 2],
  *   [1, 1, 0, 0, 2, 2],
  * ];
+ * ```
  */
 
 /**
@@ -346,6 +348,7 @@ export interface FrameGrid extends Properties<typeof FrameGrid> {
  * @name Grid.FrameGrid#useFrameFill
  * @type {$ts:Grid.FrameGrid.FrameGridOptions["useFrameFill"]}
  * @example
+ * ```js
  * import { FrameGrid } from "@egjs/grid";
  *
  * const grid = new FrameGrid(container, {
@@ -353,6 +356,7 @@ export interface FrameGrid extends Properties<typeof FrameGrid> {
  * });
  *
  * grid.useFrameFill = false;
+ * ```
  */
 
 /**
@@ -361,6 +365,7 @@ export interface FrameGrid extends Properties<typeof FrameGrid> {
  * @name Grid.FrameGrid#rectSize
  * @type {$ts:Grid.FrameGrid.FrameGridOptions["rectSize"]}
  * @example
+ * ```js
  * import { FrameGrid } from "@egjs/grid";
  *
  * const grid = new FrameGrid(container, {
@@ -368,4 +373,5 @@ export interface FrameGrid extends Properties<typeof FrameGrid> {
  * });
  *
  * grid.rectSize = { inlineSize: 100, contentSize: 150 };
+ * ```
  */
