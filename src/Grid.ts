@@ -299,12 +299,33 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     const mounted: GridItem[] = updated.filter((item) => item.mountState !== MOUNT_STATE.MOUNTED);
     const moreUpdated: GridItem[] = [];
 
+    mounted.filter((item) => {
+      if (!item.hasTransition) {
+        const element = item.element!;
+        const transitionDuration = parseFloat(getComputedStyle(element).transitionDuration);
+
+        if (transitionDuration > 0) {
+          item.transitionDuration = element.style.transitionDuration;
+          return true;
+        }
+      }
+      return false;
+    }).forEach((item) => {
+      item.element!.style.transitionDuration = "0s";
+    });
     this._im?.destroy();
     this._im = new ImReady({
       prefix: this.options.attributePrefix,
     }).on("preReadyElement", (e) => {
       updated[e.index].updateState = UPDATE_STATE.WAIT_LOADING;
     }).on("preReady", () => {
+      mounted.forEach((item) => {
+        if (item.hasTransition) {
+          const element = item.element!;
+
+          element.style.transitionDuration = item.transitionDuration;
+        }
+      });
       this.itemRenderer.updateItems(updated);
       this.readyItems(mounted, updated, options);
     }).on("readyElement", (e) => {
@@ -525,3 +546,4 @@ export default Grid;
  * grid.preserveUIOnDestroy = true;
  * ```
  */
+
