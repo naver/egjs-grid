@@ -731,6 +731,33 @@ describe("test Grid", () => {
       // Then
       expect(spy.callCount).to.be.equals(0);
     });
+    it(`should check if the transition is temporarily removed`, async () => {
+      // Given
+      container!.innerHTML = `
+      <div>1</div>
+      <div style="transition: all ease 0.2s;">2</div>
+      <div>3</div>
+      `;
+      grid = new SampleGrid(container!);
+
+      // When
+      grid.renderItems();
+
+      const transitions = grid.getItems().map((item) => item.hasTransition);
+
+      // set transitionDuration to 0s
+      const transitionProperties1 = grid.getItems().map((item) => item.element!.style.transitionDuration);
+
+      await waitEvent(grid, "renderComplete");
+      const transitionProperties2 = grid.getItems().map((item) => item.element!.style.transitionDuration);
+
+      // Then
+      expect(transitions).to.be.deep.equals([false, true, false]);
+      // before mount
+      expect(transitionProperties1).to.be.deep.equals(["", "0s", ""]);
+      // after mount (restore duration)
+      expect(transitionProperties2).to.be.deep.equals(["", "0.2s", ""]);
+    });
   });
 });
 

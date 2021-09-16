@@ -305,6 +305,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
         const transitionDuration = parseFloat(getComputedStyle(element).transitionDuration);
 
         if (transitionDuration > 0) {
+          item.hasTransition = true;
           item.transitionDuration = element.style.transitionDuration;
           return true;
         }
