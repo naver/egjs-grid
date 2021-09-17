@@ -322,13 +322,6 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     }).on("preReadyElement", (e) => {
       updated[e.index].updateState = UPDATE_STATE.WAIT_LOADING;
     }).on("preReady", () => {
-      mounted.forEach((item) => {
-        if (item.hasTransition) {
-          const element = item.element!;
-
-          element.style.transitionDuration = item.transitionDuration;
-        }
-      });
       this.itemRenderer.updateItems(updated);
       this.readyItems(mounted, updated, options);
     }).on("readyElement", (e) => {
@@ -423,6 +416,17 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     this.fitOutlines();
     this.itemRenderer.renderItems(this.items);
     this._refreshContainerContentSize();
+
+    const transitionMounted = mounted.filter((item) => item.hasTransition);
+
+    if (transitionMounted.length) {
+      this.containerManager.resize();
+      transitionMounted.forEach((item) => {
+        const element = item.element!;
+
+        element.style.transitionDuration = item.transitionDuration;
+      });
+    }
     this._renderComplete({
       direction,
       mounted,
