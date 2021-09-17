@@ -300,7 +300,9 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     const moreUpdated: GridItem[] = [];
 
     mounted.filter((item) => {
-      if (!item.hasTransition) {
+      if (item.hasTransition) {
+        return true;
+      } else {
         const element = item.element!;
         const transitionDuration = parseFloat(getComputedStyle(element).transitionDuration);
 
