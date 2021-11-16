@@ -32,6 +32,8 @@ import { ItemRenderer, ItemRendererStatus } from "./ItemRenderer";
  * @property - The default direction value when direction is not set in the render option. <ko>render옵션에서 direction을 미설정시의 기본 방향값.</ko>
  * @property - You can set the ItemRenderer directly externally. <ko>외부에서 직접 ItemRenderer를 설정할 수 있다.</ko>
  * @property - You can set the ContainerManager를 directly externally. <ko>외부에서 직접 ContainerManager를 설정할 수 있다.</ko>
+ * @property - Whether to get the size as offsetWidth, offsetHeight. Set to true if transform is applied to the container. If false, get the size through getBoundingClientRect. (default: true) <ko>사이즈를 offsetWidth, offsetHeight로 가져올지 여부.
+container에 transform이 적용되어 있다면 true로 설정해라. false면 getBoundingClientRect를 통해 사이즈를 가져온다. (default: true)</ko>
  */
 export interface GridOptions {
   horizontal?: boolean;
@@ -50,6 +52,7 @@ export interface GridOptions {
   defaultDirection?: "start" | "end";
   outlineLength?: number;
   outlineSize?: number;
+  useOffset?: boolean;
   externalItemRenderer?: ItemRenderer | null;
   externalContainerManager?: ContainerManager | null;
 }

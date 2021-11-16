@@ -15,6 +15,7 @@ export interface ItemRendererOptions {
   percentage?: Array<"position" | "size"> | boolean;
   isEqualSize?: boolean;
   isConstantSize?: boolean;
+  useOffset?: boolean;
 }
 export interface ItemRendererStatus {
   initialRect: Required<DOMRect> | null;
@@ -35,6 +36,7 @@ export class ItemRenderer {
       percentage: DEFAULT_GRID_OPTIONS.percentage,
       isEqualSize: DEFAULT_GRID_OPTIONS.isEqualSize,
       isConstantSize: DEFAULT_GRID_OPTIONS.isConstantSize,
+      useOffset: DEFAULT_GRID_OPTIONS.useOffset,
       ...options,
     };
     this._init();
@@ -88,7 +90,7 @@ export class ItemRenderer {
     this.sizePercetage = sizePercentage;
   }
   private _updateItem(item: GridItem) {
-    const { isEqualSize, isConstantSize } = this.options;
+    const { isEqualSize, isConstantSize, useOffset } = this.options;
     const initialRect = this.initialRect;
     const { orgRect, element } = item;
     const isLoading = item.updateState === UPDATE_STATE.WAIT_LOADING;
@@ -105,9 +107,18 @@ export class ItemRenderer {
       rect = {
         left: element.offsetLeft,
         top: element.offsetTop,
-        width: element.offsetWidth,
-        height: element.offsetHeight,
+        width: 0,
+        height: 0,
       };
+      if (useOffset) {
+        rect.width = element.offsetWidth;
+        rect.height = element.offsetHeight;
+      } else {
+        const clientRect = element.getBoundingClientRect();
+
+        rect.width = clientRect.width;
+        rect.height = clientRect.height;
+      }
     }
     if (!item.isFirstUpdate) {
       item.orgRect = { ...rect };
