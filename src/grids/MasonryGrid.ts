@@ -38,17 +38,18 @@ function getColumnIndex(outline: number[], columnCount: number, nearestCalculati
  * @property - The size of the columns. If it is 0, it is calculated as the size of the first item in items. Can be used instead of outlineSize. (default: 0) <ko> 열의 사이즈. 만약 열의 사이즈가 0이면, 아이템들의 첫번째 아이템의 사이즈로 계산이 된다. outlineSize 대신 사용할 수 있다.(default: 0) </ko>
  * @property - The size ratio(inlineSize / contentSize) of the columns. 0 is not set. (default: 0) <ko>열의 사이즈 비율(inlineSize / contentSize). 0은 미설정이다. </ko>
  * @property - Align of the position of the items. If you want to use `stretch`, be sure to set `column` or `columnSize` option. ("start", "center", "end", "justify", "stretch") (default: "justify") <ko>아이템들의 위치의 정렬. `stretch`를 사용하고 싶다면 `column` 또는 `columnSize` 옵션을 설정해라.  ("start", "center", "end", "justify", "stretch") (default: "justify")</ko>
+ * @property - Difference Threshold for Counting Columns. (default: 1) <ko>칼럼 개수를 계산하기 위한 차이 임계값. (default: 1)</ko>
  */
 export interface MasonryGridOptions extends GridOptions {
   column?: number;
   columnSize?: number;
   columnSizeRatio?: number;
   align?: GridAlign;
+  columnCalculationThreshold?: number;
 }
 
 /**
  * MasonryGrid is a grid that stacks items with the same width as a stack of bricks. Adjust the width of all images to the same size, find the lowest height column, and insert a new item.
- *
  * @ko MasonryGrid는 벽돌을 쌓아 올린 모양처럼 동일한 너비를 가진 아이템를 쌓는 레이아웃이다. 모든 이미지의 너비를 동일한 크기로 조정하고, 가장 높이가 낮은 열을 찾아 새로운 이미지를 삽입한다. 따라서 배치된 아이템 사이에 빈 공간이 생기지는 않지만 배치된 레이아웃의 아래쪽은 울퉁불퉁해진다.
  * @memberof Grid
  * @param {HTMLElement | string} container - A base element for a module <ko>모듈을 적용할 기준 엘리먼트</ko>
@@ -62,6 +63,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     columnSize: PROPERTY_TYPE.RENDER_PROPERTY,
     columnSizeRatio: PROPERTY_TYPE.RENDER_PROPERTY,
     align: PROPERTY_TYPE.RENDER_PROPERTY,
+    columnCalculationThreshold: PROPERTY_TYPE.RENDER_PROPERTY,
   };
   public static defaultOptions: Required<MasonryGridOptions> = {
     ...Grid.defaultOptions,
@@ -69,6 +71,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     column: 0,
     columnSize: 0,
     columnSizeRatio: 0,
+    columnCalculationThreshold: 0.5,
   };
 
   public applyGrid(items: GridItem[], direction: "start" | "end", outline: number[]): GridOutlines {
@@ -198,6 +201,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
   public getComputedOutlineLength(items = this.items) {
     const gap = this.gap;
     const columnOption = this.column || this.outlineLength;
+    const columnCalculationThreshold = this.columnCalculationThreshold;
     let column = 1;
 
     if (columnOption) {
@@ -207,7 +211,8 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
 
       column = Math.min(
         items.length,
-        Math.max(1, Math.floor((this.getContainerInlineSize() + gap) / (columnSize + gap))),
+        Math.max(1, Math.floor((this.getContainerInlineSize() + gap)
+          / (columnSize - columnCalculationThreshold + gap))),
       );
     }
     return column;
