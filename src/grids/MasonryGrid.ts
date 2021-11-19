@@ -38,7 +38,7 @@ function getColumnIndex(outline: number[], columnCount: number, nearestCalculati
  * @property - The size of the columns. If it is 0, it is calculated as the size of the first item in items. Can be used instead of outlineSize. (default: 0) <ko> 열의 사이즈. 만약 열의 사이즈가 0이면, 아이템들의 첫번째 아이템의 사이즈로 계산이 된다. outlineSize 대신 사용할 수 있다.(default: 0) </ko>
  * @property - The size ratio(inlineSize / contentSize) of the columns. 0 is not set. (default: 0) <ko>열의 사이즈 비율(inlineSize / contentSize). 0은 미설정이다. </ko>
  * @property - Align of the position of the items. If you want to use `stretch`, be sure to set `column` or `columnSize` option. ("start", "center", "end", "justify", "stretch") (default: "justify") <ko>아이템들의 위치의 정렬. `stretch`를 사용하고 싶다면 `column` 또는 `columnSize` 옵션을 설정해라.  ("start", "center", "end", "justify", "stretch") (default: "justify")</ko>
- * @property - Difference Threshold for Counting Columns. (default: 1) <ko>칼럼 개수를 계산하기 위한 차이 임계값. (default: 1)</ko>
+ * @property - Difference Threshold for Counting Columns. Since offsetSize is calculated by rounding, the number of columns may not be accurate. (default: 1) <ko>칼럼 개수를 계산하기 위한 차이 임계값. offset 사이즈는 반올림으로 게산하기 때문에 정확하지 않을 수 있다. (default: 1)</ko>
  */
 export interface MasonryGridOptions extends GridOptions {
   column?: number;
