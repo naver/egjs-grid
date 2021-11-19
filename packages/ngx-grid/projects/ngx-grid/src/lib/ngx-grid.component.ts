@@ -6,7 +6,9 @@
 import {
   AfterViewChecked, AfterViewInit, Component, ElementRef,
   EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges,
+  PLATFORM_ID, Inject,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { GridFunction, GridOptions, GRID_EVENTS, OnContentError, OnRenderComplete } from '@egjs/grid';
 import { NgxGridInterface } from './ngx-grid.interface';
 import { NgxGridEvents } from './types';
@@ -44,13 +46,16 @@ export class NgxGridComponent
   @Output() renderComplete!: EventEmitter<OnRenderComplete>;
   @Output() contentError!: EventEmitter<OnContentError>;
 
-  constructor(private _containerElementRef: ElementRef) {
+  constructor(private _containerElementRef: ElementRef, @Inject(PLATFORM_ID) private _platform: Object) {
     super();
     GRID_EVENTS.forEach((name) => {
       (this as any)[name] = new EventEmitter();
     });
   }
   ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this._platform)) {
+      return;
+    }
     const GridClass = (this.constructor as typeof NgxGridComponent).GridClass;
     const defaultOptions = GridClass.defaultOptions;
     const options: Partial<GridOptions> = {};
@@ -88,9 +93,9 @@ export class NgxGridComponent
     }
   }
   ngAfterViewChecked() {
-    this.vanillaGrid.syncElements();
+    this.vanillaGrid?.syncElements();
   }
   ngOnDestroy() {
-    this.vanillaGrid.destroy();
+    this.vanillaGrid?.destroy();
   }
 }
