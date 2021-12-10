@@ -41,6 +41,25 @@ describe("test PackingGrid", () => {
     });
     expect(container!.style.height).to.be.equals("0px");
   });
+  it("should check if outlineSize is container's inline size and outlineLength is 1", async () => {
+    // Given
+    container!.style.cssText = "width: 600px;";
+    grid = new PackingGrid(container!, {
+      gap: 5,
+    });
+
+    appendElements(container!, 4);
+    // When
+
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+
+    // Then
+    expect(grid.getComputedOutlineLength()).to.be.equals(1);
+    expect(grid.getComputedOutlineSize()).to.be.equals(grid.getContainerInlineSize());
+  });
   it(`should check that all items are connected`, async () => {
     // Given
     container!.style.cssText = "width: 600px;";

@@ -545,5 +545,76 @@ describe("test MasonryGrid", () => {
       end: [155, 155, 155],
     });
   });
+  it("should check if outlineSize and outlineLength are calculated by items", async () => {
+    // Given
+    container!.style.cssText = "width: 600px; height: 600px;";
+    container!.innerHTML = `
+      <div style="position: absolute;width: 250px; height: 250px;"></div>
+      <div style="position: absolute;width: 300px; height: 300px;"></div>
+      <div style="position: absolute;width: 500px; height: 500px;"></div>
+      <div style="position: absolute;width: 250px; height: 250px;"></div>
+    `;
+    grid = new MasonryGrid(container!, {
+      gap: 5,
+    });
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+
+    // Then
+    expect(grid.getComputedOutlineLength()).to.be.equals(2);
+    expect(grid.getComputedOutlineSize()).to.be.equals(250);
+  });
+  it("should check if column is set by outlineLength", async () => {
+    // Given
+    container!.style.cssText = "width: 600px; height: 600px;";
+    container!.innerHTML = `
+      <div style="position: absolute;width: 250px; height: 250px;"></div>
+      <div style="position: absolute;width: 300px; height: 300px;"></div>
+      <div style="position: absolute;width: 500px; height: 500px;"></div>
+      <div style="position: absolute;width: 250px; height: 250px;"></div>
+    `;
+    grid = new MasonryGrid(container!, {
+      gap: 5,
+      outlineLength: 3,
+    });
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+
+    // Then
+    expect(grid.getComputedOutlineLength()).to.be.equals(3);
+    expect(grid.getOutlines().start.length).to.be.equals(3);
+  });
+  it("should check if column is set by outlineSize", async () => {
+    // Given
+    container!.style.cssText = "width: 600px; height: 600px;";
+    container!.innerHTML = `
+      <div style="position: absolute;width: 250px; height: 250px;"></div>
+      <div style="position: absolute;width: 300px; height: 300px;"></div>
+      <div style="position: absolute;width: 500px; height: 500px;"></div>
+      <div style="position: absolute;width: 250px; height: 250px;"></div>
+    `;
+    grid = new MasonryGrid(container!, {
+      gap: 5,
+      outlineSize: 150,
+    });
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+
+    // Then
+    expect(grid.getComputedOutlineLength()).to.be.equals(3);
+    expect(grid.getOutlines().start.length).to.be.equals(3);
+  });
 });
 
