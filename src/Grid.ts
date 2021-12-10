@@ -509,6 +509,7 @@ export default Grid;
  * @ko 아이템들 사이의 공간.
  * @name Grid#gap
  * @type {$ts:Grid.GridOptions["gap"]}
+ * @default 0
  * @example
  * ```js
  * import { MasonryGrid } from "@egjs/grid";
@@ -526,6 +527,7 @@ export default Grid;
  * @ko render옵션에서 direction을 미설정시의 기본 방향값.
  * @name Grid#defaultDirection
  * @type {$ts:Grid.GridOptions["defaultDirection"]}
+ * @default "end"
  * @example
  * ```js
  * import { MasonryGrid } from "@egjs/grid";
@@ -544,6 +546,7 @@ export default Grid;
  * @ko 렌더링시 상단이 비어있을 때 아웃라인을 0으로 이동시킬지 여부. 하지만 상단보다 넘치는 경우 아웃라인을 0으로 강제 이동한다. (default: true)
  * @name Grid#useFit
  * @type {$ts:Grid.GridOptions["useFit"]}
+ * @default true
  * @example
  * ```js
  * import { MasonryGrid } from "@egjs/grid";
@@ -561,6 +564,7 @@ export default Grid;
  * @ko destroy 시 기존 컨테이너, 아이템의 UI를 보존할지 여부.
  * @name Grid#preserveUIOnDestroy
  * @type {$ts:Grid.GridOptions["preserveUIOnDestroy"]}
+ * @default false
  * @example
  * ```js
  * import { MasonryGrid } from "@egjs/grid";
@@ -575,10 +579,11 @@ export default Grid;
 
 
 /**
- * The number of outlines. If the number of outlines is 0, it is calculated according to the type of grid. (default: 0)
- * @ko outline의 개수. 아웃라인의 개수가 0이라면 grid의 종류에 따라 계산이 된다. (default: 0)
+ * The number of outlines. If the number of outlines is 0, it is calculated according to the type of grid.
+ * @ko outline의 개수. 아웃라인의 개수가 0이라면 grid의 종류에 따라 계산이 된다.
  * @name Grid#outlineLength
  * @type {$ts:Grid.GridOptions["outlineLength"]}
+ * @default 0
  * @example
  * ```js
  * import { MasonryGrid } from "@egjs/grid";
@@ -594,10 +599,11 @@ export default Grid;
 
 
 /**
- * The size of the outline. If the outline size is 0, it is calculated according to the grid type. (default: 0)
- * @ko outline의 사이즈. 만약 outline의 사이즈가 0이면, grid의 종류에 따라 계산이 된다. (default: 0)
+ * The size of the outline. If the outline size is 0, it is calculated according to the grid type.
+ * @ko outline의 사이즈. 만약 outline의 사이즈가 0이면, grid의 종류에 따라 계산이 된다.
  * @name Grid#outlineSize
  * @type {$ts:Grid.GridOptions["outlineSize"]}
+ * @default 0
  * @example
  * ```js
  * import { MasonryGrid } from "@egjs/grid";
