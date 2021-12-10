@@ -206,6 +206,12 @@ export class PackingGrid extends Grid<PackingGridOptions> {
 
     fitArea(item, bestFitArea, itemFitSize, containerFitSize, isContentDirection);
   }
+  public getComputedOutlineLength() {
+    return 1;
+  }
+  public getComputedOutlineSize() {
+    return this.getContainerInlineSize();
+  }
   private _getWeight(type: "size" | "ratio"): number {
     const options = this.options;
     const weightPriority = options.weightPriority;

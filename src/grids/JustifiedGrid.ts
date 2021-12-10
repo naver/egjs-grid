@@ -417,6 +417,12 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       end: [startPoint], // endPoint - height = startPoint
     };
   }
+  public getComputedOutlineLength() {
+    return 1;
+  }
+  public getComputedOutlineSize() {
+    return this.getContainerInlineSize();
+  }
   private _getRowRange() {
     const rowRange = this.rowRange;
     return isObject(rowRange) ? rowRange : [rowRange, rowRange];

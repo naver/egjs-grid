@@ -269,6 +269,25 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     return this;
   }
   /**
+   * Get the inline size corresponding to outline.
+   * @ko outline에 해당하는 inline 사이즈를 구한다.
+   * @param items - Items to get outline size. <ko>outline 사이즈를 구하기 위한 아이템들.</ko>
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public getComputedOutlineSize(items: GridItem[] = this.items) {
+    return this.options.outlineSize || this.getContainerInlineSize();
+  }
+  /**
+   * Get the length corresponding to outline.
+   * @ko outline에 해당하는 length를 가져온다.
+   * @param items - Items to get outline length. <ko>outline length를 구하기 위한 아이템들.</ko>
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public getComputedOutlineLength(items: GridItem[] = this.items): number {
+    return this.options.outlineLength || 1;
+  }
+
+  /**
    * Releases the instnace and events and returns the CSS of the container and elements.
    * @ko 인스턴스와 이벤트를 해제하고 컨테이너와 엘리먼트들의 CSS를 되돌린다.
    * @param Options for destroy. <ko>destory()를 위한 옵션</ko>
@@ -551,6 +570,44 @@ export default Grid;
  * });
  *
  * grid.preserveUIOnDestroy = true;
+ * ```
+ */
+
+
+/**
+ * The number of outlines. If the number of outlines is 0, it is calculated according to the type of grid. (default: 0)
+ * @ko outline의 개수. 아웃라인의 개수가 0이라면 grid의 종류에 따라 계산이 된다. (default: 0)
+ * @name Grid#outlineLength
+ * @type {$ts:Grid.GridOptions["outlineLength"]}
+ * @example
+ * ```js
+ * import { MasonryGrid } from "@egjs/grid";
+ *
+ * const grid = new MasonryGrid(container, {
+ *   outlineLength: 0,
+ *   outlineSize: 0,
+ * });
+ *
+ * grid.outlineLength = 3;
+ * ```
+ */
+
+
+/**
+ * The size of the outline. If the outline size is 0, it is calculated according to the grid type. (default: 0)
+ * @ko outline의 사이즈. 만약 outline의 사이즈가 0이면, grid의 종류에 따라 계산이 된다. (default: 0)
+ * @name Grid#outlineSize
+ * @type {$ts:Grid.GridOptions["outlineSize"]}
+ * @example
+ * ```js
+ * import { MasonryGrid } from "@egjs/grid";
+ *
+ * const grid = new MasonryGrid(container, {
+ *   outlineLength: 0,
+ *   outlineSize: 0,
+ * });
+ *
+ * grid.outlineSize = 300;
  * ```
  */
 

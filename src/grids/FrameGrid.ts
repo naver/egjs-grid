@@ -211,6 +211,22 @@ export class FrameGrid extends Grid<FrameGridOptions> {
       end: endOutline.map((point) => point + outlineDist),
     };
   }
+  public getComputedOutlineLength() {
+    const frame = this.options.frame;
+
+    return frame.length ? frame[0].length : 0;
+  }
+  public getComputedOutlineSize() {
+    const {
+      gap,
+      rectSize: rectSizeOption,
+    } = this.options;
+
+    if (typeof rectSizeOption === "object") {
+      return rectSizeOption.inlineSize;
+    }
+    return rectSizeOption || ((this.getContainerInlineSize()! + gap) / this.getComputedOutlineLength() - gap);
+  }
   protected getRectSize(frameInlineSize: number) {
     const {
       gap,

@@ -25,8 +25,10 @@ import { ItemRenderer, ItemRendererStatus } from "./ItemRenderer";
  * @property - Whether to move the outline to 0 when the top is empty when rendering. However, if it overflows above the top, the outline is forced to 0. (default: true) <ko>렌더링시 상단이 비어있을 때 아웃라인을 0으로 이동시킬지 여부. 하지만 상단보다 넘치는 경우 아웃라인을 0으로 강제 이동한다. (default: true)</ko>
  * @property - Whether the resize method should be called automatically after a window resize event. (default: true)<ko>window의 resize 이벤트 이후 자동으로 resize()메소드를 호출할지의 여부. (default: true)</ko>
  * @property - Whether to use transform property instead of using left and top css properties. <ko>left, top css 속성 쓰는 대신 transform 속성을 사용할지 여부.</ko>
- * @property - Whether to automatically render through property change. <ko>property의 변화를 통해 자동으로 render를 할지 여부.</ko>
- * @property - Whether to preserve the UI of the existing container or item when destroying. <ko>destroy 시 기존 컨테이너, 아이템의 UI를 보존할지 여부.</ko>
+ * @property - Whether to automatically render through property change. <ko>property의 변화를 통해 자동으로 render를 할지 여부.</ko>
+ * @property - Whether to preserve the UI of the existing container or item when destroying. <ko>destroy 시 기존 컨테이너, 아이템의 UI를 보존할지 여부.</ko>
+ * @property - The number of outlines. If the number of outlines is 0, it is calculated according to the type of grid. (default: 0) <ko>outline의 개수. 아웃라인의 개수가 0이라면 grid의 종류에 따라 계산이 된다. (default: 0)</ko>
+ * @property - The size of the outline. If the outline size is 0, it is calculated according to the grid type. (default: 0) <ko> outline의 사이즈. 만약 outline의 사이즈가 0이면, grid의 종류에 따라 계산이 된다. (default: 0) </ko>
  * @property - The default direction value when direction is not set in the render option. <ko>render옵션에서 direction을 미설정시의 기본 방향값.</ko>
  * @property - You can set the ItemRenderer directly externally. <ko>외부에서 직접 ItemRenderer를 설정할 수 있다.</ko>
  * @property - You can set the ContainerManager를 directly externally. <ko>외부에서 직접 ContainerManager를 설정할 수 있다.</ko>
@@ -46,6 +48,8 @@ export interface GridOptions {
   renderOnPropertyChange?: boolean;
   preserveUIOnDestroy?: boolean;
   defaultDirection?: "start" | "end";
+  outlineLength?: number;
+  outlineSize?: number;
   externalItemRenderer?: ItemRenderer | null;
   externalContainerManager?: ContainerManager | null;
 }
