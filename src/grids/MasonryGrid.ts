@@ -203,7 +203,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     if (columnOption) {
       column = columnOption;
     } else {
-      const columnSize = this.getComputedOutlineSize();
+      const columnSize = this.getComputedOutlineSize(items);
 
       column = Math.min(
         items.length,
