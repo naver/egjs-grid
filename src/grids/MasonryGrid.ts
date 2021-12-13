@@ -34,8 +34,8 @@ function getColumnIndex(outline: number[], columnCount: number, nearestCalculati
  * @typedef
  * @memberof Grid.MasonryGrid
  * @extends Grid.GridOptions
- * @property - The number of columns. If the number of columns is 0, it is automatically calculated according to the size of the container. <ko>열의 개수. 열의 개수가 0이라면, 컨테이너의 사이즈에 의해 계산이 된다. (default: 0) </ko>
- * @property - The size of the columns. If it is 0, it is calculated as the size of the first item in items. (default: 0) <ko> 열의 사이즈. 만약 열의 사이즈가 0이면, 아이템들의 첫번째 아이템의 사이즈로 계산이 된다. (default: 0) </ko>
+ * @property - The number of columns. If the number of columns is 0, it is automatically calculated according to the size of the container. Can be used instead of outlineLength. (default: 0)<ko>열의 개수. 열의 개수가 0이라면, 컨테이너의 사이즈에 의해 계산이 된다. outlineLength 대신 사용할 수 있다.(default: 0) </ko>
+ * @property - The size of the columns. If it is 0, it is calculated as the size of the first item in items. Can be used instead of outlineSize. (default: 0) <ko> 열의 사이즈. 만약 열의 사이즈가 0이면, 아이템들의 첫번째 아이템의 사이즈로 계산이 된다. outlineSize 대신 사용할 수 있다.(default: 0) </ko>
  * @property - The size ratio(inlineSize / contentSize) of the columns. 0 is not set. (default: 0) <ko>열의 사이즈 비율(inlineSize / contentSize). 0은 미설정이다. </ko>
  * @property - Align of the position of the items. If you want to use `stretch`, be sure to set `column` or `columnSize` option. ("start", "center", "end", "justify", "stretch") (default: "justify") <ko>아이템들의 위치의 정렬. `stretch`를 사용하고 싶다면 `column` 또는 `columnSize` 옵션을 설정해라.  ("start", "center", "end", "justify", "stretch") (default: "justify")</ko>
  */
@@ -71,15 +71,10 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     columnSizeRatio: 0,
   };
 
-  private _columnSize = 0;
-  private _column = 1;
-
   public applyGrid(items: GridItem[], direction: "start" | "end", outline: number[]): GridOutlines {
-    this._calculateColumnSize(items);
-    this._calculateColumn(items);
+    const columnSize = this.getComputedOutlineSize(items);
+    const column = this.getComputedOutlineLength(items);
 
-    const column = this._column;
-    const columnSize = this._columnSize;
     const {
       gap,
       align,
@@ -88,7 +83,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     } = this.options;
     const outlineLength = outline.length;
     const itemsLength = items.length;
-    const alignPoses = this._getAlignPoses();
+    const alignPoses = this._getAlignPoses(column, columnSize);
     const isEndDirection = direction === "end";
     const nearestCalculationName = isEndDirection ? "min" : "max";
     const pointCalculationName = isEndDirection ? "max" : "min";
@@ -162,22 +157,20 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
       end: isEndDirection ? endOutline : startOutline,
     };
   }
-  private _calculateColumnSize(items: GridItem[]) {
+  public getComputedOutlineSize(items = this.items) {
     const {
-      columnSize: columnSizeOption,
       gap,
       align,
     } = this.options;
+    const columnSizeOption = this.columnSize || this.outlineSize;
+    const column = this.column || this.outlineLength || 1;
+
+    let columnSize = 0;
 
     if (align === "stretch") {
-      let column = this.column;
-
-      if (columnSizeOption) {
-        column = Math.max(1, Math.floor((this.getContainerInlineSize() + gap) / (columnSizeOption + gap)));
-      }
-      this._columnSize = (this.getContainerInlineSize() + gap) / (column || 1) - gap;
+      columnSize = (this.getContainerInlineSize() + gap) / (column || 1) - gap;
     } else if (columnSizeOption) {
-      this._columnSize = columnSizeOption;
+      columnSize = columnSizeOption;
     } else if (items.length) {
       let checkedItem = items[0];
 
@@ -196,37 +189,30 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
       }
       const inlineSize = checkedItem.inlineSize || 0;
 
-      this._columnSize = inlineSize;
-      return inlineSize;
+      columnSize = inlineSize;
+    } else {
+      columnSize = this.getContainerInlineSize();
     }
-    this._columnSize = this._columnSize || 0;
-
-    return this._columnSize;
+    return columnSize || 0;
   }
-  private _calculateColumn(items: GridItem[]) {
-    const {
-      gap,
-      column: columnOption,
-    } = this.options;
-    const columnSize = this._columnSize;
+  public getComputedOutlineLength(items = this.items) {
+    const gap = this.gap;
+    const columnOption = this.column || this.outlineLength;
     let column = 1;
 
     if (columnOption) {
       column = columnOption;
-    } else if (!columnSize) {
-      column = 1;
     } else {
+      const columnSize = this.getComputedOutlineSize(items);
+
       column = Math.min(
         items.length,
         Math.max(1, Math.floor((this.getContainerInlineSize() + gap) / (columnSize + gap))),
       );
     }
-    this._column = column;
     return column;
   }
-  private _getAlignPoses() {
-    const columnSize = this._columnSize;
-    const column = this._column;
+  private _getAlignPoses(column: number, columnSize: number) {
     const {
       align,
       gap,
@@ -263,10 +249,11 @@ export interface MasonryGrid extends Properties<typeof MasonryGrid> {
 
 
 /**
- * Align of the position of the items. If you want to use `stretch`, be sure to set `column` or `columnSize` option. ("start", "center", "end", "justify", "stretch") (default: "justify")
- * @ko 아이템들의 위치의 정렬. `stretch`를 사용하고 싶다면 `column` 또는 `columnSize` 옵션을 설정해라.  ("start", "center", "end", "justify", "stretch") (default: "justify")
+ * Align of the position of the items. If you want to use `stretch`, be sure to set `column` or `columnSize` option. ("start", "center", "end", "justify", "stretch")
+ * @ko 아이템들의 위치의 정렬. `stretch`를 사용하고 싶다면 `column` 또는 `columnSize` 옵션을 설정해라.  ("start", "center", "end", "justify", "stretch")
  * @name Grid.MasonryGrid#align
  * @type {$ts:Grid.MasonryGrid.MasonryGridOptions["align"]}
+ * @default "justify"
  * @example
  * ```js
  * import { MasonryGrid } from "@egjs/grid";
@@ -281,10 +268,11 @@ export interface MasonryGrid extends Properties<typeof MasonryGrid> {
 
 
 /**
- * The number of columns. If the number of columns is 0, it is automatically calculated according to the size of the container.
- * @ko 열의 개수. 열의 개수가 0이라면, 컨테이너의 사이즈에 의해 계산이 된다. (default: 0)
+ * The number of columns. If the number of columns is 0, it is automatically calculated according to the size of the container.  Can be used instead of outlineLength.
+ * @ko 열의 개수. 열의 개수가 0이라면, 컨테이너의 사이즈에 의해 계산이 된다. outlineLength 대신 사용할 수 있다.
  * @name Grid.MasonryGrid#column
  * @type {$ts:Grid.MasonryGrid.MasonryGridOptions["column"]}
+ * @default 0
  * @example
  * ```js
  * import { MasonryGrid } from "@egjs/grid";
@@ -299,10 +287,11 @@ export interface MasonryGrid extends Properties<typeof MasonryGrid> {
 
 
 /**
- * The size of the columns. If it is 0, it is calculated as the size of the first item in items. (default: 0)
- * @ko 열의 사이즈. 만약 열의 사이즈가 0이면, 아이템들의 첫번째 아이템의 사이즈로 계산이 된다. (default: 0)
+ * The size of the columns. If it is 0, it is calculated as the size of the first item in items. Can be used instead of outlineSize.
+ * @ko 열의 사이즈. 만약 열의 사이즈가 0이면, 아이템들의 첫번째 아이템의 사이즈로 계산이 된다. outlineSize 대신 사용할 수 있다.
  * @name Grid.MasonryGrid#columnSize
  * @type {$ts:Grid.MasonryGrid.MasonryGridOptions["columnSize"]}
+ * @default 0
  * @example
  * ```js
  * import { MasonryGrid } from "@egjs/grid";
@@ -317,10 +306,11 @@ export interface MasonryGrid extends Properties<typeof MasonryGrid> {
 
 
 /**
- * The size ratio(inlineSize / contentSize) of the columns. 0 is not set. (default: 0)
+ * The size ratio(inlineSize / contentSize) of the columns. 0 is not set.
  * @ko 열의 사이즈 비율(inlineSize / contentSize). 0은 미설정이다.
  * @name Grid.MasonryGrid#columnSizeRatio
  * @type {$ts:Grid.MasonryGrid.MasonryGridOptions["columnSizeRatio"]}
+ * @default 0
  * @example
  * ```js
  * import { MasonryGrid } from "@egjs/grid";

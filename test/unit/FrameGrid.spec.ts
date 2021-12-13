@@ -40,6 +40,29 @@ describe("test FrameGrid", () => {
     });
     expect(container!.style.height).to.be.equals("0px");
   });
+  it("should check if outlineSize and outlineLength are calculated by frame", async () => {
+    // Given
+    container!.style.cssText = "width: 1000px;";
+    grid = new FrameGrid(container!, {
+      gap: 10,
+      frame: [
+        [1, 1, 0, 0, 2],
+        [1, 1, 0, 3, 3],
+      ],
+    });
+
+    appendElements(container!, 3);
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+
+    // Then
+    expect(grid.getComputedOutlineLength()).to.be.equals(5);
+    expect(grid.getComputedOutlineSize()).to.be.equals(192);
+  });
   it("should check if the grid is rendered to fit the frame (items' length = frame rects' length)", async () => {
     // Given
     container!.style.cssText = "width: 1000px;";

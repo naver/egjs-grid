@@ -211,6 +211,22 @@ export class FrameGrid extends Grid<FrameGridOptions> {
       end: endOutline.map((point) => point + outlineDist),
     };
   }
+  public getComputedOutlineLength() {
+    const frame = this.options.frame;
+
+    return frame.length ? frame[0].length : 0;
+  }
+  public getComputedOutlineSize() {
+    const {
+      gap,
+      rectSize: rectSizeOption,
+    } = this.options;
+
+    if (typeof rectSizeOption === "object") {
+      return rectSizeOption.inlineSize;
+    }
+    return rectSizeOption || ((this.getContainerInlineSize()! + gap) / this.getComputedOutlineLength() - gap);
+  }
   protected getRectSize(frameInlineSize: number) {
     const {
       gap,
@@ -313,10 +329,11 @@ export interface FrameGrid extends Properties<typeof FrameGrid> {
 
 
 /**
- * The shape of the grid. You can set the shape and order of items with a 2d array ([contentPos][inlinePos]). You can place items as many times as you fill the array with numbers, and zeros and spaces are empty spaces. The order of the items is arranged in ascending order of the numeric values that fill the array. (default: [])
- * @ko Grid의 모양. 2d 배열([contentPos][inlinePos])로 아이템의 모양과 순서를 설정할 수 있다. 숫자로 배열을 채운만큼 아이템을 배치할 수 있으며 0과 공백은 빈 공간이다. 아이템들의 순서는 배열을 채운 숫자값의 오름차순대로 배치가 된다. (default: [])
+ * The shape of the grid. You can set the shape and order of items with a 2d array ([contentPos][inlinePos]). You can place items as many times as you fill the array with numbers, and zeros and spaces are empty spaces. The order of the items is arranged in ascending order of the numeric values that fill the array.
+ * @ko Grid의 모양. 2d 배열([contentPos][inlinePos])로 아이템의 모양과 순서를 설정할 수 있다. 숫자로 배열을 채운만큼 아이템을 배치할 수 있으며 0과 공백은 빈 공간이다. 아이템들의 순서는 배열을 채운 숫자값의 오름차순대로 배치가 된다.
  * @name Grid.FrameGrid#frame
  * @type {$ts:Grid.FrameGrid.FrameGridOptions["frame"]}
+ * @default []
  * @example
  * ```js
  * import { FrameGrid } from "@egjs/grid";
@@ -343,10 +360,11 @@ export interface FrameGrid extends Properties<typeof FrameGrid> {
  */
 
 /**
- * Make sure that the frame can be attached after the previous frame. (default: true)
- * @ko 다음 프레임이 전 프레임에 이어 붙일 수 있는지 있는지 확인한다. (default: true)
+ * Make sure that the frame can be attached after the previous frame.
+ * @ko 다음 프레임이 전 프레임에 이어 붙일 수 있는지 있는지 확인한다.
  * @name Grid.FrameGrid#useFrameFill
  * @type {$ts:Grid.FrameGrid.FrameGridOptions["useFrameFill"]}
+ * @default true
  * @example
  * ```js
  * import { FrameGrid } from "@egjs/grid";

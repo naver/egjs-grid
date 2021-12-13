@@ -206,6 +206,12 @@ export class PackingGrid extends Grid<PackingGridOptions> {
 
     fitArea(item, bestFitArea, itemFitSize, containerFitSize, isContentDirection);
   }
+  public getComputedOutlineLength() {
+    return 1;
+  }
+  public getComputedOutlineSize() {
+    return this.getContainerInlineSize();
+  }
   private _getWeight(type: "size" | "ratio"): number {
     const options = this.options;
     const weightPriority = options.weightPriority;
@@ -224,10 +230,11 @@ export interface PackingGrid extends Properties<typeof PackingGrid> {
 
 
 /**
- * The aspect ratio (inlineSize / contentSize) of the container with items. (default: 1)
- * @ko 아이템들을 가진 컨테이너의 종횡비(inlineSize / contentSize). (default: 1)
+ * The aspect ratio (inlineSize / contentSize) of the container with items.
+ * @ko 아이템들을 가진 컨테이너의 종횡비(inlineSize / contentSize).
  * @name Grid.PackingGrid#aspectRatio
  * @type {$ts:Grid.PackingGrid.PackingGridOptions["aspectRatio"]}
+ * @default 1
  * @example
  * ```js
  * import { PackingGrid } from "@egjs/grid";
@@ -241,11 +248,12 @@ export interface PackingGrid extends Properties<typeof PackingGrid> {
  */
 
 /**
- * The priority that determines the weight of the item. (default: "custom"), "size" = (sizeWieght: 2, ratioWeight: 1), "ratio" = (sizeWeight: 1, ratioWeight; 2), "custom" = (set sizeWeight, ratioWeight)
+ * The priority that determines the weight of the item. "size" = (sizeWieght: 2, ratioWeight: 1), "ratio" = (sizeWeight: 1, ratioWeight; 2), "custom" = (set sizeWeight, ratioWeight)
  * item's weight = item's ratio(inlineSize / contentSize) change * `ratioWeight` + size(inlineSize * contentSize) change * `sizeWeight`.
- * @ko 아이템의 가중치를 결정하는 우선수치. (default: "custom"), "size" = (sizeWieght: 2, ratioWeight: 1), "ratio" = (sizeWeight: 1, ratioWeight; 2), "custom" = (set sizeWeight, ratioWeight). 아이템의 가중치 = ratio(inlineSize / contentSize)의 변화량 * `ratioWeight` + size(inlineSize * contentSize)의 변화량 * `sizeWeight`.
+ * @ko 아이템의 가중치를 결정하는 우선수치. "size" = (sizeWieght: 2, ratioWeight: 1), "ratio" = (sizeWeight: 1, ratioWeight; 2), "custom" = (set sizeWeight, ratioWeight). 아이템의 가중치 = ratio(inlineSize / contentSize)의 변화량 * `ratioWeight` + size(inlineSize * contentSize)의 변화량 * `sizeWeight`.
  * @name Grid.PackingGrid#weightPriority
  * @type {$ts:Grid.PackingGrid.PackingGridOptions["weightPriority"]}
+ * @default "custom"
  * @example
  * ```js
  * import { PackingGrid } from "@egjs/grid";
@@ -263,10 +271,11 @@ export interface PackingGrid extends Properties<typeof PackingGrid> {
  */
 
 /**
- * The size weight when placing items. (default: 1)
- * @ko 아이템들을 배치하는데 사이즈 가중치. (default: 1)
+ * The size weight when placing items.
+ * @ko 아이템들을 배치하는데 사이즈 가중치.
  * @name Grid.PackingGrid#sizeWeight
  * @type {$ts:Grid.PackingGrid.PackingGridOptions["sizeWeight"]}
+ * @default 1
  * @example
  * ```js
  * import { PackingGrid } from "@egjs/grid";
@@ -281,10 +290,11 @@ export interface PackingGrid extends Properties<typeof PackingGrid> {
 
 
 /**
- * The weight to keep ratio when placing items. (default: 1)
- * @ko 아이템들을 배치하는데 비율을 유지하는 가중치. (default: 1)
+ * The weight to keep ratio when placing items.
+ * @ko 아이템들을 배치하는데 비율을 유지하는 가중치.
  * @name Grid.PackingGrid#ratioWeight
  * @type {$ts:Grid.PackingGrid.PackingGridOptions["ratioWeight"]}
+ * @default 1
  * @example
  * ```js
  * import { PackingGrid } from "@egjs/grid";

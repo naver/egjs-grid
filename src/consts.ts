@@ -22,6 +22,8 @@ export const DEFAULT_GRID_OPTIONS: Required<GridOptions> = {
   externalItemRenderer: null,
   renderOnPropertyChange: true,
   useFit: true,
+  outlineLength: 0,
+  outlineSize: 0,
 };
 
 export enum PROPERTY_TYPE {
@@ -45,6 +47,8 @@ export const GRID_PROPERTY_TYPES = {
   renderOnPropertyChange: PROPERTY_TYPE.PROPERTY,
   preserveUIOnDestroy: PROPERTY_TYPE.PROPERTY,
   useFit: PROPERTY_TYPE.PROPERTY,
+  outlineSize: PROPERTY_TYPE.RENDER_PROPERTY,
+  outlineLength: PROPERTY_TYPE.RENDER_PROPERTY,
 };
 
 export const GRID_METHODS = [

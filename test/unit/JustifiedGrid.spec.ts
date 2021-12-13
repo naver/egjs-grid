@@ -41,6 +41,29 @@ describe("test JustifiedGrid", () => {
     });
     expect(container!.style.height).to.be.equals("0px");
   });
+  it("should check if outlineSize is container's inline size and outlineLength is 1", async () => {
+    // Given
+    container!.style.cssText = "width: 1000px;";
+
+    grid = new JustifiedGrid(container!, {
+      gap: 5,
+      horizontal: false,
+    });
+
+    appendElements(container!, 18).forEach((element) => {
+      element.setAttribute("data-grid-inline-offset", "20");
+    });
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+
+    // Then
+    expect(grid.getComputedOutlineLength()).to.be.equals(1);
+    expect(grid.getComputedOutlineSize()).to.be.equals(grid.getContainerInlineSize());
+  });
   it(`should check whether the ratio is maintained except for the offset when the inline offset is set`, async () => {
     // Given
     container!.style.cssText = "width: 1000px;";

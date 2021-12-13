@@ -417,6 +417,12 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       end: [startPoint], // endPoint - height = startPoint
     };
   }
+  public getComputedOutlineLength() {
+    return 1;
+  }
+  public getComputedOutlineSize() {
+    return this.getContainerInlineSize();
+  }
   private _getRowRange() {
     const rowRange = this.rowRange;
     return isObject(rowRange) ? rowRange : [rowRange, rowRange];
@@ -436,10 +442,11 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
 
 
 /**
- * The minimum and maximum number of items per line. (default: [1, 8])
- * @ko 한 줄에 들어가는 아이템의 최소, 최대 개수. (default: [1, 8])
+ * The minimum and maximum number of items per line.
+ * @ko 한 줄에 들어가는 아이템의 최소, 최대 개수.
  * @name Grid.JustifiedGrid#columnRange
  * @type {$ts:Grid.JustifiedGrid.JustifiedGridOptions["columnRange"]}
+ * @default [1, 8]
  * @example
  * ```js
  * import { JustifiedGrid } from "@egjs/grid";
@@ -454,10 +461,11 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
 
 
 /**
- * The minimum and maximum number of rows in a group, 0 is not set. (default: 0)
- * @ko 한 그룹에 들어가는 행의 최소, 최대 개수, 0은 미설정이다. (default: 0)
+ * The minimum and maximum number of rows in a group, 0 is not set.
+ * @ko 한 그룹에 들어가는 행의 최소, 최대 개수, 0은 미설정이다.
  * @name Grid.JustifiedGrid#rowRange
  * @type {$ts:Grid.JustifiedGrid.JustifiedGridOptions["rowRange"]}
+ * @default 0
  * @example
  * ```js
  * import { JustifiedGrid } from "@egjs/grid";
@@ -471,10 +479,11 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
  */
 
 /**
- * The minimum and maximum size by which the item is adjusted. If it is not calculated, it may deviate from the minimum and maximum sizes. (default: [0, Infinity])
- * @ko 아이템이 조정되는 최소, 최대 사이즈. 계산이 되지 않는 경우 최소, 최대 사이즈를 벗어날 수 있다. (default: [0, Infinity])
+ * The minimum and maximum size by which the item is adjusted. If it is not calculated, it may deviate from the minimum and maximum sizes.
+ * @ko 아이템이 조정되는 최소, 최대 사이즈. 계산이 되지 않는 경우 최소, 최대 사이즈를 벗어날 수 있다.
  * @name Grid.JustifiedGrid#sizeRange
  * @type {$ts:Grid.JustifiedGrid.JustifiedGridOptions["sizeRange"]}
+ * @default [0, Infinity]
  * @example
  * ```js
  * import { JustifiedGrid } from "@egjs/grid";
@@ -488,10 +497,11 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
  */
 
 /**
- * Maximum number of rows to be counted for container size. You can hide it on the screen by setting overflow: hidden. -1 is not set. (default: -1)
- * @ko - 컨테이너 크기에 계산될 최대 row 개수. overflow: hidden을 설정하면 화면에 가릴 수 있다. -1은 미설정이다. (default: -1)
+ * Maximum number of rows to be counted for container size. You can hide it on the screen by setting overflow: hidden. -1 is not set.
+ * @ko - 컨테이너 크기에 계산될 최대 row 개수. overflow: hidden을 설정하면 화면에 가릴 수 있다. -1은 미설정이다.
  * @name Grid.JustifiedGrid#displayedRow
  * @type {$ts:Grid.JustifiedGrid.JustifiedGridOptions["displayedRow"]}
+ * @default -1
  * @example
  * ```js
  * import { JustifiedGrid } from "@egjs/grid";
@@ -505,10 +515,11 @@ export interface JustifiedGrid extends Properties<typeof JustifiedGrid> {
  */
 
 /**
- * Whether to crop when the row size is out of sizeRange. If set to true, this ratio can be broken. (default: false)
- * @ko - row 사이즈가 sizeRange에 벗어나면 크롭할지 여부. true로 설정하면 비율이 깨질 수 있다. (default: false)
+ * Whether to crop when the row size is out of sizeRange. If set to true, this ratio can be broken.
+ * @ko - row 사이즈가 sizeRange에 벗어나면 크롭할지 여부. true로 설정하면 비율이 깨질 수 있다.
  * @name Grid.JustifiedGrid#isCroppedSize
  * @type {$ts:Grid.JustifiedGrid.JustifiedGridOptions["isCroppedSize"]}
+ * @default false
  * @example
  * ```js
  * import { JustifiedGrid } from "@egjs/grid";
