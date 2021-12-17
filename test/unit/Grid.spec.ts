@@ -758,17 +758,17 @@ describe("test Grid", () => {
       // after mount (restore duration)
       expect(transitionProperties2).to.be.deep.equals(["", "0.2s", ""]);
     });
-    it(`should check whether decimal point calculation is performed when useOffset is used`, async () => {
+    it(`should check whether decimal point calculation is performed when useRoundedSize is used`, async () => {
       // Given
       container!.innerHTML = `
       <div style="width: 100.5px">1</div>
       <div>3</div>
       `;
       grid = new SampleGrid(container!, {
-        useOffset: false,
+        useRoundedSize: false,
       });
       const grid2 = new SampleGrid(container!, {
-        useOffset: true,
+        useRoundedSize: true,
       });
 
 

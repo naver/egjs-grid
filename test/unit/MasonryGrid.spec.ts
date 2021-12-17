@@ -616,5 +616,50 @@ describe("test MasonryGrid", () => {
     expect(grid.getComputedOutlineLength()).to.be.equals(3);
     expect(grid.getOutlines().start.length).to.be.equals(3);
   });
+  it(`should check whether the number of columns is 2 even if there is a decimal point problem`, async () => {
+    // Given
+    container!.style.cssText = "width: 600px; height: 600px;";
+    grid = new MasonryGrid(container!);
+    const grid2 = new MasonryGrid(container!, {
+      columnCalculationThreshold: 0,
+    });
+
+    grid.setItems([
+      new GridItem(false, {
+        rect: { width: 300.5, height: 150, top: 0, left: 0 },
+      }),
+      new GridItem(false, {
+        rect: { width: 300.5, height: 150, top: 0, left: 0 },
+      }),
+    ]);
+    grid2.setItems([
+      new GridItem(false, {
+        rect: { width: 300.5, height: 150, top: 0, left: 0 },
+      }),
+      new GridItem(false, {
+        rect: { width: 300.5, height: 150, top: 0, left: 0 },
+      }),
+    ]);
+
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+    grid2.renderItems();
+    await waitEvent(grid2, "renderComplete");
+
+    // [0, 0]
+    const startOutline = grid.getOutlines().start;
+    // [0]
+    const startOutline2 = grid2.getOutlines().start;
+
+    grid2.destroy();
+
+    // Then
+    expect(startOutline).to.be.deep.equals([0, 0]);
+    expect(startOutline2).to.be.deep.equals([0]);
+  });
 });
 

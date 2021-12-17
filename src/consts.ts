@@ -24,7 +24,7 @@ export const DEFAULT_GRID_OPTIONS: Required<GridOptions> = {
   useFit: true,
   outlineLength: 0,
   outlineSize: 0,
-  useOffset: true,
+  useRoundedSize: true,
 };
 
 export enum PROPERTY_TYPE {

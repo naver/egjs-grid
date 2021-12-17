@@ -74,7 +74,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
       resizeDebounce,
       maxResizeDebounce,
       autoResize,
-      useOffset,
+      useRoundedSize,
     } = this.options;
 
     // TODO: 테스트용 설정
@@ -91,7 +91,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
         isEqualSize,
         isConstantSize,
         percentage,
-        useOffset,
+        useRoundedSize,
       });
 
     this._init();
