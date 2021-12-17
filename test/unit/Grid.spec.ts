@@ -175,7 +175,7 @@ describe("test Grid", () => {
       expect(outline2).to.be.deep.equals([100]);
       expect(outline3).to.be.deep.equals([0]);
     });
-    it(`should test lazyloading`, async () => {
+    it(`should test lazy loading(loading="lazy")`, async () => {
       // Given
       container!.innerHTML = `
       <div>1</div>
@@ -194,6 +194,32 @@ describe("test Grid", () => {
       Object.defineProperty(loadingImg, "complete", {
         value: false,
       });
+
+      grid.renderItems();
+
+      const e1 = await waitEvent(grid, "renderComplete");
+
+      // When
+      // loading is complete
+      loadingImg.src = "complete";
+
+      const e2 = await waitEvent(grid, "renderComplete");
+
+      // Then
+      expect(e1.updated.length).to.be.equals(3);
+      expect(e2.updated.length).to.be.equals(1);
+    });
+    it(`should test lazy loading(data-grid-lazy="true")`, async () => {
+      // Given
+      container!.innerHTML = `
+      <div>1</div>
+      <div><img data-grid-lazy="true"/></div>
+      <div>3</div>
+      `;
+      grid = new SampleGrid(container!);
+
+      const loadingImg = grid.getChildren()[1].querySelector<HTMLImageElement>("img")!;
+
 
       grid.renderItems();
 
