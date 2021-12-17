@@ -36,12 +36,13 @@ function getExpectedColumnSize(item: GridItem, rowSize: number) {
   const contentSize = item.orgContentSize;
 
   if (!inlineSize || !contentSize) {
-    return 0;
+    return rowSize;
   }
   const inlineOffset = parseFloat(item.gridData.inlineOffset) || 0;
   const contentOffset = parseFloat(item.gridData.contentOffset) || 0;
+  const ratio = contentSize <= contentOffset ? 1 : (inlineSize - inlineOffset) / (contentSize - contentOffset);
 
-  return (inlineSize - inlineOffset) / (contentSize - contentOffset) * (rowSize - contentOffset) + inlineOffset;
+  return ratio * (rowSize - contentOffset) + inlineOffset;
 }
 
 /**
@@ -256,12 +257,14 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       const contentSize = item.orgContentSize;
 
       if (!inlineSize || !contentSize) {
+        ratioSum += 1;
         return;
       }
       // sum((expect - offset) * ratio) = container inline size
       const inlineOffset = parseFloat(item.gridData.inlineOffset) || 0;
       const contentOffset = parseFloat(item.gridData.contentOffset) || 0;
-      const maintainedRatio = (inlineSize - inlineOffset) / (contentSize - contentOffset);
+      const maintainedRatio = contentSize <= contentOffset ? 1
+        : (inlineSize - inlineOffset) / (contentSize - contentOffset);
 
       ratioSum += maintainedRatio;
       inlineSum += contentOffset * maintainedRatio;
@@ -278,7 +281,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       return sum + getExpectedColumnSize(item, rowSize);
     }, 0);
 
-    return size ? size +  gap * (items.length - 1) : 0;
+    return size ? size + gap * (items.length - 1) : 0;
   }
   private _getCost(
     items: GridItem[],
@@ -374,7 +377,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       const allGap = gap * (length - 1);
       const scale = (containerInlineSize - allGap) / (expectedInlineSize - allGap);
 
-      groupItems.forEach((item, i)=> {
+      groupItems.forEach((item, i) => {
         let columnSize = getExpectedColumnSize(item, rowSize);
 
         const prevItem = groupItems[i - 1];
