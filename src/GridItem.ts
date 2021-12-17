@@ -81,9 +81,10 @@ class GridItem {
    * @member Grid.GridItem#orgInlineSize
    */
   public get orgInlineSize() {
-    const orgRect = (this.orgRect || this.rect);
+    const orgRect = this.orgRect;
+    const rect = this.rect;
 
-    return this.horizontal ? orgRect.height : orgRect.width;
+    return this.horizontal ? orgRect.height || rect.height : orgRect.width || rect.width;
   }
   /**
    * The size in content direction before first rendering. "height" if horizontal is false, "width" otherwise.
@@ -91,9 +92,10 @@ class GridItem {
    * @member Grid.GridItem#orgContentSize
    */
   public get orgContentSize() {
-    const orgRect = (this.orgRect || this.rect);
+    const orgRect = this.orgRect;
+    const rect = this.rect;
 
-    return this.horizontal ? orgRect.width : orgRect.height;
+    return this.horizontal ? orgRect.width || rect.width : orgRect.height || rect.height;
   }
   /**
    * The size in inline direction. "width" if horizontal is false, "height" otherwise.
@@ -222,20 +224,28 @@ class GridItem {
       attributes: this.attributes,
       gridData: this.gridData,
     };
-    if (typeof this.key !== "undefined") {
-      status.key = this.key;
+
+    const {
+      key,
+      mountState,
+      updateState,
+      isFirstUpdate,
+      orgCSSText,
+    } = this;
+    if (typeof key !== "undefined") {
+      status.key = key;
     }
-    if (this.mountState !== MOUNT_STATE.UNCHECKED) {
-      status.mountState = this.mountState;
+    if (mountState !== MOUNT_STATE.UNCHECKED) {
+      status.mountState = mountState;
     }
-    if (this.updateState !== UPDATE_STATE.NEED_UPDATE) {
-      status.updateState = this.updateState;
+    if (updateState !== UPDATE_STATE.NEED_UPDATE) {
+      status.updateState = updateState;
     }
-    if (this.isFirstUpdate) {
+    if (isFirstUpdate) {
       status.isFirstUpdate = true;
     }
-    if (this.orgCSSText) {
-      status.orgCSSText = this.orgCSSText;
+    if (orgCSSText) {
+      status.orgCSSText = orgCSSText;
     }
     return status;
   }

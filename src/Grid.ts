@@ -154,7 +154,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
    */
   public syncElements(options: RenderOptions = {}) {
     const items = this.items;
-    const horizontal = this.options.horizontal;
+    const { horizontal } = this.options;
     const elements: HTMLElement[] = this.getChildren();
     const { added, maintained, changed, removed } = diff(this.items.map((item) => item.element!), elements);
 
@@ -183,7 +183,15 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
    * @param - Options for rendering. <ko>렌더링을 하기 위한 옵션.</ko>
    */
   public updateItems(items: GridItem[] = this.items, options: RenderOptions = {}) {
+    const useOrgResize = options.useOrgResize;
+
     items.forEach((item) => {
+      if (useOrgResize) {
+        const orgRect = item.orgRect;
+
+        orgRect.width = 0;
+        orgRect.height = 0;
+      }
       item.updateState = UPDATE_STATE.NEED_UPDATE;
     });
     this.checkReady(options);
@@ -209,7 +217,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
 
     if (!this.getItems().length && this.getChildren().length) {
       this.syncElements(options);
-    } else if (options.useResize) {
+    } else if (options.useResize || options.useOrgResize) {
       // Resize container and Update all items
       this._resizeContainer();
       this.updateItems(this.items, options);
@@ -341,6 +349,15 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     }).on("preReadyElement", (e) => {
       updated[e.index].updateState = UPDATE_STATE.WAIT_LOADING;
     }).on("preReady", () => {
+      // reset org size
+      updated.forEach((item) => {
+        const hasOrgSize = item.orgRect.width && item.orgRect.height;
+        const hasCSSSize = item.cssRect.width || item.cssRect.height;
+
+        if (!hasOrgSize && hasCSSSize) {
+          item.element!.style.cssText = item.orgCSSText;
+        }
+      });
       this.itemRenderer.updateItems(updated);
       this.readyItems(mounted, updated, options);
     }).on("readyElement", (e) => {
