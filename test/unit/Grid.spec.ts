@@ -283,6 +283,30 @@ describe("test Grid", () => {
       // Then
       expect(item.mountState).to.be.equals(MOUNT_STATE.UNCHECKED);
     });
+    it("should check if orgSize is changed when useOrgResize is used", async () => {
+      // Given
+      container!.innerHTML = `<div style="position: absolute;">
+      <div style="width: 100px; height: 100px;"></div>
+      </div>`;
+      grid = new SampleGrid(container!);
+
+      grid.renderItems();
+      await waitEvent(grid, "renderComplete");
+      const item = grid.getItems()[0];
+      const orgRect1 = item.orgRect.width;
+
+      // When
+      item.element!.querySelector("div")!.style.width = "200px";
+
+      grid.renderItems({ useOrgResize: true });
+      await waitEvent(grid, "renderComplete");
+
+      const orgRect2 = item.orgRect.width;
+
+      // Then
+      expect(orgRect1).to.be.equals(100);
+      expect(orgRect2).to.be.equals(200);
+    });
   });
   describe("test setStatus, getStatus", () => {
     it("should check whether the items are recovered when you call setStatus().", async () => {
