@@ -193,6 +193,7 @@ describe("test Grid", () => {
       });
       Object.defineProperty(loadingImg, "complete", {
         value: false,
+        writable: true,
       });
 
       grid.renderItems();
@@ -201,6 +202,10 @@ describe("test Grid", () => {
 
       // When
       // loading is complete
+      Object.defineProperty(loadingImg, "complete", {
+        value: true,
+        writable: true,
+      });
       loadingImg.src = "complete";
 
       const e2 = await waitEvent(grid, "renderComplete");
@@ -253,6 +258,7 @@ describe("test Grid", () => {
       });
       Object.defineProperty(loadingImg, "complete", {
         value: false,
+        writable: true,
       });
 
       grid.renderItems();
@@ -265,6 +271,10 @@ describe("test Grid", () => {
 
       // When
       // loading is complete
+      Object.defineProperty(loadingImg, "complete", {
+        value: true,
+        writable: true,
+      });
       loadingImg.src = "complete";
       loadingImg.style.width = "200px";
       loadingImg.style.height = "200px";
