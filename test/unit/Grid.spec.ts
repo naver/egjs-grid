@@ -818,6 +818,36 @@ describe("test Grid", () => {
       // after mount (restore duration)
       expect(transitionProperties2).to.be.deep.equals(["", "0.2s", ""]);
     });
+    it(`should check whether decimal point calculation is performed when useRoundedSize is used`, async () => {
+      // Given
+      container!.innerHTML = `
+      <div style="width: 100.5px">1</div>
+      <div>3</div>
+      `;
+      grid = new SampleGrid(container!, {
+        useRoundedSize: false,
+      });
+      const grid2 = new SampleGrid(container!, {
+        useRoundedSize: true,
+      });
+
+
+      // When
+      grid.renderItems();
+      await waitEvent(grid, "renderComplete");
+      // 100.5
+      const width1 = grid.getItems()[0].orgRect.width;
+
+      grid2.renderItems();
+      await waitEvent(grid2, "renderComplete");
+      // 101
+      const width2 = grid2.getItems()[0].orgRect.width;
+      grid2.destroy();
+
+      // Then
+      expect(width1).to.be.deep.equals(100.5);
+      expect(width2).to.be.deep.equals(101);
+    });
   });
 });
 
