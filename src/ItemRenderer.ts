@@ -109,7 +109,7 @@ export class ItemRenderer {
         height: element.offsetHeight,
       };
     }
-    if (!item.isFirstUpdate) {
+    if (!item.isFirstUpdate || !hasOrgSize) {
       item.orgRect = { ...rect };
     }
     item.rect = { ...rect };

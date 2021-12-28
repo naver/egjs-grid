@@ -175,7 +175,7 @@ describe("test Grid", () => {
       expect(outline2).to.be.deep.equals([100]);
       expect(outline3).to.be.deep.equals([0]);
     });
-    it(`should test lazyloading`, async () => {
+    it(`should test lazy loading(loading="lazy")`, async () => {
       // Given
       container!.innerHTML = `
       <div>1</div>
@@ -193,7 +193,38 @@ describe("test Grid", () => {
       });
       Object.defineProperty(loadingImg, "complete", {
         value: false,
+        writable: true,
       });
+
+      grid.renderItems();
+
+      const e1 = await waitEvent(grid, "renderComplete");
+
+      // When
+      // loading is complete
+      Object.defineProperty(loadingImg, "complete", {
+        value: true,
+        writable: true,
+      });
+      loadingImg.src = "complete";
+
+      const e2 = await waitEvent(grid, "renderComplete");
+
+      // Then
+      expect(e1.updated.length).to.be.equals(3);
+      expect(e2.updated.length).to.be.equals(1);
+    });
+    it(`should test lazy loading(data-grid-lazy="true")`, async () => {
+      // Given
+      container!.innerHTML = `
+      <div>1</div>
+      <div><img data-grid-lazy="true"/></div>
+      <div>3</div>
+      `;
+      grid = new SampleGrid(container!);
+
+      const loadingImg = grid.getChildren()[1].querySelector<HTMLImageElement>("img")!;
+
 
       grid.renderItems();
 
@@ -227,6 +258,7 @@ describe("test Grid", () => {
       });
       Object.defineProperty(loadingImg, "complete", {
         value: false,
+        writable: true,
       });
 
       grid.renderItems();
@@ -239,6 +271,10 @@ describe("test Grid", () => {
 
       // When
       // loading is complete
+      Object.defineProperty(loadingImg, "complete", {
+        value: true,
+        writable: true,
+      });
       loadingImg.src = "complete";
       loadingImg.style.width = "200px";
       loadingImg.style.height = "200px";
@@ -282,6 +318,30 @@ describe("test Grid", () => {
 
       // Then
       expect(item.mountState).to.be.equals(MOUNT_STATE.UNCHECKED);
+    });
+    it("should check if orgSize is changed when useOrgResize is used", async () => {
+      // Given
+      container!.innerHTML = `<div style="position: absolute;">
+      <div style="width: 100px; height: 100px;"></div>
+      </div>`;
+      grid = new SampleGrid(container!);
+
+      grid.renderItems();
+      await waitEvent(grid, "renderComplete");
+      const item = grid.getItems()[0];
+      const orgRect1 = item.orgRect.width;
+
+      // When
+      item.element!.querySelector("div")!.style.width = "200px";
+
+      grid.renderItems({ useOrgResize: true });
+      await waitEvent(grid, "renderComplete");
+
+      const orgRect2 = item.orgRect.width;
+
+      // Then
+      expect(orgRect1).to.be.equals(100);
+      expect(orgRect2).to.be.equals(200);
     });
   });
   describe("test setStatus, getStatus", () => {

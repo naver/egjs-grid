@@ -67,11 +67,13 @@ export interface GridOutlines {
  * @property - Array of outline points to be reference points.<ko>기준점이 되는 아웃라인 점들의 배열</ko>
  * @property - The direction to render the grid.<ko>Grid를 렌더링할 방향.</ko>
  * @property - Whether to resize containers and items.<ko>컨테이너와 아이템들을 리사이즈할지 여부.</ko>
+ * @property - Whether to resize items to their original size. <ko>아이템들의 원본 사이즈까지 리사이즈할지 여부.</ko>
  */
 export interface RenderOptions {
   outline?: number[];
   direction?: "start" | "end";
   useResize?: boolean;
+  useOrgResize?: boolean;
 }
 /**
  * @typedef

@@ -162,6 +162,31 @@ describe("test JustifiedGrid", () => {
       expect(item.element!.clientHeight).to.be.closeTo(item.element!.scrollHeight, 0.00001);
     });
   });
+  it("should check if the ratio is maintained at 1:1 when there is no size", async () => {
+    // Given
+    container!.style.cssText = "width: 1000px;";
+
+    grid = new JustifiedGrid(container!, {
+      gap: 5,
+      horizontal: false,
+    });
+    grid.setItems([
+      new GridItem(false),
+      new GridItem(false),
+      new GridItem(false),
+    ]);
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+    // Then
+    grid.getItems().forEach((item) => {
+      expect(item.cssInlineSize).to.be.not.equals(0);
+      expect(item.cssInlineSize).to.be.equals(item.cssContentSize);
+    });
+  });
   describe("test columnRange option", () => {
     [0, 10, 20].forEach((gap) => {
       it(`should check if there are 3 columns (gap = ${gap})`, async () => {
