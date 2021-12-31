@@ -43,6 +43,9 @@ export class NgxGridComponent
   @Input() defaultDirection!: Required<GridOptions>['defaultDirection'];
   @Input() externalItemRenderer!: Required<GridOptions>['externalItemRenderer'];
   @Input() externalContainerManager!: Required<GridOptions>['externalContainerManager'];
+  @Input() outlineLength!: Required<GridOptions>['outlineLength'];
+  @Input() outlineSize!: Required<GridOptions>['outlineSize'];
+  @Input() useRoundedSize!: Required<GridOptions>['useRoundedSize'];
   @Output() renderComplete!: EventEmitter<OnRenderComplete>;
   @Output() contentError!: EventEmitter<OnContentError>;
 

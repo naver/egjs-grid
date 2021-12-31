@@ -285,7 +285,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public getComputedOutlineSize(items: GridItem[] = this.items) {
-    return this.options.outlineSize || this.getContainerInlineSize();
+    return this.options.outlineSize! || this.getContainerInlineSize();
   }
   /**
    * Get the length corresponding to outline.
@@ -294,7 +294,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public getComputedOutlineLength(items: GridItem[] = this.items): number {
-    return this.options.outlineLength || 1;
+    return this.options.outlineLength! || 1;
   }
 
   /**
