@@ -81,10 +81,9 @@ class GridItem {
    * @member Grid.GridItem#orgInlineSize
    */
   public get orgInlineSize() {
-    const orgRect = this.orgRect;
-    const rect = this.rect;
+    const name = this._names.inlineSize;
 
-    return this.horizontal ? orgRect.height || rect.height : orgRect.width || rect.width;
+    return this.orgRect[name] || this.rect[name];
   }
   /**
    * The size in content direction before first rendering. "height" if horizontal is false, "width" otherwise.
@@ -92,10 +91,9 @@ class GridItem {
    * @member Grid.GridItem#orgContentSize
    */
   public get orgContentSize() {
-    const orgRect = this.orgRect;
-    const rect = this.rect;
+    const name = this._names.contentSize;
 
-    return this.horizontal ? orgRect.width || rect.width : orgRect.height || rect.height;
+    return this.orgRect[name] || this.rect[name];
   }
   /**
    * The size in inline direction. "width" if horizontal is false, "height" otherwise.
@@ -103,9 +101,7 @@ class GridItem {
    * @member Grid.GridItem#inlineSize
    */
   public get inlineSize() {
-    const rect = this.rect;
-
-    return this.horizontal ? rect.height : rect.width;
+    return this.rect[this._names.inlineSize];
   }
   /**
    * The size in content direction. "height" if horizontal is false, "width" otherwise.
@@ -113,9 +109,7 @@ class GridItem {
    * @member Grid.GridItem#contentSize
    */
   public get contentSize() {
-    const rect = this.rect;
-
-    return this.horizontal ? rect.width : rect.height;
+    return this.rect[this._names.contentSize];
   }
   /**
    * The CSS size in inline direction applied to the Grid. "width" if horizontal is false, "height" otherwise.
@@ -123,9 +117,7 @@ class GridItem {
    * @member Grid.GridItem#cssInlineSize
    */
   public get cssInlineSize() {
-    const cssRect = this.cssRect;
-
-    return this.horizontal ? cssRect.height! : cssRect.width!;
+    return  this.cssRect[this._names.inlineSize];
   }
   /**
    * The CSS size in content direction applied to the Grid. "height" if horizontal is false, "width" otherwise.
@@ -133,9 +125,7 @@ class GridItem {
    * @member Grid.GridItem#cssContentSize
    */
   public get cssContentSize() {
-    const cssRect = this.cssRect;
-
-    return this.horizontal ? cssRect.width! : cssRect.height!;
+    return  this.cssRect[this._names.contentSize];
   }
   /**
    * The CSS pos in inline direction applied to the Grid. "left" if horizontal is false, "top" otherwise.
@@ -143,9 +133,7 @@ class GridItem {
    * @member Grid.GridItem#cssInlinePos
    */
   public get cssInlinePos() {
-    const cssRect = this.cssRect;
-
-    return this.horizontal ? cssRect.top! : cssRect.left!;
+    return  this.cssRect[this._names.inlinePos];
   }
   /**
    * The CSS pos in content direction applied to the Grid. "top" if horizontal is false, "left" otherwise.
@@ -153,29 +141,39 @@ class GridItem {
    * @member Grid.GridItem#cssContentPos
    */
   public get cssContentPos() {
-    const cssRect = this.cssRect;
-
-    return this.horizontal ? cssRect.left! : cssRect.top!;
+    return  this.cssRect[this._names.contentPos];
   }
-  public set cssInlinePos(inlinePos: number) {
-    const cssRect = this.cssRect;
-
-    cssRect[this.horizontal ? "top" : "left"] = inlinePos;
+  public set cssInlinePos(inlinePos: number | undefined) {
+    this.cssRect[this._names.inlinePos] = inlinePos;
   }
-  public set cssContentPos(contentPos: number) {
-    const cssRect = this.cssRect;
-
-    cssRect[this.horizontal ? "left" : "top"] = contentPos;
+  public set cssContentPos(contentPos: number | undefined) {
+    this.cssRect[this._names.contentPos] = contentPos;
   }
-  public set cssInlineSize(inlineSize: number) {
-    const cssRect = this.cssRect;
-
-    cssRect[this.horizontal ? "height" : "width"] = inlineSize;
+  public set cssInlineSize(inlineSize: number | undefined) {
+    this.cssRect[this._names.inlineSize] = inlineSize;
   }
-  public set cssContentSize(contentSize: number) {
-    const cssRect = this.cssRect;
+  public set cssContentSize(contentSize: number | undefined) {
+    this.cssRect[this._names.contentSize] = contentSize;
+  }
+  public get computedInlineSize() {
+    const name = this._names.inlineSize;
 
-    cssRect[this.horizontal ? "width" : "height"] = contentSize;
+    return this.cssRect[name] || this.rect[name] || this.orgRect[name];
+  }
+  public get computedContentSize() {
+    const name = this._names.contentSize;
+
+    return this.cssRect[name] || this.rect[name] || this.orgRect[name];
+  }
+  public get computedInlinePos() {
+    const name = this._names.inlinePos;
+
+    return this.cssRect[name] ?? this.rect[name];
+  }
+  public get computedContentPos() {
+    const name = this._names.contentPos;
+
+    return this.cssRect[name] ?? this.rect[name];
   }
   /**
    * Set CSS Rect through GridRect.
@@ -248,6 +246,9 @@ class GridItem {
       status.orgCSSText = orgCSSText;
     }
     return status;
+  }
+  private get _names() {
+    return this.horizontal ? RECT_NAMES.horizontal : RECT_NAMES.vertical;
   }
 }
 
