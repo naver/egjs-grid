@@ -117,7 +117,7 @@ class GridItem {
    * @member Grid.GridItem#cssInlineSize
    */
   public get cssInlineSize() {
-    return  this.cssRect[this._names.inlineSize];
+    return this.cssRect[this._names.inlineSize];
   }
   /**
    * The CSS size in content direction applied to the Grid. "height" if horizontal is false, "width" otherwise.
@@ -125,7 +125,7 @@ class GridItem {
    * @member Grid.GridItem#cssContentSize
    */
   public get cssContentSize() {
-    return  this.cssRect[this._names.contentSize];
+    return this.cssRect[this._names.contentSize];
   }
   /**
    * The CSS pos in inline direction applied to the Grid. "left" if horizontal is false, "top" otherwise.
@@ -133,7 +133,7 @@ class GridItem {
    * @member Grid.GridItem#cssInlinePos
    */
   public get cssInlinePos() {
-    return  this.cssRect[this._names.inlinePos];
+    return this.cssRect[this._names.inlinePos];
   }
   /**
    * The CSS pos in content direction applied to the Grid. "top" if horizontal is false, "left" otherwise.
@@ -141,7 +141,7 @@ class GridItem {
    * @member Grid.GridItem#cssContentPos
    */
   public get cssContentPos() {
-    return  this.cssRect[this._names.contentPos];
+    return this.cssRect[this._names.contentPos];
   }
   public set cssInlinePos(inlinePos: number | undefined) {
     this.cssRect[this._names.inlinePos] = inlinePos;
