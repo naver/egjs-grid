@@ -155,21 +155,41 @@ class GridItem {
   public set cssContentSize(contentSize: number | undefined) {
     this.cssRect[this._names.contentSize] = contentSize;
   }
+  /**
+   * Calculated size in the direction of the inline applied to the grid. "width" if horizontal is false, "height" otherwise.
+   * @ko Grid에 적용된 inline 방향의 계산된 사이즈. horizontal이 false면 "width", 아니면 "height".
+   * @member Grid.GridItem#computedInlineSize
+   */
   public get computedInlineSize() {
     const name = this._names.inlineSize;
 
     return this.cssRect[name] || this.rect[name] || this.orgRect[name];
   }
+  /**
+   * Calculated size in the direction of the content applied to the grid. "height" if horizontal is false, "width" otherwise.
+   * @ko Grid에 적용된 content 방향의 계산된 사이즈. horizontal이 false면 "height", 아니면 "width".
+   * @member Grid.GridItem#computedContentSize
+   */
   public get computedContentSize() {
     const name = this._names.contentSize;
 
     return this.cssRect[name] || this.rect[name] || this.orgRect[name];
   }
+  /**
+   * Calculated position in the direction of the inline applied to the grid. "left" if horizontal is false, "top" otherwise.
+   * @ko Grid에 적용된 content 방향의 계산된 포지션. horizontal이 false면 "left", 아니면 "top".
+   * @member Grid.GridItem#computedInlinePos
+   */
   public get computedInlinePos() {
     const name = this._names.inlinePos;
 
     return this.cssRect[name] ?? this.rect[name];
   }
+  /**
+   * Calculated position in the direction of the content applied to the grid. "top" if horizontal is false, "left" otherwise.
+   * @ko Grid에 적용된 content 방향의 계산된 포지션. horizontal이 false면 "top", 아니면 "left".
+   * @member Grid.GridItem#computedContentPos
+   */
   public get computedContentPos() {
     const name = this._names.contentPos;
 
