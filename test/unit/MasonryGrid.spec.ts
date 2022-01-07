@@ -311,10 +311,10 @@ describe("test MasonryGrid", () => {
       end: [310, 210, 510, 210],
     });
     expect(grid.getItems().map((item) => item.cssRect)).to.be.deep.equals([
-      { width: 120, left: 0, top: 0 },
-      { width: 120, left: 160, top: 0 },
-      { width: 120, left: 320, top: 0 },
-      { width: 120, left: 480, top: 0 },
+      { left: 0, top: 0 },
+      { left: 160, top: 0 },
+      { left: 320, top: 0 },
+      { left: 480, top: 0 },
     ]);
     expect(container!.style.height).to.be.deep.equals("500px");
   });

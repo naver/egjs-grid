@@ -82,7 +82,6 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
       gap,
       align,
       columnSizeRatio,
-      columnSize: columnSizeOption,
     } = this.options;
     const outlineLength = outline.length;
     const itemsLength = items.length;
@@ -107,9 +106,11 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
       const item = items[isEndDirection ? i : itemsLength - 1 - i];
       const columnAttribute = parseInt(item.attributes.column || "1", 10);
       const maxColumnAttribute = parseInt(item.attributes.maxColumn || "1", 10);
-      let inlineSize = item.inlineSize;
       let contentSize = item.contentSize;
-      let columnCount = Math.min(column, columnAttribute || Math.max(1, Math.ceil((inlineSize + gap) / columnDist)));
+      let columnCount = Math.min(
+        column,
+        columnAttribute || Math.max(1, Math.ceil((item.inlineSize + gap) / columnDist)),
+      );
       const maxColumnCount = Math.min(column, Math.max(columnCount, maxColumnAttribute));
       let columnIndex = getColumnIndex(endOutline, columnCount, nearestCalculationName);
       let contentPos = getColumnPoint(endOutline, columnIndex, columnCount, pointCalculationName);
@@ -133,12 +134,12 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
       columnIndex = Math.max(0, columnIndex);
       columnCount = Math.min(column - columnIndex, columnCount);
 
-      if (columnAttribute > 0 && (columnCount > 1 || isStretch || columnSizeOption)) {
-        inlineSize = (columnCount - 1) * columnDist + columnSize;
-        item.cssInlineSize = inlineSize;
+      // stretch mode or data-grid-column > "1"
+      if ((columnAttribute > 0 && columnCount > 1) || isStretch) {
+        item.cssInlineSize = (columnCount - 1) * columnDist + columnSize;
       }
       if (columnSizeRatio > 0) {
-        contentSize = inlineSize / columnSizeRatio;
+        contentSize = item.computedInlineSize / columnSizeRatio;
         item.cssContentSize = contentSize;
       }
       const inlinePos = alignPoses[columnIndex];
