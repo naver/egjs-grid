@@ -84,8 +84,8 @@ describe("test PackingGrid", () => {
       end: [605],
     });
 
-    const maxInlinePos = Math.max(...items.map((item) => item.cssInlinePos + item.cssInlineSize));
-    const maxContentPos = Math.max(...items.map((item) => item.cssContentPos + item.cssContentSize));
+    const maxInlinePos = Math.max(...items.map((item) => item.cssInlinePos! + item.cssInlineSize!));
+    const maxContentPos = Math.max(...items.map((item) => item.cssContentPos! + item.cssContentSize!));
 
     expect(checks.every((chk) => chk)).to.be.true;
     expect(maxInlinePos).to.be.closeTo(600, 0.000001);
@@ -117,8 +117,8 @@ describe("test PackingGrid", () => {
       end: [1205],
     });
 
-    const maxInlinePos = Math.max(...items.map((item) => item.cssInlinePos + item.cssInlineSize));
-    const maxContentPos = Math.max(...items.map((item) => item.cssContentPos + item.cssContentSize));
+    const maxInlinePos = Math.max(...items.map((item) => item.cssInlinePos! + item.cssInlineSize!));
+    const maxContentPos = Math.max(...items.map((item) => item.cssContentPos! + item.cssContentSize!));
 
     expect(checks.every((chk) => chk)).to.be.true;
     expect(maxInlinePos).to.be.closeTo(600, 0.000001);
@@ -150,8 +150,8 @@ describe("test PackingGrid", () => {
       end: [305],
     });
 
-    const maxInlinePos = Math.max(...items.map((item) => item.cssInlinePos + item.cssInlineSize));
-    const maxContentPos = Math.max(...items.map((item) => item.cssContentPos + item.cssContentSize));
+    const maxInlinePos = Math.max(...items.map((item) => item.cssInlinePos! + item.cssInlineSize!));
+    const maxContentPos = Math.max(...items.map((item) => item.cssContentPos! + item.cssContentSize!));
 
     expect(checks.every((chk) => chk)).to.be.true;
     expect(maxInlinePos).to.be.closeTo(600, 0.000001);
@@ -178,7 +178,7 @@ describe("test PackingGrid", () => {
 
     const items = grid.getItems();
     const distortion1 = items.reduce((prev, item) => {
-      const ratioCost = getCost(item.orgInlineSize / item.orgContentSize, item.cssInlineSize / item.cssContentSize);
+      const ratioCost = getCost(item.orgInlineSize / item.orgContentSize, item.cssInlineSize! / item.cssContentSize!);
 
       return prev + ratioCost;
     }, 0);
@@ -189,7 +189,7 @@ describe("test PackingGrid", () => {
     await waitEvent(grid, "renderComplete");
 
     const distortion2 = items.reduce((prev, item) => {
-      const ratioCost = getCost(item.orgInlineSize / item.orgContentSize, item.cssInlineSize / item.cssContentSize);
+      const ratioCost = getCost(item.orgInlineSize / item.orgContentSize, item.cssInlineSize! / item.cssContentSize!);
 
       return prev + ratioCost;
     }, 0);

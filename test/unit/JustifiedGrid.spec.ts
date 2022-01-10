@@ -87,7 +87,7 @@ describe("test JustifiedGrid", () => {
     // Then
     expectItemsPosition(items);
     items.forEach((item) => {
-      const cssRatio = (item.cssInlineSize - 20) / item.cssContentSize;
+      const cssRatio = (item.cssInlineSize! - 20) / item.cssContentSize!;
       const orgRatio = (item.orgInlineSize - 20) / item.orgContentSize;
 
       expect(cssRatio).to.be.closeTo(orgRatio, 0.00001);
@@ -122,7 +122,7 @@ describe("test JustifiedGrid", () => {
     // Then
     expectItemsPosition(items);
     items.forEach((item, i) => {
-      const cssRatio = item.cssInlineSize / (item.cssContentSize - 20);
+      const cssRatio = item.cssInlineSize! / (item.cssContentSize! - 20);
       const orgRatio = item.orgInlineSize / (item.orgContentSize - 20);
 
       if (i < 4) {
@@ -205,7 +205,7 @@ describe("test JustifiedGrid", () => {
 
         await waitEvent(grid, "renderComplete");
         const items = grid.getItems();
-        const maxInlinePos = Math.max(...items.map((item) => item.cssInlinePos + item.cssInlineSize));
+        const maxInlinePos = Math.max(...items.map((item) => item.cssInlinePos! + item.cssInlineSize!));
 
         // Then
         expect(maxInlinePos).to.be.closeTo(1000, 0.00001);
@@ -234,7 +234,7 @@ describe("test JustifiedGrid", () => {
 
         await waitEvent(grid, "renderComplete");
         const items = grid.getItems();
-        const maxInlinePos = Math.max(...items.map((item) => item.cssInlinePos + item.cssInlineSize));
+        const maxInlinePos = Math.max(...items.map((item) => item.cssInlinePos! + item.cssInlineSize!));
 
         // Then
         expect(maxInlinePos).to.be.closeTo(1000, 0.00001);

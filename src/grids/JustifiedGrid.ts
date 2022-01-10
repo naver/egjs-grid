@@ -382,7 +382,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
 
         const prevItem = groupItems[i - 1];
         const inlinePos = prevItem
-          ? prevItem.cssInlinePos + prevItem.cssInlineSize + gap
+          ? prevItem.cssInlinePos! + prevItem.cssInlineSize! + gap
           : 0;
 
         if (isCroppedSize) {
@@ -413,7 +413,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     const height = contentPos - startPoint;
 
     items.forEach((item) => {
-      item.cssContentPos -= height;
+      item.cssContentPos! -= height;
     });
     return {
       start: [startPoint - height],

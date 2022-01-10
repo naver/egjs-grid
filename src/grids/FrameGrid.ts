@@ -203,7 +203,7 @@ export class FrameGrid extends Grid<FrameGridOptions> {
       : getOutlinePoint(endOutline, gridOutline, useFrameFill);
 
     items.forEach((item) => {
-      item.cssContentPos += outlineDist;
+      item.cssContentPos! += outlineDist;
     });
 
     return {
