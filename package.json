@@ -146,7 +146,7 @@
 		"storybook-dark-mode": "^1.0.3",
 		"ts-node": "^9.1.1",
 		"tslib": "^2.0.3",
-		"typescript": "^3.9.7"
+		"typescript": "^4.2.4"
 	},
 	"dependencies": {
 		"@egjs/children-differ": "^1.0.1",
