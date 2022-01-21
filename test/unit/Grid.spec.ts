@@ -585,7 +585,37 @@ describe("test Grid", () => {
       expect(outerHTML1).to.be.equals(outerHTML2);
     });
   });
-  describe("test autoResize, resizeDebounce, maxResizeDebounce options", () => {
+  describe("test autoResize, useResizeObserver, resizeDebounce, maxResizeDebounce options", () => {
+    it(`should check if renderComplete does trigger when useResizeObserver is enabled and container's size is changed`, async () => {
+      // Given
+      container!.innerHTML = `
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      `;
+      const spy = sinon.spy();
+      grid = new SampleGrid(container!, {
+        autoResize: false,
+        useResizeObserver: true,
+        resizeDebounce: 0,
+      });
+
+      grid.on("renderComplete", spy);
+
+      // When
+      // occur when resize inline direction
+      container!.style.width = "90%";
+
+
+      await waitFor(100);
+
+      // not occur when resize content direction
+      container!.style.height = "100px";
+      await waitFor(100);
+
+      // Then
+      expect(spy.callCount).to.be.equals(1);
+    });
     it(`should check if renderComplete does not trigger when autoResize is disabled`, async () => {
       // Given
       container!.innerHTML = `
@@ -596,6 +626,7 @@ describe("test Grid", () => {
       const spy = sinon.spy();
       grid = new SampleGrid(container!, {
         autoResize: false,
+        resizeDebounce: 0,
       });
 
       grid.on("renderComplete", spy);
