@@ -25,6 +25,7 @@ export const DEFAULT_GRID_OPTIONS: Required<GridOptions> = {
   outlineLength: 0,
   outlineSize: 0,
   useRoundedSize: true,
+  useResizeObserver: false,
 };
 
 export enum PROPERTY_TYPE {

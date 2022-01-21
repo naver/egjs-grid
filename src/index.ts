@@ -14,6 +14,7 @@ export * from "./types";
 export * from "./Grid";
 export * from "./GridItem";
 export * from "./ContainerManager";
+export * from "./ResizeWatcher";
 export * from "./consts";
 export {
   GetterSetter,

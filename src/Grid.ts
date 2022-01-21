@@ -75,6 +75,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
       maxResizeDebounce,
       autoResize,
       useRoundedSize,
+      useResizeObserver,
     } = this.options;
 
     // TODO: 테스트용 설정
@@ -84,6 +85,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
         resizeDebounce,
         maxResizeDebounce,
         autoResize,
+        useResizeObserver,
       }).on("resize", this._onResize);
     this.itemRenderer = externalItemRenderer!
       || new ItemRenderer({
@@ -215,18 +217,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
    * ```
    */
   public renderItems(options: RenderOptions = {}) {
-    this._clearRenderTimer();
-
-    if (!this.getItems().length && this.getChildren().length) {
-      this.syncElements(options);
-    } else if (options.useResize || options.useOrgResize) {
-      // Resize container and Update all items
-      this._resizeContainer();
-      this.updateItems(this.items, options);
-    } else {
-      // Update only items that need to be updated.
-      this.checkReady(options);
-    }
+    this._renderItems(options);
     return this;
   }
   /**
@@ -509,13 +500,34 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     this.itemRenderer.setContainerRect(this.containerManager.getRect());
   }
   private _onResize = () => {
-    this.renderItems({
+    this._renderItems({
       useResize: true,
-    });
+    }, true);
   }
-
   private _init() {
     this._resizeContainer();
+  }
+  private _renderItems(options: RenderOptions = {}, isTrusted?: boolean) {
+    this._clearRenderTimer();
+
+    const isResize = options.useResize || options.useOrgResize;
+
+
+    if (isResize && !isTrusted) {
+      // Resize container
+      // isTrusted has already been resized internally.
+      this._resizeContainer();
+    }
+
+    if (!this.getItems().length && this.getChildren().length) {
+      this.syncElements(options);
+    } else if (isResize) {
+      // Update all items
+      this.updateItems(this.items, options);
+    } else {
+      // Update only items that need to be updated.
+      this.checkReady(options);
+    }
   }
 }
 
