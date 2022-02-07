@@ -11,22 +11,17 @@ export interface ResizeWatherOptions {
   rectBox?: "border-box" | "content-box";
 }
 
-export interface OnResize {
-
-}
-
-
 export class ResizeWatcher {
   private _resizeTimer = 0;
   private _maxResizeDebounceTimer = 0;
-  private _emitter: Component<{ resize: OnResize }>;
+  private _emitter: Component<{ resize: void }>;
   private _observer: ResizeObserver | null;
   protected container: HTMLElement;
   protected rect: SizeRect = { width: 0, height: 0 };
-  protected options!: Required<ResizeWatherOptions>;
+  private _options!: Required<ResizeWatherOptions>;
 
   constructor(container: HTMLElement | string, options: ResizeWatherOptions = {}) {
-    this.options = {
+    this._options = {
       resizeDebounce: 100,
       maxResizeDebounce: 0,
       useResizeObserver: false,
@@ -48,7 +43,7 @@ export class ResizeWatcher {
   public resize() {
     const container = this.container;
 
-    this.setRect(this.options.rectBox === "border-box" ? {
+    this.setRect(this._options.rectBox === "border-box" ? {
       width: container.offsetWidth,
       height: container.offsetHeight,
     } : {
@@ -56,19 +51,19 @@ export class ResizeWatcher {
       height: container.clientHeight,
     });
   }
-  public listen(callback: (e: OnResize) => void) {
+  public listen(callback: () => void) {
     this._emitter.on("resize", callback);
     return this;
   }
   public destroy() {
     this._observer?.disconnect();
-    if (this.options.useWindowResize) {
+    if (this._options.useWindowResize) {
       window.removeEventListener("reisze", this._onResize);
     }
   }
   private _init() {
     const container = this.container;
-    const options = this.options;
+    const options = this._options;
 
     this._emitter = new Component();
     if (options.useResizeObserver && !!window.ResizeObserver) {
@@ -89,7 +84,7 @@ export class ResizeWatcher {
     this._maxResizeDebounceTimer = 0;
     this._resizeTimer = 0;
 
-    const watchDirection = this.options.watchDirection;
+    const watchDirection = this._options.watchDirection;
     const prevRect = this.rect;
     this.resize();
     const rect = this.rect;
@@ -100,14 +95,14 @@ export class ResizeWatcher {
       || (isWatchHeight && prevRect.height !== rect.height);
 
     if (isResize) {
-      this._emitter.trigger("resize", {});
+      this._emitter.trigger("resize");
     }
   }
   private _scheduleResize = () => {
     const {
       resizeDebounce,
       maxResizeDebounce,
-    } = this.options;
+    } = this._options;
 
 
     if (!this._maxResizeDebounceTimer && maxResizeDebounce >= resizeDebounce) {

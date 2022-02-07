@@ -32,9 +32,9 @@ import { ItemRenderer, ItemRendererStatus } from "./ItemRenderer";
  * @property - The default direction value when direction is not set in the render option. <ko>render옵션에서 direction을 미설정시의 기본 방향값.</ko>
  * @property - Whether to get the size as rounded size(offsetWidth, offsetHeight). Set to true if transform is applied to the container. If false, get the size through getBoundingClientRect. (default: true)
  <ko>사이즈를 반올림된 사이즈(offsetWidth, offsetHeight)로 가져올지 여부. container에 transform이 적용되어 있다면 true로 설정해라. false면 getBoundingClientRect를 통해 사이즈를 가져온다. (default: true)</ko>
- * @property - Whether to use ResizeObserver event to detect container size change when `autoResize` option is used.<ko>autoResize 옵션 사용시 container의 사이즈 변화 감지를 위해 ResizeObserver 이벤트를 사용할지 여부.</ko>
+ * @property - Whether to use ResizeObserver event to detect container size change when `autoResize` option is used. (default: false)<ko>autoResize 옵션 사용시 container의 사이즈 변화 감지를 위해 ResizeObserver 이벤트를 사용할지 여부. (default: false)</ko>
  * @property - You can set the ItemRenderer directly externally. <ko>외부에서 직접 ItemRenderer를 설정할 수 있다.</ko>
- * @property - You can set the ContainerManager를 directly externally. <ko>외부에서 직접 ContainerManager를 설정할 수 있다.</ko>
+ * @property - You can set the ContainerManager directly externally. <ko>외부에서 직접 ContainerManager를 설정할 수 있다.</ko>
  */
 export interface GridOptions {
   horizontal?: boolean;

@@ -626,7 +626,6 @@ describe("test Grid", () => {
       const spy = sinon.spy();
       grid = new SampleGrid(container!, {
         autoResize: false,
-        resizeDebounce: 0,
       });
 
       grid.on("renderComplete", spy);
