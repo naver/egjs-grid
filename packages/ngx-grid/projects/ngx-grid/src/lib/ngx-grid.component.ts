@@ -46,6 +46,7 @@ export class NgxGridComponent
   @Input() outlineLength!: Required<GridOptions>['outlineLength'];
   @Input() outlineSize!: Required<GridOptions>['outlineSize'];
   @Input() useRoundedSize!: Required<GridOptions>['useRoundedSize'];
+  @Input() useResizeObserver!: Required<GridOptions>['useResizeObserver'];
   @Output() renderComplete!: EventEmitter<OnRenderComplete>;
   @Output() contentError!: EventEmitter<OnContentError>;
 
