@@ -139,7 +139,7 @@ describe("test JustifiedGrid", () => {
     container!.style.cssText = "width: 1000px;";
 
     grid = new JustifiedGrid(container!, {
-      gap: 5,
+      gap: 6,
       horizontal: false,
     });
 

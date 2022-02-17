@@ -10,7 +10,16 @@ describe("test Grid", () => {
   let container: HTMLElement | null;
 
   beforeEach(() => {
-    container = sandbox("")!;
+    const root = sandbox("")!;
+    root.innerHTML = `
+    <style>
+    .sample div {
+      font-size: 0;
+      min-height: 18px;
+    }
+    </style>
+    <div class="sample"></div>`;
+    container = document.querySelector<HTMLElement>(".sample")!;
     container!.style.cssText = "";
   });
 
