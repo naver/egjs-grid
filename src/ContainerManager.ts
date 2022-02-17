@@ -4,8 +4,9 @@
  * MIT license
  */
 import Component from "@egjs/component";
-import { DestroyOptions, RECT_NAMES, ResizeWatcher, SizeRect } from ".";
-import { DEFAULT_GRID_OPTIONS } from "./consts";
+import { DestroyOptions, SizeRect } from "./types";
+import { ResizeWatcher } from "./ResizeWatcher";
+import { DEFAULT_GRID_OPTIONS, RECT_NAMES } from "./consts";
 
 export interface ContainerManagerOptions {
   horizontal?: boolean;
