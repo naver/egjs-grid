@@ -730,7 +730,7 @@ describe("test Grid", () => {
       }, 210);
     });
   });
-  describe.only("test isEqualSize option", () => {
+  describe("test isEqualSize option", () => {
     it(`should check if all items are the same size when isEqualSize is true`, async () => {
       // Given
       container!.innerHTML = `
