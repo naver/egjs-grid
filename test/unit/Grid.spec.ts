@@ -730,6 +730,58 @@ describe("test Grid", () => {
       }, 210);
     });
   });
+  describe.only("test isEqualSize option", () => {
+    it(`should check if all items are the same size when isEqualSize is true`, async () => {
+      // Given
+      container!.innerHTML = `
+      <div style="height: 70px;">1</div>
+      <div style="height: 100px;">2</div>
+      <div style="height: 50px;">3</div>
+      `;
+      grid = new SampleGrid(container!, {
+        isEqualSize: true,
+      });
+
+      // When
+      grid.renderItems();
+      await waitEvent(grid, "renderComplete");
+
+      // Then
+      const items = grid.getItems();
+
+      expect(items[0].contentSize).to.be.equals(70);
+      expect(items[1].contentSize).to.be.equals(70);
+      expect(items[2].contentSize).to.be.equals(70);
+    });
+    it(`should check if all items are the same size when isEqualSize is true and update items`, async () => {
+      // Given
+      container!.innerHTML = `
+      <div style="height: 70px;">1</div>
+      <div style="height: 100px;">2</div>
+      <div style="height: 50px;">3</div>
+      `;
+      grid = new SampleGrid(container!, {
+        isEqualSize: true,
+      });
+
+      grid.renderItems();
+      await waitEvent(grid, "renderComplete");
+
+      const items = grid.getItems();
+
+      items[0].element!.style.height = "80px";
+
+      // When
+
+      grid.renderItems({ useResize: true });
+      await waitEvent(grid, "renderComplete");
+
+      // Then
+      expect(items[0].contentSize).to.be.equals(80);
+      expect(items[1].contentSize).to.be.equals(80);
+      expect(items[2].contentSize).to.be.equals(80);
+    });
+  });
 
   describe("test dynamic options", () => {
     it("should check if dynamic option works", () => {
