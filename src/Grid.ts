@@ -517,6 +517,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
       // Resize container
       // isTrusted has already been resized internally.
       this._resizeContainer();
+      this.itemRenderer.resize();
     }
 
     if (!this.getItems().length && this.getChildren().length) {

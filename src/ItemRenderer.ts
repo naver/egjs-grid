@@ -135,7 +135,7 @@ export class ItemRenderer {
     }
     item.attributes = element ? getDataAttributes(element, this.options.attributePrefix) : {};
 
-    if (!isLoading) {
+    if (!isLoading && !this.initialRect) {
       this.initialRect = { ...rect };
     }
 
