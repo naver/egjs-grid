@@ -328,6 +328,26 @@ describe("test Grid", () => {
       // Then
       expect(item.mountState).to.be.equals(MOUNT_STATE.UNCHECKED);
     });
+    it("should check if it is mounted when unmounted after updated", async () => {
+      // Given
+      container!.innerHTML = `<div></div>`;
+      grid = new SampleGrid(container!);
+
+      grid.renderItems();
+      await waitEvent(grid, "renderComplete");
+      const item = grid.getItems()[0];
+
+      // When
+      item.mountState = MOUNT_STATE.UNMOUNTED;
+      grid.renderItems();
+      const e = await waitEvent(grid, "renderComplete");
+
+      // Then
+      expect(e.mounted.length).to.be.equals(1);
+      expect(e.updated.length).to.be.equals(0);
+      expect(e.mounted[0]).to.be.equals(item);
+      expect(item.mountState).to.be.equals(MOUNT_STATE.MOUNTED);
+    });
     it("should check if orgSize is changed when useOrgResize is used", async () => {
       // Given
       container!.innerHTML = `<div style="position: absolute;">
