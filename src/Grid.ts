@@ -316,7 +316,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     // Grid: renderItems => checkReady => readyItems => applyGrid
     const items = this.items;
     const updated = items.filter((item) => item.element?.parentNode && item.updateState !== UPDATE_STATE.UPDATED);
-    const mounted: GridItem[] = updated.filter((item) => item.mountState !== MOUNT_STATE.MOUNTED);
+    const mounted = items.filter((item) => item.element?.parentNode && item.mountState !== MOUNT_STATE.MOUNTED);
     const moreUpdated: GridItem[] = [];
 
     mounted.filter((item) => {
@@ -432,6 +432,9 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
       end: [...prevOutline],
     };
 
+    mounted.forEach((item) => {
+      item.mountState = MOUNT_STATE.MOUNTED;
+    });
     updated.forEach((item) => {
       item.isUpdate = true;
     });
