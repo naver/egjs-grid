@@ -126,6 +126,12 @@ export interface GridOptions {
    */
   useResizeObserver?: boolean;
   /**
+   * Whether to detect size change of children if useResizeObserver option is used.
+   * <ko>useResizeObserver옵션을 사용한다면 children의 사이즈 변화 감지 여부.</ko>
+   * @default false
+   */
+  useObserveChildren?: boolean;
+  /**
    * You can set the ItemRenderer directly externally.
    * <ko>외부에서 직접 ItemRenderer를 설정할 수 있다.</ko>
    * @inner

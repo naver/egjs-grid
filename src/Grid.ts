@@ -13,9 +13,10 @@ import {
 } from "./types";
 import ImReady from "@egjs/imready";
 import { ItemRenderer } from "./ItemRenderer";
-import { GetterSetter, isNumber, isString } from "./utils";
+import { GetterSetter, getMountedElements, isNumber, isString, getUpdatedItems } from "./utils";
 import { diff } from "@egjs/children-differ";
 import { GridItem } from "./GridItem";
+import { OnResizeWatcherResize } from "./ResizeWatcher";
 
 /**
  * @extends eg.Component
@@ -125,6 +126,14 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
    * @param items - The items to set. <ko>설정할 아이템들</ko>
    */
   public setItems(items: GridItem[]): this {
+    const options = this.options;
+
+    if (options.autoResize && options.useResizeObserver && options.useObserveChildren) {
+      const containerManager = this.containerManager;
+
+      containerManager.unobserveChildren(getMountedElements(this.items));
+      containerManager.observeChildren(getMountedElements(items));
+    }
     this.items = items;
     return this;
   }
@@ -502,10 +511,18 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     this.containerManager.resize();
     this.itemRenderer.setContainerRect(this.containerManager.getRect());
   }
-  private _onResize = () => {
-    this._renderItems({
-      useResize: true,
-    }, true);
+  private _onResize = (e: OnResizeWatcherResize) => {
+    if (e.isResizeContainer) {
+      this._renderItems({
+        useResize: true,
+      }, true);
+    } else {
+      const updatedItems = getUpdatedItems(this.items, e.childEntries);
+
+      if (updatedItems.length > 0) {
+        this.updateItems(updatedItems);
+      }
+    }
   }
   private _init() {
     this._resizeContainer();

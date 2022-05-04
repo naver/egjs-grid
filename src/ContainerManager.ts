@@ -5,7 +5,7 @@
  */
 import Component from "@egjs/component";
 import { DestroyOptions, SizeRect } from "./types";
-import { ResizeWatcher } from "./ResizeWatcher";
+import { OnResizeWatcherResize, ResizeWatcher } from "./ResizeWatcher";
 import { DEFAULT_GRID_OPTIONS, RECT_NAMES } from "./consts";
 
 export interface ContainerManagerOptions {
@@ -20,7 +20,7 @@ export interface ContainerManagerStatus {
   rect: SizeRect;
 }
 export interface ContainerManagerEvents {
-  resize: void;
+  resize: OnResizeWatcherResize;
 }
 export class ContainerManager extends Component<ContainerManagerEvents> {
   protected options: Required<ContainerManagerOptions>;
@@ -50,6 +50,12 @@ export class ContainerManager extends Component<ContainerManagerEvents> {
   }
   public getRect() {
     return this._watcher.getRect();
+  }
+  public observeChildren(children: Element[]) {
+    this._watcher.observeChildren(children);
+  }
+  public unobserveChildren(children: Element[]) {
+    this._watcher.unobserveChildren(children);
   }
   public setRect(rect: SizeRect) {
     this._watcher.setRect(rect);
@@ -101,8 +107,8 @@ export class ContainerManager extends Component<ContainerManagerEvents> {
       watchDirection: options.useResizeObserver ? this._names.inlineSize : false,
     }).listen(this._onResize);
   }
-  private _onResize = () => {
-    this.trigger("resize");
+  private _onResize = (e: OnResizeWatcherResize) => {
+    this.trigger("resize", e);
   }
   private get _names() {
     return RECT_NAMES[this.options.horizontal ? "horizontal" : "vertical"];
