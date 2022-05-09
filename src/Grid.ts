@@ -16,7 +16,7 @@ import { ItemRenderer } from "./ItemRenderer";
 import { GetterSetter, getMountedElements, isNumber, isString, getUpdatedItems } from "./utils";
 import { diff } from "@egjs/children-differ";
 import { GridItem } from "./GridItem";
-import { OnResizeWatcherResize } from "./ResizeWatcher";
+import { ResizeEvent } from "./ResizeWatcher";
 
 /**
  * @extends eg.Component
@@ -128,7 +128,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
   public setItems(items: GridItem[]): this {
     const options = this.options;
 
-    if (options.autoResize && options.useResizeObserver && options.useObserveChildren) {
+    if (options.autoResize && options.useResizeObserver && options.observeChildren) {
       const containerManager = this.containerManager;
 
       containerManager.unobserveChildren(getMountedElements(this.items));
@@ -511,7 +511,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     this.containerManager.resize();
     this.itemRenderer.setContainerRect(this.containerManager.getRect());
   }
-  private _onResize = (e: OnResizeWatcherResize) => {
+  private _onResize = (e: ResizeEvent) => {
     if (e.isResizeContainer) {
       this._renderItems({
         useResize: true,

@@ -13,8 +13,6 @@ import { ItemRenderer, ItemRendererStatus } from "./ItemRenderer";
 /**
  * @typedef
  * @memberof Grid
- * @property - You can set the ItemRenderer directly externally. <ko>외부에서 직접 ItemRenderer를 설정할 수 있다.</ko>
- * @property - You can set the ContainerManager directly externally. <ko>외부에서 직접 ContainerManager를 설정할 수 있다.</ko>
  */
 export interface GridOptions {
   /**
@@ -130,7 +128,7 @@ export interface GridOptions {
    * <ko>useResizeObserver옵션을 사용한다면 children의 사이즈 변화 감지 여부.</ko>
    * @default false
    */
-  useObserveChildren?: boolean;
+  observeChildren?: boolean;
   /**
    * You can set the ItemRenderer directly externally.
    * <ko>외부에서 직접 ItemRenderer를 설정할 수 있다.</ko>

@@ -645,7 +645,7 @@ describe("test Grid", () => {
       // Then
       expect(spy.callCount).to.be.equals(1);
     });
-    it(`should check if renderComplete does trigger with updated when useResizeObserver, useObserveChildren is enabled and children's size is changed`, async () => {
+    it(`should check if renderComplete does trigger with updated when useResizeObserver, observeChildren is enabled and children's size is changed`, async () => {
       // Given
       container!.innerHTML = `
       <div>1</div>
@@ -655,7 +655,7 @@ describe("test Grid", () => {
       grid = new SampleGrid(container!, {
         autoResize: false,
         useResizeObserver: true,
-        useObserveChildren: true,
+        observeChildren: true,
         resizeDebounce: 0,
       });
 

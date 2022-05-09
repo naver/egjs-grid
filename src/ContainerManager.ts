@@ -5,7 +5,7 @@
  */
 import Component from "@egjs/component";
 import { DestroyOptions, SizeRect } from "./types";
-import { OnResizeWatcherResize, ResizeWatcher } from "./ResizeWatcher";
+import { ResizeEvent, ResizeWatcher } from "./ResizeWatcher";
 import { DEFAULT_GRID_OPTIONS, RECT_NAMES } from "./consts";
 
 export interface ContainerManagerOptions {
@@ -20,7 +20,7 @@ export interface ContainerManagerStatus {
   rect: SizeRect;
 }
 export interface ContainerManagerEvents {
-  resize: OnResizeWatcherResize;
+  resize: ResizeEvent;
 }
 export class ContainerManager extends Component<ContainerManagerEvents> {
   protected options: Required<ContainerManagerOptions>;
