@@ -12,7 +12,7 @@ export interface ResizeWatherOptions {
   childrenRectBox?: "border-box" | "content-box";
 }
 
-export interface ResizerWatcherResizeEvent {
+export interface ResizeWatcherResizeEvent {
   isResizeContainer: boolean;
   childEntries: ResizeWatcherEntry[];
 }
@@ -25,7 +25,7 @@ export interface ResizeWatcherEntry {
 export class ResizeWatcher {
   private _resizeTimer = 0;
   private _maxResizeDebounceTimer = 0;
-  private _emitter: Component<{ resize: ResizerWatcherResizeEvent }>;
+  private _emitter: Component<{ resize: ResizeWatcherResizeEvent }>;
   private _observer: ResizeObserver | null;
   protected container: HTMLElement;
   protected rect: SizeRect = { width: 0, height: 0 };
@@ -88,7 +88,7 @@ export class ResizeWatcher {
       observer.unobserve(element);
     });
   }
-  public listen(callback: (e: ResizerWatcherResizeEvent) => void) {
+  public listen(callback: (e: ResizeWatcherResizeEvent) => void) {
     this._emitter.on("resize", callback);
     return this;
   }
