@@ -629,6 +629,9 @@ describe("test Grid", () => {
         resizeDebounce: 0,
       });
 
+      grid.renderItems();
+
+      await waitEvent(grid, "renderComplete");
       grid.on("renderComplete", spy);
 
       // When

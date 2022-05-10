@@ -128,7 +128,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
   public setItems(items: GridItem[]): this {
     const options = this.options;
 
-    if (options.autoResize && options.useResizeObserver && options.observeChildren) {
+    if (options.useResizeObserver && options.observeChildren) {
       const containerManager = this.containerManager;
 
       containerManager.unobserveChildren(getMountedElements(this.items));
