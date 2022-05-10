@@ -1,5 +1,5 @@
 import * as sinon from "sinon";
-import { MOUNT_STATE } from "../../src";
+import { MOUNT_STATE, OnRenderComplete } from "../../src";
 import { GridItem } from "../../src/GridItem";
 import { SampleGrid } from "./samples/SampleGrid";
 import { cleanup, sandbox, waitEvent, waitFor } from "./utils/utils";
@@ -629,6 +629,9 @@ describe("test Grid", () => {
         resizeDebounce: 0,
       });
 
+      grid.renderItems();
+
+      await waitEvent(grid, "renderComplete");
       grid.on("renderComplete", spy);
 
       // When
@@ -644,6 +647,37 @@ describe("test Grid", () => {
 
       // Then
       expect(spy.callCount).to.be.equals(1);
+    });
+    it(`should check if renderComplete does trigger with updated when useResizeObserver, observeChildren is enabled and children's size is changed`, async () => {
+      // Given
+      container!.innerHTML = `
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      `;
+      grid = new SampleGrid(container!, {
+        autoResize: false,
+        useResizeObserver: true,
+        observeChildren: true,
+        resizeDebounce: 0,
+      });
+
+      grid.renderItems();
+      await waitEvent(grid, "renderComplete");
+
+      // When
+      // occur when resize inline direction
+      const children = grid.getChildren();
+
+      children[0].style.width = "90%";
+      children[1].style.width = "90%";
+
+
+      const e: OnRenderComplete = await waitEvent(grid, "renderComplete");
+
+      // Then
+      // [0, 1]
+      expect(e.updated).to.be.deep.equals(grid.getItems().slice(0, 2));
     });
     it(`should check if renderComplete does not trigger when autoResize is disabled`, async () => {
       // Given

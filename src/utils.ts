@@ -5,11 +5,33 @@
  */
 import Grid from "./Grid";
 import { GRID_METHODS, GRID_PROPERTY_TYPES, PROPERTY_TYPE } from "./consts";
+import { GridItem } from "./GridItem";
+import { ResizeWatcherEntry } from "./ResizeWatcher";
+import { diff } from "@egjs/children-differ";
 
 export function getKeys<T extends Record<string, any>>(obj: T): Array<keyof T> {
   return Object.keys(obj);
 }
+export function getUpdatedItems(items: GridItem[], entries: ResizeWatcherEntry[]) {
+  const mountedItems = getMountedItems(items);
 
+  return diff(
+    entries.map((entry) => entry.target),
+    mountedItems.map((item) => item.element!),
+  ).maintained.filter(([prevIndex, nextIndex]) => {
+    const entrySize = entries[prevIndex].size!;
+    const item = items[nextIndex];
+
+    return entrySize.inlineSize !== item.computedInlineSize
+      || entrySize.blockSize !== item.computedContentSize;
+  }).map(([, nextIndex]) => items[nextIndex]);
+}
+export function getMountedItems(items: GridItem[]) {
+  return items.filter((item) => item.element);
+}
+export function getMountedElements(items: GridItem[]) {
+  return getMountedItems(items).map((item) => item.element!);
+}
 export function isString(val: any): val is string {
   return typeof val === "string";
 }
@@ -19,7 +41,6 @@ export function isObject(val: any): val is object {
 export function isNumber(val: any): val is number {
   return typeof val === "number";
 }
-
 export function camelize(str: string) {
   return str.replace(/[\s-_]([a-z])/g, (all, letter) => letter.toUpperCase());
 }

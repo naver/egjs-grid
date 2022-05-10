@@ -88,6 +88,29 @@ grid.renderItems();
 </div>
 ```
 
+## Detect resize of Container & Children
+Grid calculates the size of container and children by window resizing event. However, even if the size of the window does not change, the size of the event container and children can change. Most of the first rendering issues are also like this.
+
+In this case, I recommend [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver) for you.
+
+Provides `useResizeObserver` option to detect size change of container and `observeChildren` option to detect size change of children.
+
+
+```js
+import { MasonryGrid, JustifiedGrid, FrameGrid, PackingGrid } from "@egjs/grid";
+
+
+// Grid.MasonryGrid
+const grid = new MasonryGrid(container, {
+  gap: 5,
+  useResizeObserver: true,
+  observeChildren: true,
+});
+
+grid.renderItems();
+```
+
+
 ## Packages
 |Package|Version|Description|
 |:-----:|:-----:|:-----:|

@@ -20,5 +20,7 @@ export {
   GetterSetter,
   withGridMethods,
   withMethods,
+  getMountedElements,
+  getUpdatedItems,
 } from "./utils";
 export default Grid;
