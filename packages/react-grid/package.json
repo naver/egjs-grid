@@ -1,10 +1,11 @@
 {
   "name": "@egjs/react-grid",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "description": "A React component that can arrange items according to the type of grids",
   "types": "declaration/index.d.ts",
   "main": "dist/grid.cjs.js",
   "module": "dist/grid.esm.js",
+  "browser": "dist/grid.umd.js",
   "sideEffects": false,
   "scripts": {
     "storybook": "start-storybook -p 6007",

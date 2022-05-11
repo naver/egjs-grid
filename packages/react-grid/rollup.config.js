@@ -3,7 +3,7 @@ const buildHelper = require("@egjs/build-helper");
 const defaultOptions = {
     tsconfig: "tsconfig.build.json",
     sourcemap: true,
-    name: "Lapin"
+    name: "Grid"
 };
 export default buildHelper([
     {
@@ -12,14 +12,19 @@ export default buildHelper([
         exports: "named",
         format: "es",
         output: "./dist/grid.esm.js",
-        commonjs: true,
     },
     {
         ...defaultOptions,
         input: "./src/index.umd.ts",
-        exports: "named",
+        exports: "default",
         format: "cjs",
         output: "./dist/grid.cjs.js",
-        commonjs: true,
     },
+    {
+      ...defaultOptions,
+      input: "./src/index.umd.ts",
+      exports: "default",
+      format: "umd",
+      output: "./dist/grid.umd.js",
+  },
 ]);
