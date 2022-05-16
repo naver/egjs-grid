@@ -374,7 +374,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
         this.readyItems([], [item], options);
       }
     }).on("error", (e) => {
-      const item = items[e.index];
+      const item = updated[e.index];
       /**
        * This event is fired when an error occurs in the content.
        * @ko 콘텐츠 로드에 에러가 날 때 발생하는 이벤트.
