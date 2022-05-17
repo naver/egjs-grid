@@ -122,6 +122,36 @@ describe("test Grid", () => {
       expect(renderCompleteSpy.callCount).to.be.equals(2);
       expect(errorSpy.callCount).to.be.equals(1);
     });
+    it("should check whether it is the same as the error item. if error event occurs during update", async () => {
+      // Given
+      container!.innerHTML = `
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      `;
+      grid = new SampleGrid(container!);
+
+      const errorSpy = sinon.spy();
+
+      grid.on("contentError", errorSpy);
+      grid.renderItems();
+      await waitEvent(grid, "renderComplete");
+
+      // When
+      // <div>2</div>
+      const errorItem = grid.getItems()[1];
+      errorItem.element!.innerHTML = `<div><img src="INVALID"></div>`;
+
+      grid.updateItems([errorItem]);
+      await waitEvent(grid, "renderComplete");
+
+      // Then
+      const errorEvent = errorSpy.args[0][0];
+
+      expect(errorSpy.callCount).to.be.equals(1);
+      expect(errorEvent.item).to.be.equals(errorItem);
+      expect(errorEvent.element).to.be.equals(errorItem.element);
+    });
     it("should check if inlineSize is reduced if there is a border", async () => {
       // Given
       container!.innerHTML = `
