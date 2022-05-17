@@ -3,7 +3,7 @@ const buildHelper = require("@egjs/build-helper");
 const defaultOptions = {
     tsconfig: "tsconfig.build.json",
     sourcemap: true,
-    name: "Grid"
+    name: "ReactGrid"
 };
 export default buildHelper([
     {
@@ -26,5 +26,9 @@ export default buildHelper([
       exports: "default",
       format: "umd",
       output: "./dist/grid.umd.js",
+      external: {
+        "@egjs/grid": "Grid",
+        "react": "React",
+      }
   },
 ]);
