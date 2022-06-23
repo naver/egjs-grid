@@ -72,7 +72,7 @@
     grid.syncElements();
   });
   onDestroy(() => {
-    grid.destroy();
+    grid && grid.destroy();
   });
   export function getInstance() {
     return grid;
