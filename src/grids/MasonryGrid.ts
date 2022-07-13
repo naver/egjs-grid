@@ -172,12 +172,13 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     } = this.options;
     const containerInlineSize = this.getContainerInlineSize();
     const columnSizeOption = this.columnSize || this.outlineSize;
-    let column = this.column || this.outlineLength || 1;
+    const columnOption = this.column || this.outlineLength;
+    let column = columnOption || 1;
 
     let columnSize = 0;
 
     if (align === "stretch") {
-      if (!this.column && !this.outlineLength) {
+      if (!columnOption) {
         const maxStretchColumnSize = this.maxStretchColumnSize || Infinity;
 
         column = Math.max(1, Math.ceil((containerInlineSize + gap) / (maxStretchColumnSize + gap)));
