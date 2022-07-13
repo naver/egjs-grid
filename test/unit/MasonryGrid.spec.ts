@@ -451,6 +451,41 @@ describe("test MasonryGrid", () => {
     ]);
     expect(container!.style.height).to.be.deep.equals("460px");
   });
+  it(`should check if it is aligned with stretch and maxStretchColumnSize`, async () => {
+    // Given
+    container!.style.cssText = "width: 600px; height: 600px;";
+    container!.innerHTML = `
+      <div style="position: absolute;width: 200px; height: 200px;"></div>
+      <div style="position: absolute;width: 150px; height: 150px;"></div>
+      <div style="position: absolute;width: 300px; height: 300px;"></div>
+      <div style="position: absolute;width: 250px; height: 250px;"></div>
+    `;
+    grid = new MasonryGrid(container!, {
+      align: "stretch",
+      maxStretchColumnSize: 300,
+      gap: 10,
+    });
+
+    // When
+    // 295 10 295
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+    // Then
+    expect(grid.getOutlines()).to.be.deep.equals({
+      start: [0, 0],
+      end: [470, 470],
+    });
+
+    expect(grid.getItems().map((item) => item.cssRect)).to.be.deep.equals([
+      { width: 295, left: 0, top: 0 },
+      { width: 295, left: 305, top: 0 },
+      { width: 295, left: 305, top: 160 },
+      { width: 295, left: 0, top: 210 },
+    ]);
+    expect(container!.style.height).to.be.deep.equals("460px");
+  });
   it(`should check if the ratio of the size of all items is 1:2`, async () => {
     // Given
     container!.style.cssText = "width: 600px; height: 600px;";
