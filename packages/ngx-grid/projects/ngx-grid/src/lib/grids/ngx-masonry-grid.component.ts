@@ -21,4 +21,5 @@ export class NgxMasonryGridComponent
   @Input() columnSizeRatio!: Required<MasonryGrid>['columnSizeRatio'];
   @Input() align!: Required<MasonryGrid>['align'];
   @Input() columnCalculationThreshold!: Required<MasonryGrid>['columnCalculationThreshold'];
+  @Input() maxStretchColumnSize!: Required<MasonryGrid>['maxStretchColumnSize'];
 }
