@@ -122,6 +122,7 @@
 		"karma-typescript": "^4.0.0",
 		"karma-viewport": "^1.0.4",
 		"mocha": "^6.0.2",
+		"playwright": "^1.25.1",
 		"postcss-loader": "^4.1.0",
 		"print-coveralls": "^1.2.2",
 		"print-sizes": "^0.1.0",
