@@ -1,6 +1,6 @@
 {
   "name": "@egjs/svelte-grid",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "description": "A Svelte component that can arrange items according to the type of grids",
   "sideEffects": false,
   "svelte": "src/index.js",
@@ -69,6 +69,6 @@
     "typescript": "^4.0.0"
   },
   "dependencies": {
-    "@egjs/grid": "~1.11.0"
+    "@egjs/grid": "~1.11.1"
   }
 }
