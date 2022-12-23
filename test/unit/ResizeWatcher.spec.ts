@@ -2,7 +2,7 @@ import * as sinon from "sinon";
 import { ResizeWatcher } from "../../src";
 import { cleanup, sandbox, waitFor } from "./utils/utils";
 
-describe.only("test ResizeObserver", () => {
+describe("test ResizeObserver", () => {
   let watcher!: ResizeWatcher;
   let container!: HTMLElement;
 
