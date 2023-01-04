@@ -79,7 +79,7 @@
 	"devDependencies": {
 		"@babel/core": "^7.13.10",
 		"@codeceptjs/ui": "^0.4.3",
-		"@daybrush/jsdoc": "^0.3.9",
+		"@daybrush/jsdoc": "^0.4.4",
 		"@egjs/build-helper": "^0.1.2",
 		"@egjs/release-helper": "0.0.3",
 		"@storybook/addon-actions": "^6.0.21",
