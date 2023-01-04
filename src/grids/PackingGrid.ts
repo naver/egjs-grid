@@ -46,17 +46,32 @@ function fitArea(
  * @typedef
  * @memberof Grid.PackingGrid
  * @extends Grid.GridOptions
- * @property - The aspect ratio (inlineSize / contentSize) of the container with items. (default: 1) <ko>아이템들을 가진 컨테이너의 종횡비(inlineSize / contentSize). (default: 1)</ko>
- * @property - The size weight when placing items. (default: 1)<ko>아이템들을 배치하는데 사이즈 가중치. (default: 1)</ko>
- * @property - The weight to keep ratio when placing items. (default: 1)<ko>아이템들을 배치하는데 비율을 유지하는 가중치. (default: 1)</ko>
- * @property - The priority that determines the weight of the item. (default: "custom"), "size" = (sizeWieght: 100, ratioWeight: 1), "ratio" = (sizeWeight: 1, ratioWeight; 100), "custom" = (set sizeWeight, ratioWeight)
- * item's weight = item's ratio(inlineSize / contentSize) change * `ratioWeight` + size(inlineSize * contentSize) change * `sizeWeight`.
- * <ko> 아이템의 가중치를 결정하는 우선수치. (default: "custom"), "size" = (sizeWieght: 100, ratioWeight: 1), "ratio" = (sizeWeight: 1, ratioWeight; 100), "custom" = (set sizeWeight, ratioWeight). 아이템의 가중치 = ratio(inlineSize / contentSize)의 변화량 * `ratioWeight` + size(inlineSize * contentSize)의 변화량 * `sizeWeight`.</ko>
  */
 export interface PackingGridOptions extends GridOptions {
+  /**
+   * The aspect ratio (inlineSize / contentSize) of the container with items.
+   * <ko>아이템들을 가진 컨테이너의 종횡비(inlineSize / contentSize).</ko>
+   * @default 1
+   */
   aspectRatio?: number;
+  /**
+   * The size weight when placing items.
+   * <ko>아이템들을 배치하는데 사이즈 가중치.</ko>
+   * @default 1
+   */
   sizeWeight?: number;
+  /**
+   * The weight to keep ratio when placing items.
+   * <ko>아이템들을 배치하는데 비율을 유지하는 가중치.</ko>
+   * @default 1
+   */
   ratioWeight?: number;
+  /**
+   * The priority that determines the weight of the item. "size" = (sizeWieght: 100, ratioWeight: 1), "ratio" = (sizeWeight: 1, ratioWeight; 100), "custom" = (set sizeWeight, ratioWeight)
+   * item's weight = item's ratio(inlineSize / contentSize) change * `ratioWeight` + size(inlineSize * contentSize) change * `sizeWeight`.
+   * <ko> 아이템의 가중치를 결정하는 우선수치. "size" = (sizeWieght: 100, ratioWeight: 1), "ratio" = (sizeWeight: 1, ratioWeight; 100), "custom" = (set sizeWeight, ratioWeight). 아이템의 가중치 = ratio(inlineSize / contentSize)의 변화량 * `ratioWeight` + size(inlineSize * contentSize)의 변화량 * `sizeWeight`.</ko>
+   * @default "custom"
+   */
   weightPriority?: "size" | "ratio" | "custom";
 }
 
