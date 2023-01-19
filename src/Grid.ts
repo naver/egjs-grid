@@ -366,10 +366,11 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
       const item = updated[e.index];
 
       item.updateState = UPDATE_STATE.NEED_UPDATE;
-
       // after preReady
       if (e.isPreReadyOver) {
-        item.element!.style.cssText = item.orgCSSText;
+        if (item.isRestoreOrgCSSText) {
+          item.element!.style.cssText = item.orgCSSText;
+        }
         this.itemRenderer.updateItems([item]);
         this.readyItems([], [item], options);
       }
@@ -474,6 +475,14 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
       updated,
       isResize: !!options.useResize,
     });
+    const requestUpdated = updated.filter((item) => item.isRequestUpdate);
+
+    if (requestUpdated.length) {
+      this.updateItems(requestUpdated);
+    }
+  }
+  protected _isObserverEnabled() {
+    return this.containerManager.isObserverEnabled();
   }
   private _renderComplete(e: OnRenderComplete) {
     /**

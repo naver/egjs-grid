@@ -103,12 +103,16 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
   };
 
   public applyGrid(items: GridItem[], direction: "start" | "end", outline: number[]): GridOutlines {
+    items.forEach((item) => {
+      item.isRestoreOrgCSSText = false;
+    });
     const columnSize = this.getComputedOutlineSize(items);
     const column = this.getComputedOutlineLength(items);
 
     const {
       gap,
       align,
+      observeChildren,
       columnSizeRatio,
     } = this.options;
     const outlineLength = outline.length;
@@ -164,7 +168,12 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
 
       // stretch mode or data-grid-column > "1"
       if ((columnAttribute > 0 && columnCount > 1) || isStretch) {
-        item.cssInlineSize = (columnCount - 1) * columnDist + columnSize;
+        const nextInlineSize = (columnCount - 1) * columnDist + columnSize;
+
+        if ((!this._isObserverEnabled() || !observeChildren) && item.cssInlineSize !== nextInlineSize) {
+          item.isRequestUpdate = true;
+        }
+        item.cssInlineSize = nextInlineSize;
       }
       if (columnSizeRatio > 0) {
         contentSize = item.computedInlineSize / columnSizeRatio;

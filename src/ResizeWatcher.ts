@@ -53,6 +53,9 @@ export class ResizeWatcher {
   public setRect(rect: SizeRect) {
     this.rect = { ...rect };
   }
+  public isObserverEnabled() {
+    return !!this._observer;
+  }
   public resize() {
     const container = this.container;
 
