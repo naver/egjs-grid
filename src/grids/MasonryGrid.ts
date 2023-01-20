@@ -171,7 +171,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
         const nextInlineSize = (columnCount - 1) * columnDist + columnSize;
 
         if ((!this._isObserverEnabled() || !observeChildren) && item.cssInlineSize !== nextInlineSize) {
-          item.isRequestUpdate = true;
+          item.shouldReupdate = true;
         }
         item.cssInlineSize = nextInlineSize;
       }

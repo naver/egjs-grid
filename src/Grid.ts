@@ -475,10 +475,10 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
       updated,
       isResize: !!options.useResize,
     });
-    const requestUpdated = updated.filter((item) => item.isRequestUpdate);
+    const shouldReupdateItems = updated.filter((item) => item.shouldReupdate);
 
-    if (requestUpdated.length) {
-      this.updateItems(requestUpdated);
+    if (shouldReupdateItems.length) {
+      this.updateItems(shouldReupdateItems);
     }
   }
   protected _isObserverEnabled() {

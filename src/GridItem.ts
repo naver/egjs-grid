@@ -43,7 +43,7 @@ export interface GridItemStatus {
  */
 class GridItem {
   /**
-   * whether it is updating
+   * Whether or not it will be updated upon request.
    * @inner
    */
   public isUpdating = false;
@@ -51,7 +51,7 @@ class GridItem {
    * Whether the item needs to be updated again
    * @inner
    */
-  public isRequestUpdate = false;
+  public shouldReupdate = false;
   public hasTransition = false;
   public transitionDuration = "";
   public isRestoreOrgCSSText = true;

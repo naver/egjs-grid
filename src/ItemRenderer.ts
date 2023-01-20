@@ -120,7 +120,7 @@ export class ItemRenderer {
         rect.height = clientRect.height;
       }
     }
-    item.isRequestUpdate = false;
+    item.shouldReupdate = false;
 
     if (!item.isFirstUpdate || !hasOrgSize) {
       item.orgRect = { ...rect };
