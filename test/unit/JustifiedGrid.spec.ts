@@ -111,7 +111,7 @@ describe("test JustifiedGrid", () => {
 
     // When
     items.slice(0, 4).forEach((item) => {
-      item.isUpdate = true;
+      item.isUpdating = true;
       item.attributes = {
         contentOffset: "20",
       };

@@ -446,13 +446,13 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
       item.mountState = MOUNT_STATE.MOUNTED;
     });
     updated.forEach((item) => {
-      item.isUpdate = true;
+      item.isUpdating = true;
     });
     if (items.length) {
       nextOutlines = this.applyGrid(this.items, direction, prevOutline);
     }
     updated.forEach((item) => {
-      item.isUpdate = false;
+      item.isUpdating = false;
     });
     this.setOutlines(nextOutlines);
     this.fitOutlines();

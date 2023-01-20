@@ -42,11 +42,19 @@ export interface GridItemStatus {
  * @implements Grid.GridItem.GridItemStatus
  */
 class GridItem {
-  public isUpdate = false;
+  /**
+   * whether it is updating
+   * @inner
+   */
+  public isUpdating = false;
+  /**
+   * Whether the item needs to be updated again
+   * @inner
+   */
+  public isRequestUpdate = false;
   public hasTransition = false;
   public transitionDuration = "";
   public isRestoreOrgCSSText = true;
-  public isRequestUpdate = false;
 
   /**
    * @constructor
