@@ -119,7 +119,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     } = this.options;
 
     items.forEach((item) => {
-      if (!item.isUpdate) {
+      if (!item.isUpdating) {
         return;
       }
       const element = item.element;

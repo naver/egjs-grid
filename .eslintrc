@@ -29,8 +29,8 @@
         "arrow-parens": ["error", "always"],
         "@typescript-eslint/naming-convention": [
             "error",
-            { "selector": "default", "modifiers": ["protected"], "format": ["camelCase"], "leadingUnderscore": "forbid" },
-            { "selector": "default", "modifiers": ["private"], "format": ["camelCase"], "leadingUnderscore": "require" }
+            { "selector": "default", "modifiers": ["protected"], "format": [] },
+            { "selector": "default", "modifiers": ["private"], "format": [], "leadingUnderscore": "require" }
         ],
         "no-empty-interface": "off",
         "comma-dangle": [
