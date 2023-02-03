@@ -1,16 +1,16 @@
 import Grid from "../Grid.svelte";
 import { JustifiedGrid as GridClass } from "@egjs/grid";
 
-let JustifiedGrid;
+let SvelteJustifiedGrid;
 
 if (typeof Grid === "object") {
-  JustifiedGrid = Grid;
+  SvelteJustifiedGrid = Grid;
 } else {
-  JustifiedGrid = class JustifiedGrid extends Grid {
+  SvelteJustifiedGrid = class SvelteJustifiedGrid extends Grid {
     constructor(options) {
       options.props.GridClass = GridClass;
       super(options);
     }
   }
 }
-export { JustifiedGrid };
+export { SvelteJustifiedGrid as JustifiedGrid };
