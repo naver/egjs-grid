@@ -1,16 +1,16 @@
 import Grid from "../Grid.svelte";
 import { MasonryGrid as GridClass } from "@egjs/grid";
 
-let MasonryGrid;
+let SvelteMasonryGrid;
 
 if (typeof Grid === "object") {
-  MasonryGrid = Grid;
+  SvelteMasonryGrid = Grid;
 } else {
-  MasonryGrid = class MasonryGrid extends Grid {
+  SvelteMasonryGrid = class SvelteMasonryGrid extends Grid {
     constructor(options) {
       options.props.GridClass = GridClass;
       super(options);
     }
   }
 }
-export { MasonryGrid };
+export { SvelteMasonryGrid as MasonryGrid };
