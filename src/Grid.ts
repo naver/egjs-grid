@@ -360,7 +360,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
           item.element!.style.cssText = item.orgCSSText;
         }
       });
-      this.itemRenderer.updateItems(updated);
+      this._updateItems(updated);
       this.readyItems(mounted, updated, options);
     }).on("readyElement", (e) => {
       const item = updated[e.index];
@@ -371,7 +371,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
         if (item.isRestoreOrgCSSText) {
           item.element!.style.cssText = item.orgCSSText;
         }
-        this.itemRenderer.updateItems([item]);
+        this._updateItems([item]);
         this.readyItems([], [item], options);
       }
     }).on("error", (e) => {
@@ -483,6 +483,9 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
   }
   protected _isObserverEnabled() {
     return this.containerManager.isObserverEnabled();
+  }
+  protected _updateItems(items: GridItem[]) {
+    this.itemRenderer.updateEqualSizeItems(items, this.getItems());
   }
   private _renderComplete(e: OnRenderComplete) {
     /**
