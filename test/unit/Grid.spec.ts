@@ -814,7 +814,7 @@ describe("test Grid", () => {
       }, 210);
     });
   });
-  describe("test isEqualSize option", () => {
+  describe("test isEqualSize, SizeGroup option", () => {
     it(`should check if all items are the same size when isEqualSize is true`, async () => {
       // Given
       container!.innerHTML = `
@@ -864,6 +864,63 @@ describe("test Grid", () => {
       expect(items[0].contentSize).to.be.equals(80);
       expect(items[1].contentSize).to.be.equals(80);
       expect(items[2].contentSize).to.be.equals(80);
+    });
+    it(`should check the size of items with the data-grid-not-equal-size attribute`, async () => {
+      // Given
+      container!.innerHTML = `
+      <div style="height: 70px;">1</div>
+      <div style="height: 100px;">2</div>
+      <div style="height: 50px;" data-grid-not-equal-size="true">3</div>
+      `;
+      grid = new SampleGrid(container!, {
+        isEqualSize: true,
+      });
+      // When
+      grid.renderItems();
+      await waitEvent(grid, "renderComplete");
+
+      const items = grid.getItems();
+
+      // Then
+      expect(items[0].contentSize).to.be.equals(70);
+      expect(items[1].contentSize).to.be.equals(70);
+      expect(items[2].contentSize).to.be.equals(50);
+    });
+    it(`should check if the size is the same for each group with data-grid-size-group`, async () => {
+      // Given
+      container!.innerHTML = `
+      <div style="height: 70px;" data-grid-size-group="1">1</div>
+      <div style="height: 100px;" data-grid-size-group="1">1</div>
+      <div style="height: 70px;" data-grid-size-group="1">1</div>
+      <div style="height: 100px;" data-grid-size-group="2">2</div>
+      <div style="height: 70px;" data-grid-size-group="2">2</div>
+      <div style="height: 100px;" data-grid-size-group="2">2</div>
+      <div style="height: 60px;" data-grid-size-group="3">3</div>
+      <div style="height: 100px;" data-grid-size-group="3">3</div>
+      <div style="height: 50px;" data-grid-size-group="3">3</div>
+      `;
+      grid = new SampleGrid(container!, {
+        isEqualSize: true,
+      });
+      // When
+      grid.renderItems();
+      await waitEvent(grid, "renderComplete");
+
+      const items = grid.getItems();
+
+      // Then
+      // data-grid-size-group="1"
+      expect(items[0].contentSize).to.be.equals(70);
+      expect(items[1].contentSize).to.be.equals(70);
+      expect(items[2].contentSize).to.be.equals(70);
+      // data-grid-size-group="2"
+      expect(items[3].contentSize).to.be.equals(100);
+      expect(items[4].contentSize).to.be.equals(100);
+      expect(items[5].contentSize).to.be.equals(100);
+      // data-grid-size-group="3"
+      expect(items[6].contentSize).to.be.equals(60);
+      expect(items[7].contentSize).to.be.equals(60);
+      expect(items[8].contentSize).to.be.equals(60);
     });
   });
 

@@ -18,13 +18,13 @@ export interface ItemRendererOptions {
   useRoundedSize?: boolean;
 }
 export interface ItemRendererStatus {
-  initialRect: Required<DOMRect> | null;
+  initialRects: Record<string, Required<DOMRect>>;
 }
 
 export class ItemRenderer {
   protected options: Required<ItemRendererOptions>;
   protected containerRect: DOMRect;
-  protected initialRect: Required<DOMRect> | null = null;
+  protected initialRects: Record<string, Required<DOMRect>> = {};
   protected sizePercetage = false;
   protected posPercetage = false;
 
@@ -42,7 +42,7 @@ export class ItemRenderer {
     this._init();
   }
   public resize() {
-    this.initialRect = null;
+    this.initialRects = {};
   }
   public renderItems(items: GridItem[]) {
     items.forEach((item) => {
@@ -55,6 +55,24 @@ export class ItemRenderer {
   public setContainerRect(rect: DOMRect) {
     this.containerRect = rect;
   }
+  public updateEqualSizeItems(items: GridItem[], totalItems: GridItem[]) {
+    this.updateItems(items);
+
+    const hasSizeGroup = items.some((item) => item.attributes.sizeGroup);
+
+    // Check the rest of the items(totalItems) except `items`.
+    if (this.options.isEqualSize || hasSizeGroup) {
+      const updatedItem = items.some((item) => item.updateState === UPDATE_STATE.UPDATED);
+
+      if (updatedItem) {
+        totalItems.forEach((item) => {
+          if (items.indexOf(item) === -1) {
+            this._updateItem(item, true);
+          }
+        });
+      }
+    }
+  }
   public updateItems(items: GridItem[]) {
     items.forEach((item) => {
       this._updateItem(item);
@@ -62,11 +80,11 @@ export class ItemRenderer {
   }
   public getStatus(): ItemRendererStatus {
     return {
-      initialRect: this.initialRect,
+      initialRects: this.initialRects,
     };
   }
   public setStatus(status: ItemRendererStatus) {
-    this.initialRect = status.initialRect;
+    this.initialRects = status.initialRects;
   }
   private _init() {
     const { percentage } = this.options;
@@ -89,19 +107,27 @@ export class ItemRenderer {
     this.posPercetage = posPercentage;
     this.sizePercetage = sizePercentage;
   }
-  private _updateItem(item: GridItem) {
+  private _updateItem(item: GridItem, checkSizeGroup?: boolean) {
     const { isEqualSize, isConstantSize, useRoundedSize } = this.options;
-    const initialRect = this.initialRect;
+    const initialRects = this.initialRects;
     const { orgRect, element } = item;
     const isLoading = item.updateState === UPDATE_STATE.WAIT_LOADING;
     const hasOrgSize = orgRect && orgRect.width && orgRect.height;
     let rect: Required<DOMRect>;
 
-    if (isEqualSize && initialRect) {
-      rect = initialRect;
+    const attributes: Record<string, string> = element
+      ? getDataAttributes(element, this.options.attributePrefix)
+      : item.attributes;
+    const sizeGroup = attributes.sizeGroup || "";
+    const isNotEqualSize = attributes.notEqualSize;
+
+    if (sizeGroup && initialRects[sizeGroup]) {
+      rect = initialRects[sizeGroup];
+    } else if (isEqualSize && !isNotEqualSize && !sizeGroup && initialRects[""]) {
+      rect = initialRects[""];
     } else if (isConstantSize && hasOrgSize && !isLoading) {
       rect = orgRect;
-    } else if (!element) {
+    } else if (checkSizeGroup || !element) {
       return;
     } else {
       rect = {
@@ -120,6 +146,7 @@ export class ItemRenderer {
         rect.height = clientRect.height;
       }
     }
+    item.attributes = attributes;
     item.shouldReupdate = false;
 
     if (!item.isFirstUpdate || !hasOrgSize) {
@@ -127,18 +154,19 @@ export class ItemRenderer {
     }
     item.rect = { ...rect };
 
-    if (item.element) {
-      item.mountState = MOUNT_STATE.MOUNTED;
-    }
+    // If it's equal size items, it doesn't affect the state.
+    if (!checkSizeGroup) {
+      if (item.element) {
+        item.mountState = MOUNT_STATE.MOUNTED;
+      }
 
-    if (item.updateState === UPDATE_STATE.NEED_UPDATE) {
-      item.updateState = UPDATE_STATE.UPDATED;
-      item.isFirstUpdate = true;
-    }
-    item.attributes = element ? getDataAttributes(element, this.options.attributePrefix) : {};
-
-    if (!isLoading && !this.initialRect) {
-      this.initialRect = { ...rect };
+      if (item.updateState === UPDATE_STATE.NEED_UPDATE) {
+        item.updateState = UPDATE_STATE.UPDATED;
+        item.isFirstUpdate = true;
+      }
+      if (!isLoading && !isNotEqualSize && !initialRects[sizeGroup]) {
+        initialRects[sizeGroup] = { ...rect };
+      }
     }
 
     return rect;
@@ -161,7 +189,7 @@ export class ItemRenderer {
     const {
       inlineSize: sizeName,
       inlinePos: posName,
-    } = RECT_NAMES[horizontal ? "horizontal": "vertical"];
+    } = RECT_NAMES[horizontal ? "horizontal" : "vertical"];
     const inlineSize = this.getInlineSize();
     let keys = getKeys(cssRect);
 
