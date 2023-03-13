@@ -25,12 +25,7 @@
     "frame",
     "layout"
   ],
-  "peerDependencies": {
-    "@angular/common": ">=8.0.0",
-    "@angular/core": ">=8.0.0"
-  },
   "dependencies": {
-    "@egjs/grid": "~1.12.0",
-    "tslib": "^2.0.0"
+    "@egjs/grid": "~1.12.0"
   }
 }

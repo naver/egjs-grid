@@ -4,16 +4,28 @@
  * MIT license
  */
 import {
-  AfterViewChecked, AfterViewInit, Component, ElementRef,
-  EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges,
-  PLATFORM_ID, Inject,
+  AfterViewChecked,
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChanges,
+  PLATFORM_ID,
+  Inject,
+  NgZone,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformServer } from '@angular/common';
+import { Subject, fromEvent } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { GridFunction, GridOptions, GRID_EVENTS, OnContentError, OnRenderComplete } from '@egjs/grid';
+
 import { NgxGridInterface } from './ngx-grid.interface';
 import { NgxGridEvents } from './types';
 
-// @dynamic
 @Component({
   selector: 'ngx-grid, [NgxGrid]',
   template: '<slot></slot>',
@@ -24,9 +36,6 @@ import { NgxGridEvents } from './types';
 export class NgxGridComponent
   extends NgxGridInterface
   implements Required<GridOptions>, NgxGridEvents, AfterViewInit, AfterViewChecked, OnChanges, OnDestroy {
-
-  public static GridClass: GridFunction;
-
   @Input() horizontal!: Required<GridOptions>['horizontal'];
   @Input() percentage!: Required<GridOptions>['percentage'];
   @Input() isEqualSize!: Required<GridOptions>['isEqualSize'];
@@ -52,17 +61,25 @@ export class NgxGridComponent
   @Output() renderComplete!: EventEmitter<OnRenderComplete>;
   @Output() contentError!: EventEmitter<OnContentError>;
 
-  constructor(private _containerElementRef: ElementRef, @Inject(PLATFORM_ID) private _platform: Object) {
+  private _destroy$ = new Subject<void>();
+
+  constructor(
+    private _ngZone: NgZone,
+    private _host: ElementRef<HTMLElement>,
+    @Inject(PLATFORM_ID) private _platformId: string
+  ) {
     super();
     GRID_EVENTS.forEach((name) => {
       (this as any)[name] = new EventEmitter();
     });
   }
+
   ngAfterViewInit(): void {
-    if (!isPlatformBrowser(this._platform)) {
+    if (isPlatformServer(this._platformId)) {
       return;
     }
-    const GridClass = (this.constructor as typeof NgxGridComponent).GridClass;
+
+    const GridClass = this._getGridClass();
     const defaultOptions = GridClass.defaultOptions;
     const options: Partial<GridOptions> = {};
 
@@ -72,22 +89,33 @@ export class NgxGridComponent
       }
     }
 
-    this.vanillaGrid = new GridClass(this._containerElementRef.nativeElement!, options);
-    this.vanillaGrid.syncElements();
+    this.vanillaGrid = this._ngZone.runOutsideAngular(() => {
+      const vanillaGrid = new GridClass(this._host.nativeElement, options);
+      vanillaGrid.syncElements();
+      return vanillaGrid;
+    });
 
     GRID_EVENTS.forEach((name) => {
-      this.vanillaGrid.on(name, (e) => {
-        this[name].emit(e as any);
-      });
+      fromEvent(this.vanillaGrid, name)
+        .pipe(takeUntil(this._destroy$))
+        .subscribe((event) => {
+          const emitter = this[name] as any;
+          // `observed` is available on newer RxJS versions (7.2+).
+          if (emitter.observed || emitter.observers.length > 0) {
+            this._ngZone.run(() => emitter.emit(event as any));
+          }
+        });
     });
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     const grid = this.vanillaGrid;
 
     if (!grid) {
       return;
     }
-    const GridClass = (this.constructor as typeof NgxGridComponent).GridClass;
+
+    const GridClass = this._getGridClass();
     const propertyTypes = GridClass.propertyTypes;
 
     for (const name in changes) {
@@ -98,10 +126,23 @@ export class NgxGridComponent
       }
     }
   }
+
   ngAfterViewChecked() {
-    this.vanillaGrid?.syncElements();
+    this._ngZone.runOutsideAngular(() => this.vanillaGrid?.syncElements());
   }
+
   ngOnDestroy() {
+    this._destroy$.next();
     this.vanillaGrid?.destroy();
+  }
+
+  private _getGridClass(): GridFunction {
+    // We don't declare the type on the component class as `static GridClass: GridFunction`,
+    // because it fails metadata collection when compiling.
+    const GridClass = ((this.constructor as unknown) as {
+      GridClass: GridFunction;
+    }).GridClass;
+
+    return GridClass;
   }
 }
