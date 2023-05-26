@@ -67,7 +67,7 @@ export class ItemRenderer {
       if (updatedItem) {
         totalItems.forEach((item) => {
           if (items.indexOf(item) === -1) {
-            this._updateItem(item, true);
+            this.updateItem(item, true);
           }
         });
       }
@@ -75,7 +75,7 @@ export class ItemRenderer {
   }
   public updateItems(items: GridItem[]) {
     items.forEach((item) => {
-      this._updateItem(item);
+      this.updateItem(item);
     });
   }
   public getStatus(): ItemRendererStatus {
@@ -107,7 +107,7 @@ export class ItemRenderer {
     this.posPercetage = posPercentage;
     this.sizePercetage = sizePercentage;
   }
-  private _updateItem(item: GridItem, checkSizeGroup?: boolean) {
+  public updateItem(item: GridItem, checkSizeGroup?: boolean) {
     const { isEqualSize, isConstantSize, useRoundedSize } = this.options;
     const initialRects = this.initialRects;
     const { orgRect, element } = item;
@@ -118,10 +118,10 @@ export class ItemRenderer {
     const attributes: Record<string, string> = element
       ? getDataAttributes(element, this.options.attributePrefix)
       : item.attributes;
-    const sizeGroup = attributes.sizeGroup || "";
+    const sizeGroup = attributes.sizeGroup ?? "";
     const isNotEqualSize = attributes.notEqualSize;
 
-    if (sizeGroup && initialRects[sizeGroup]) {
+    if (sizeGroup !== "" && initialRects[sizeGroup]) {
       rect = initialRects[sizeGroup];
     } else if (isEqualSize && !isNotEqualSize && !sizeGroup && initialRects[""]) {
       rect = initialRects[""];

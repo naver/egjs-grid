@@ -358,7 +358,6 @@ describe("test ItemRenderer", () => {
       }
     });
   });
-
   it(`should check get status and restore status`, () => {
     // Given
     el.style.cssText = "position: absolute; left: 50px; top: 50px; width: 200px; height: 100px;";
@@ -422,4 +421,44 @@ describe("test ItemRenderer", () => {
       "test": "data-grid-test",
     });
   });
+  it("should check if width and height are entered by sizeGroup", () => {
+    // Given
+    itemRenderer = new ItemRenderer({
+      horizontal: false,
+    });
+
+    itemRenderer.setStatus({
+      initialRects: {
+        "0": {
+          left: 0,
+          top: 0,
+          width: 100,
+          height: 100,
+        },
+      },
+    });
+
+    const item1 = new GridItem(false, {
+      attributes: {
+        sizeGroup: 0,
+      },
+    });
+    const item2 = new GridItem(false, {
+      attributes: {
+        sizeGroup: 1,
+      },
+    });
+
+    // When
+    // update
+    itemRenderer.updateItem(item1, true);
+
+    // not update
+    itemRenderer.updateItem(item2, true);
+
+    // Then
+    expect(item1.rect.width).to.be.deep.equals(100);
+    expect(item2.rect.width).to.be.deep.equals(0);
+  });
+
 });

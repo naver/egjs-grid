@@ -28,7 +28,7 @@ export interface GridItemStatus {
   mountState?: MOUNT_STATE;
   updateState?: UPDATE_STATE;
   isFirstUpdate?: boolean;
-  attributes?: Record<string, string>;
+  attributes?: Record<string, any>;
   orgCSSText?: string;
   orgRect?: Required<DOMRect>;
   rect?: Required<DOMRect>;
