@@ -4,7 +4,7 @@ name: @egjs/grid
 license: MIT
 author: NAVER Corp.
 repository: https://github.com/naver/egjs-grid
-version: 1.14.0
+version: 1.14.1
 */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -2589,7 +2589,7 @@ version: 1.14.0
           if (updatedItem) {
             totalItems.forEach(function (item) {
               if (items.indexOf(item) === -1) {
-                _this._updateItem(item, true);
+                _this.updateItem(item, true);
               }
             });
           }
@@ -2600,7 +2600,7 @@ version: 1.14.0
         var _this = this;
 
         items.forEach(function (item) {
-          _this._updateItem(item);
+          _this.updateItem(item);
         });
       };
 
@@ -2636,11 +2636,13 @@ version: 1.14.0
         this.sizePercetage = sizePercentage;
       };
 
-      __proto._updateItem = function (item, checkSizeGroup) {
-        var _a = this.options,
-            isEqualSize = _a.isEqualSize,
-            isConstantSize = _a.isConstantSize,
-            useRoundedSize = _a.useRoundedSize;
+      __proto.updateItem = function (item, checkSizeGroup) {
+        var _a;
+
+        var _b = this.options,
+            isEqualSize = _b.isEqualSize,
+            isConstantSize = _b.isConstantSize,
+            useRoundedSize = _b.useRoundedSize;
         var initialRects = this.initialRects;
         var orgRect = item.orgRect,
             element = item.element;
@@ -2648,10 +2650,10 @@ version: 1.14.0
         var hasOrgSize = orgRect && orgRect.width && orgRect.height;
         var rect;
         var attributes = element ? getDataAttributes(element, this.options.attributePrefix) : item.attributes;
-        var sizeGroup = attributes.sizeGroup || "";
+        var sizeGroup = (_a = attributes.sizeGroup) !== null && _a !== void 0 ? _a : "";
         var isNotEqualSize = attributes.notEqualSize;
 
-        if (sizeGroup && initialRects[sizeGroup]) {
+        if (sizeGroup !== "" && initialRects[sizeGroup]) {
           rect = initialRects[sizeGroup];
         } else if (isEqualSize && !isNotEqualSize && !sizeGroup && initialRects[""]) {
           rect = initialRects[""];
