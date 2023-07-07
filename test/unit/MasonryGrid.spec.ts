@@ -186,6 +186,27 @@ describe("test MasonryGrid", () => {
     ]);
     expect(container!.style.height).to.be.deep.equals("805px");
   });
+  it.only(`should check whether calculate column width when data-grid-column="1"`, async () => {
+    // Given
+    container!.style.cssText = "width: 600px; height: 600px;";
+    container!.innerHTML = `
+      <div style="position: absolute;width: 250px; height: 300px;" data-grid-column="1"></div>
+      <div style="position: absolute;width: 150px; height: 200px;"></div>
+      <div style="position: absolute;width: 500px; height: 500px;"></div>
+      <div style="position: absolute;width: 250px; height: 250px;"></div>
+    `;
+    grid = new MasonryGrid(container!, {
+      gap: 5,
+    });
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+    // Then
+    expect(grid.getOutlines().start).to.be.lengthOf(2);
+  });
   it(`should check whether multiple columns are used when data-grid-column="2"`, async () => {
     // Given
     container!.style.cssText = "width: 660px; height: 660px;";
