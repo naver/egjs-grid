@@ -154,7 +154,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
         if (isEndDirection && (nextEndColumnIndex >= column || endOutline[nextEndColumnIndex] > contentPos)) {
           break;
         }
-        if (!isEndDirection && (nextColumnIndex < 0 || endOutline[nextColumnIndex]) < contentPos) {
+        if (!isEndDirection && (nextColumnIndex < 0 || endOutline[nextColumnIndex] < contentPos)) {
           break;
         }
         if (!isEndDirection) {
@@ -224,11 +224,14 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
 
       for (const item of items) {
         const attributes = item.attributes;
+        const columnAttribute = parseInt(attributes.column || "1", 10);
+        const maxColumnAttribute = parseInt(attributes.maxColumn || "1", 10);
+
         if (
           item.updateState !== UPDATE_STATE.UPDATED
           || !item.inlineSize
-          || attributes.column
-          || attributes.maxColumnCount
+          || columnAttribute !== 1
+          || maxColumnAttribute !== 1
         ) {
           continue;
         }
