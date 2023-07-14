@@ -186,7 +186,7 @@ describe("test MasonryGrid", () => {
     ]);
     expect(container!.style.height).to.be.deep.equals("805px");
   });
-  it.only(`should check whether calculate column width when data-grid-column="1"`, async () => {
+  it(`should check whether calculate column width when data-grid-column="1"`, async () => {
     // Given
     container!.style.cssText = "width: 600px; height: 600px;";
     container!.innerHTML = `
