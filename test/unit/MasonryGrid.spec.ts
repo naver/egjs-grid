@@ -1,6 +1,7 @@
+import * as sinon from "sinon";
 import { GridItem } from "../../src";
 import { MasonryGrid } from "../../src/grids/MasonryGrid";
-import { cleanup, sandbox, waitEvent } from "./utils/utils";
+import { cleanup, sandbox, waitEvent, waitFor } from "./utils/utils";
 
 
 describe("test MasonryGrid", () => {
@@ -184,6 +185,27 @@ describe("test MasonryGrid", () => {
       { left: 0, top: 510 },
     ]);
     expect(container!.style.height).to.be.deep.equals("805px");
+  });
+  it(`should check whether calculate column width when data-grid-column="1"`, async () => {
+    // Given
+    container!.style.cssText = "width: 600px; height: 600px;";
+    container!.innerHTML = `
+      <div style="position: absolute;width: 250px; height: 300px;" data-grid-column="1"></div>
+      <div style="position: absolute;width: 150px; height: 200px;"></div>
+      <div style="position: absolute;width: 500px; height: 500px;"></div>
+      <div style="position: absolute;width: 250px; height: 250px;"></div>
+    `;
+    grid = new MasonryGrid(container!, {
+      gap: 5,
+    });
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+    // Then
+    expect(grid.getOutlines().start).to.be.lengthOf(2);
   });
   it(`should check whether multiple columns are used when data-grid-column="2"`, async () => {
     // Given
@@ -450,6 +472,86 @@ describe("test MasonryGrid", () => {
       { width: 295, left: 0, top: 210 },
     ]);
     expect(container!.style.height).to.be.deep.equals("460px");
+  });
+  it(`should check if it is aligned with stretch`, async () => {
+    // Given
+    container!.style.cssText = "width: 600px; height: 600px;";
+    container!.innerHTML = `
+      <div style="position: absolute;width: 200px; height: 200px;"></div>
+      <div style="position: absolute;width: 150px; height: 150px;"></div>
+      <div style="position: absolute;width: 300px; height: 300px;"></div>
+      <div style="position: absolute;width: 250px; height: 250px;"></div>
+    `;
+    grid = new MasonryGrid(container!, {
+      align: "stretch",
+      gap: 10,
+      column: 2,
+    });
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+    // Then
+    expect(grid.getOutlines()).to.be.deep.equals({
+      start: [0, 0],
+      end: [470, 470],
+    });
+
+    expect(grid.getItems().map((item) => item.cssRect)).to.be.deep.equals([
+      { width: 295, left: 0, top: 0 },
+      { width: 295, left: 305, top: 0 },
+      { width: 295, left: 305, top: 160 },
+      { width: 295, left: 0, top: 210 },
+    ]);
+    expect(container!.style.height).to.be.deep.equals("460px");
+  });
+  it(`should check if stretch causes re-rendering`, async () => {
+    // Given
+    const renderCompleteSpy = sinon.spy();
+
+    container!.style.cssText = "width: 600px; height: 600px;";
+    container!.innerHTML = `
+      <div style="position: absolute;width: 200px; height: 200px;"></div>
+      <div style="position: absolute;width: 150px; height: 150px;"></div>
+      <div style="position: absolute;width: 300px; height: 300px;"></div>
+      <div style="position: absolute;width: 250px; height: 250px;"></div>
+    `;
+    grid = new MasonryGrid(container!, {
+      align: "stretch",
+      gap: 10,
+      column: 2,
+    });
+
+    // When
+    grid.on("renderComplete", renderCompleteSpy);
+    grid.once("renderComplete", () => {
+      const firstElement = container!.children[0] as HTMLElement;
+
+      // height change due to stretch
+      firstElement.style.height = "295px";
+    });
+    grid.renderItems();
+
+    await waitFor(100);
+
+    // Then
+    expect(renderCompleteSpy.callCount).to.be.equals(2);
+    expect(grid.getOutlines()).to.be.deep.equals({
+      start: [0, 0],
+      end: [565, 470],
+    });
+
+    expect(grid.getItems().map((item) => item.cssRect)).to.be.deep.equals([
+      { width: 295, left: 0, top: 0 },
+      { width: 295, left: 305, top: 0 },
+      // 295 + 10
+      { width: 295, left: 305, top: 160 },
+      { width: 295, left: 0, top: 305 },
+    ]);
+
+    expect(container!.style.height).to.be.deep.equals("555px");
   });
   it(`should check if it is aligned with stretch and maxStretchColumnSize`, async () => {
     // Given

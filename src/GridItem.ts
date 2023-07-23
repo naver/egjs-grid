@@ -28,7 +28,7 @@ export interface GridItemStatus {
   mountState?: MOUNT_STATE;
   updateState?: UPDATE_STATE;
   isFirstUpdate?: boolean;
-  attributes?: Record<string, string>;
+  attributes?: Record<string, any>;
   orgCSSText?: string;
   orgRect?: Required<DOMRect>;
   rect?: Required<DOMRect>;
@@ -42,9 +42,20 @@ export interface GridItemStatus {
  * @implements Grid.GridItem.GridItemStatus
  */
 class GridItem {
-  public isUpdate = false;
+  /**
+   * Whether or not it will be updated upon request.
+   * @inner
+   */
+  public isUpdating = false;
+  /**
+   * Whether the item needs to be updated again
+   * @inner
+   */
+  public shouldReupdate = false;
   public hasTransition = false;
   public transitionDuration = "";
+  public isRestoreOrgCSSText = true;
+
   /**
    * @constructor
    * @param horizontal - Direction of the scroll movement. (true: horizontal, false: vertical) <ko>스크롤 이동 방향. (true: 가로방향, false: 세로방향)</ko>

@@ -360,17 +360,18 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
           item.element!.style.cssText = item.orgCSSText;
         }
       });
-      this.itemRenderer.updateItems(updated);
+      this._updateItems(updated);
       this.readyItems(mounted, updated, options);
     }).on("readyElement", (e) => {
       const item = updated[e.index];
 
       item.updateState = UPDATE_STATE.NEED_UPDATE;
-
       // after preReady
       if (e.isPreReadyOver) {
-        item.element!.style.cssText = item.orgCSSText;
-        this.itemRenderer.updateItems([item]);
+        if (item.isRestoreOrgCSSText) {
+          item.element!.style.cssText = item.orgCSSText;
+        }
+        this._updateItems([item]);
         this.readyItems([], [item], options);
       }
     }).on("error", (e) => {
@@ -445,13 +446,13 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
       item.mountState = MOUNT_STATE.MOUNTED;
     });
     updated.forEach((item) => {
-      item.isUpdate = true;
+      item.isUpdating = true;
     });
     if (items.length) {
       nextOutlines = this.applyGrid(this.items, direction, prevOutline);
     }
     updated.forEach((item) => {
-      item.isUpdate = false;
+      item.isUpdating = false;
     });
     this.setOutlines(nextOutlines);
     this.fitOutlines();
@@ -474,6 +475,17 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
       updated,
       isResize: !!options.useResize,
     });
+    const shouldReupdateItems = updated.filter((item) => item.shouldReupdate);
+
+    if (shouldReupdateItems.length) {
+      this.updateItems(shouldReupdateItems);
+    }
+  }
+  protected _isObserverEnabled() {
+    return this.containerManager.isObserverEnabled();
+  }
+  protected _updateItems(items: GridItem[]) {
+    this.itemRenderer.updateEqualSizeItems(items, this.getItems());
   }
   private _renderComplete(e: OnRenderComplete) {
     /**

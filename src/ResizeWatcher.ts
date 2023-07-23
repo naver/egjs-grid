@@ -53,6 +53,9 @@ export class ResizeWatcher {
   public setRect(rect: SizeRect) {
     this.rect = { ...rect };
   }
+  public isObserverEnabled() {
+    return !!this._observer;
+  }
   public resize() {
     const container = this.container;
 
@@ -128,8 +131,17 @@ export class ResizeWatcher {
     this._scheduleResize(entries.map((entry) => {
       const target = entry.target;
       const rectBox = target === container ? containerRectBox : childrenRectBox;
-      const sizes = rectBox === "border-box" ? entry.borderBoxSize : entry.contentBoxSize;
+      let sizes = (rectBox === "border-box" ? entry.borderBoxSize : entry.contentBoxSize);
 
+      // Safari < 15.3
+      if (!sizes) {
+        const contentRect = entry.contentRect;
+
+        sizes = [{
+          inlineSize: contentRect.width,
+          blockSize: contentRect.height,
+        }];
+      }
       return {
         // not array in old browser
         size: sizes[0] || sizes as any,

@@ -1,0 +1,144 @@
+<style>
+  html, body {
+  position: relative;
+  height: 100%;
+  padding: 0!important;
+  margin: 0!important;
+}
+
+.container {
+  overflow: hidden;
+}
+
+.item {
+  position: absolute;
+  width: 100px;
+  color: white;
+  text-align: center;
+}
+
+.item:nth-child(6n + 1) {
+  background: #f55;
+  height: 200px;
+}
+
+.item:nth-child(6n + 2) {
+  background: #7e7;
+  height: 300px;
+}
+
+.item:nth-child(6n + 3) {
+  background: #66e;
+  height: 200px;
+}
+
+.item:nth-child(6n + 4) {
+  background: #4af;
+  height: 100px;
+}
+
+.item:nth-child(6n + 5) {
+  background: #ed5;
+  height: 150px;
+}
+
+.item:nth-child(6n + 6) {
+  background: #d5e;
+  height: 130px;
+}
+
+.result {
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.button {
+  position: relative;
+  display: block;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background: white;
+  border: 1px solid #ccc;
+  appearance: none;
+  font-weight: bold;
+  width: 150px;
+  text-align: center;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.image {
+  position: relative;
+  width: 200px;
+  height: 300px;
+  color: black;
+}
+
+.image img {
+  width: 100%;
+}
+
+.title {
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+</style>
+<div class="container">
+  <div class="image" data-grid-size-group="0">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/1.jpg" alt="image1"  data-grid-lazy="true"/>
+    <div class="title">Item 1</div>
+  </div>
+  <div class="image" data-grid-size-group="0">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/2.jpg" alt="image2"  data-grid-lazy="true"/>
+    <div class="title">Item 2</div>
+  </div>
+  <div class="image" data-grid-size-group="0">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/3.jpg" alt="image3"  data-grid-lazy="true"/>
+    <div class="title">Item 3</div>
+  </div>
+  <div class="image" data-grid-size-group="0">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/4.jpg" alt="image4"  data-grid-lazy="true"/>
+    <div class="title">Item 4</div>
+  </div>
+  <div class="image" data-grid-size-group="1" data-grid-column="0" style="width: 100%; height: 200px; background: #f55;">
+    <div class="title">Item 5</div>
+  </div>
+  <div class="image" data-grid-size-group="0">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/6.jpg" alt="image6"  data-grid-lazy="true"/>
+    <div class="title">Item 6</div>
+  </div>
+  <div class="image" data-grid-size-group="0">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/7.jpg" alt="image7"  data-grid-lazy="true"/>
+    <div class="title">Item 7</div>
+  </div>
+  <div class="image" data-grid-size-group="0">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/8.jpg" alt="image8"  data-grid-lazy="true"/>
+    <div class="title">Item 8</div>
+  </div>
+  <div class="image" data-grid-size-group="0">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/9.jpg" alt="image9"  data-grid-lazy="true"/>
+    <div class="title">Item 9</div>
+  </div>
+  <div class="image" data-grid-size-group="0">
+    <img src="https://naver.github.io/egjs-infinitegrid/assets/image/10.jpg" alt="image10"  data-grid-lazy="true"/>
+    <div class="title">Item 10</div>
+  </div>
+</div>
+<script src="../../dist/grid.js"></script>
+<script>
+
+const grid = new Grid.MasonryGrid(".container", {
+  gap: 5,
+  column: 3,
+}).on("renderComplete", () => {
+  console.log("?");
+});
+grid.renderItems();
+</script>

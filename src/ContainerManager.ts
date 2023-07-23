@@ -25,7 +25,7 @@ export interface ContainerManagerEvents {
 export class ContainerManager extends Component<ContainerManagerEvents> {
   protected options: Required<ContainerManagerOptions>;
   protected orgCSSText: string;
-  private _watcher: ResizeWatcher;
+  protected _watcher: ResizeWatcher;
 
   constructor(protected container: HTMLElement, options: ContainerManagerOptions) {
     super();
@@ -47,6 +47,9 @@ export class ContainerManager extends Component<ContainerManagerEvents> {
       width: container.clientWidth,
       height: container.clientHeight,
     });
+  }
+  public isObserverEnabled() {
+    return this._watcher.isObserverEnabled();
   }
   public getRect() {
     return this._watcher.getRect();

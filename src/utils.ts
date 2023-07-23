@@ -22,7 +22,8 @@ export function getUpdatedItems(items: GridItem[], entries: ResizeWatcherEntry[]
     const entrySize = entries[prevIndex].size!;
     const item = items[nextIndex];
 
-    return entrySize.inlineSize !== item.computedInlineSize
+    return !item.inlineSize || !item.contentSize
+      || entrySize.inlineSize !== item.computedInlineSize
       || entrySize.blockSize !== item.computedContentSize;
   }).map(([, nextIndex]) => items[nextIndex]);
 }

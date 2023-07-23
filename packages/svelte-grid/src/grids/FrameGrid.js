@@ -1,16 +1,16 @@
 import Grid from "../Grid.svelte";
 import { FrameGrid as GridClass } from "@egjs/grid";
 
-let FrameGrid;
+let SvelteFrameGrid;
 
 if (typeof Grid === "object") {
-  FrameGrid = Grid;
+  SvelteFrameGrid = Grid;
 } else {
-  FrameGrid = class FrameGrid extends Grid {
+  SvelteFrameGrid = class SvelteFrameGrid extends Grid {
     constructor(options) {
       options.props.GridClass = GridClass;
       super(options);
     }
   }
 }
-export { FrameGrid };
+export { SvelteFrameGrid as FrameGrid };
