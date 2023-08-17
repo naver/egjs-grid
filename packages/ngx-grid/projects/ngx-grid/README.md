@@ -6,6 +6,7 @@
 <a href="https://github.com/naver/egjs-grid/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/static/v1?style=flat-square&label=license&message=MIT&color=08CE5D" /></a>&nbsp;
 </p>
 <p align="middle">An Angular component that can arrange items according to the type of grids.</p>
+<p align="middle"><strong>Supported versions:</strong> LTS Angular versions after v14</p>
 <p align="middle">
     <a href="https://naver.github.io/egjs-grid" target="_blank"><strong>Demo</strong></a> /&nbsp;
     <a href="https://naver.github.io/egjs-grid/release/latest/doc/" target="_blank"><strong>API</strong></a>
