@@ -4,6 +4,7 @@ import VanillaGrid, {
 } from "@egjs/grid";
 import type { SvelteComponent } from "svelte";
 
+
 export default abstract class Grid<T extends GridOptions> extends SvelteComponent {
   $$prop_def: T;
   getInstance(): VanillaGrid;
