@@ -2,10 +2,9 @@ import VanillaGrid, {
   FrameGridOptions, GridMethods, GridOptions, JustifiedGridOptions,
   MasonryGridOptions, PackingGridOptions,
 } from "@egjs/grid";
-import { SvelteComponentDev } from "svelte/internal";
+import type { SvelteComponent } from "svelte";
 
-
-export default abstract class Grid<T extends GridOptions> extends SvelteComponentDev {
+export default abstract class Grid<T extends GridOptions> extends SvelteComponent {
   $$prop_def: T;
   getInstance(): VanillaGrid;
 }
