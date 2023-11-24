@@ -210,6 +210,13 @@ export interface OnContentError {
  */
 export type GridAlign = "start" | "center" | "end" | "justify" | "stretch";
 
+/**
+ * @typedef
+ * @memberof Grid
+ */
+export type MasonryGridVerticalAlign = "masonry" | "start";
+
+
 export type GridEvents = {
   renderComplete: OnRenderComplete;
   contentError: OnContentError;

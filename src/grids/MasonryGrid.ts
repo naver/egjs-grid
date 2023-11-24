@@ -5,7 +5,7 @@
  */
 import Grid from "../Grid";
 import { PROPERTY_TYPE, UPDATE_STATE } from "../consts";
-import { GridOptions, Properties, GridOutlines, GridAlign } from "../types";
+import { GridOptions, Properties, GridOutlines, GridAlign, MasonryGridVerticalAlign } from "../types";
 import { range, GetterSetter } from "../utils";
 import { GridItem } from "../GridItem";
 
@@ -19,12 +19,19 @@ function getColumnPoint(
   return Math[pointCaculationName](...outline.slice(columnIndex, columnIndex + columnCount));
 }
 
-function getColumnIndex(outline: number[], columnCount: number, nearestCalculationName: "max" | "min") {
+function getColumnIndex(
+  outline: number[],
+  columnCount: number,
+  nearestCalculationName: "max" | "min",
+  startPos: number,
+) {
   const length = outline.length - columnCount + 1;
   const pointCaculationName = nearestCalculationName === "max" ? "min" : "max";
   const indexCaculationName = nearestCalculationName === "max" ? "lastIndexOf" : "indexOf";
   const points = range(length).map((index) => {
-    return getColumnPoint(outline, index, columnCount, pointCaculationName);
+    const point = getColumnPoint(outline, index, columnCount, pointCaculationName);
+
+    return Math[pointCaculationName](startPos, point);
   });
 
   return points[indexCaculationName](Math[nearestCalculationName](...points));
@@ -61,6 +68,13 @@ export interface MasonryGridOptions extends GridOptions {
    */
   align?: GridAlign;
   /**
+   * Content direction alignment of items. “Masonry” is sorted in the form of masonry. Others are applied as content direction alignment, similar to vertical-align of inline-block.
+   * If you set multiple columns (`data-grid-column`), the screen may look strange.
+   * <ko>아이템들의 Content 방향의 정렬. "masonry"는 masonry 형태로 정렬이 된다. 그 외는 inline-block의 vertical-align과 유사하게 content 방향 정렬로 적용이 된다.칼럼(`data-grid-column` )을 여러개 설정하면 화면이 이상하게 보일 수 있다. </ko>
+   * @default "masonry"
+   */
+  contentAlign?: MasonryGridVerticalAlign;
+  /**
    * Difference Threshold for Counting Columns. Since offsetSize is calculated by rounding, the number of columns may not be accurate.
    * <ko>칼럼 개수를 계산하기 위한 차이 임계값. offset 사이즈는 반올림으로 게산하기 때문에 정확하지 않을 수 있다.</ko>
    * @default 1
@@ -91,6 +105,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     align: PROPERTY_TYPE.RENDER_PROPERTY,
     columnCalculationThreshold: PROPERTY_TYPE.RENDER_PROPERTY,
     maxStretchColumnSize: PROPERTY_TYPE.RENDER_PROPERTY,
+    contentAlign: PROPERTY_TYPE.RENDER_PROPERTY,
   };
   public static defaultOptions: Required<MasonryGridOptions> = {
     ...Grid.defaultOptions,
@@ -100,6 +115,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     columnSizeRatio: 0,
     columnCalculationThreshold: 0.5,
     maxStretchColumnSize: Infinity,
+    contentAlign: "masonry",
   };
 
   public applyGrid(items: GridItem[], direction: "start" | "end", outline: number[]): GridOutlines {
@@ -114,6 +130,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
       align,
       observeChildren,
       columnSizeRatio,
+      contentAlign,
     } = this.options;
     const outlineLength = outline.length;
     const itemsLength = items.length;
@@ -130,9 +147,19 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
 
       startOutline = range(column).map(() => point);
     }
-    const endOutline = startOutline.slice();
+    let endOutline = startOutline.slice();
     const columnDist = column > 1 ? alignPoses[1] - alignPoses[0] : 0;
     const isStretch = align === "stretch";
+    const isStartContentAlign = isEndDirection && contentAlign === "start";
+
+
+    let startPos = isEndDirection ? -Infinity : Infinity;
+
+
+    if (isStartContentAlign) {
+      // support only end direction
+      startPos = Math.min(...endOutline);
+    }
 
     for (let i = 0; i < itemsLength; ++i) {
       const item = items[isEndDirection ? i : itemsLength - 1 - i];
@@ -144,8 +171,15 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
         columnAttribute || Math.max(1, Math.ceil((item.inlineSize + gap) / columnDist)),
       );
       const maxColumnCount = Math.min(column, Math.max(columnCount, maxColumnAttribute));
-      let columnIndex = getColumnIndex(endOutline, columnCount, nearestCalculationName);
+      let columnIndex = getColumnIndex(endOutline, columnCount, nearestCalculationName, startPos);
       let contentPos = getColumnPoint(endOutline, columnIndex, columnCount, pointCalculationName);
+
+      if (isStartContentAlign && startPos !== contentPos) {
+        startPos = Math.max(...endOutline);
+        endOutline = endOutline.map(() => startPos);
+        contentPos = startPos;
+        columnIndex = 0;
+      }
 
       while (columnCount < maxColumnCount) {
         const nextEndColumnIndex = columnIndex + columnCount;
@@ -189,6 +223,13 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
       range(columnCount).forEach((indexOffset) => {
         endOutline[columnIndex + indexOffset] = nextOutlinePoint;
       });
+    }
+
+    // Finally, check whether startPos and min of the outline match.
+    // If different, endOutline is updated.
+    if (isStartContentAlign && startPos !== Math.min(...endOutline)) {
+      startPos = Math.max(...endOutline);
+      endOutline = endOutline.map(() => startPos);
     }
 
     // if end items, startOutline is low, endOutline is high
