@@ -798,5 +798,41 @@ describe("test MasonryGrid", () => {
     expect(startOutline).to.be.deep.equals([0, 0]);
     expect(startOutline2).to.be.deep.equals([0]);
   });
+
+  it(`should check if it is aligned at the top If contentAlign is "start".`, async () => {
+    // Given
+    container!.style.cssText = "width: 600px; height: 600px;";
+    grid = new MasonryGrid(container!, {
+      contentAlign: "start",
+    });
+
+    grid.setItems([
+      new GridItem(false, {
+        rect: { width: 300, height: 150, top: 0, left: 0 },
+      }),
+      new GridItem(false, {
+        rect: { width: 300, height: 100, top: 0, left: 0 },
+      }),
+      new GridItem(false, {
+        rect: { width: 300, height: 150, top: 0, left: 0 },
+      }),
+      new GridItem(false, {
+        rect: { width: 300, height: 100, top: 0, left: 0 },
+      }),
+    ]);
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+
+    // Then
+    // [0, 0]
+    // [150, 150]
+    expect(grid.getItems()[2].cssRect.top).to.be.deep.equals(150);
+    expect(grid.getItems()[3].cssRect.top).to.be.deep.equals(150);
+    expect(grid.getOutlines().end).to.be.deep.equals([300, 300]);
+  });
 });
 
