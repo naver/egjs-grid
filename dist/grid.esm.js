@@ -4,7 +4,7 @@ name: @egjs/grid
 license: MIT
 author: NAVER Corp.
 repository: https://github.com/naver/egjs-grid
-version: 1.14.2
+version: 1.15.0
 */
 import Component from '@egjs/component';
 import { diff } from '@egjs/children-differ';
@@ -1981,12 +1981,13 @@ function getColumnPoint(outline, columnIndex, columnCount, pointCaculationName) 
   return Math[pointCaculationName].apply(Math, outline.slice(columnIndex, columnIndex + columnCount));
 }
 
-function getColumnIndex(outline, columnCount, nearestCalculationName) {
+function getColumnIndex(outline, columnCount, nearestCalculationName, startPos) {
   var length = outline.length - columnCount + 1;
   var pointCaculationName = nearestCalculationName === "max" ? "min" : "max";
   var indexCaculationName = nearestCalculationName === "max" ? "lastIndexOf" : "indexOf";
   var points = range(length).map(function (index) {
-    return getColumnPoint(outline, index, columnCount, pointCaculationName);
+    var point = getColumnPoint(outline, index, columnCount, pointCaculationName);
+    return Math[pointCaculationName](startPos, point);
   });
   return points[indexCaculationName](Math[nearestCalculationName].apply(Math, points));
 }
@@ -2020,7 +2021,8 @@ function (_super) {
         gap = _a.gap,
         align = _a.align,
         observeChildren = _a.observeChildren,
-        columnSizeRatio = _a.columnSizeRatio;
+        columnSizeRatio = _a.columnSizeRatio,
+        contentAlign = _a.contentAlign;
     var outlineLength = outline.length;
     var itemsLength = items.length;
 
@@ -2043,6 +2045,13 @@ function (_super) {
     var endOutline = startOutline.slice();
     var columnDist = column > 1 ? alignPoses[1] - alignPoses[0] : 0;
     var isStretch = align === "stretch";
+    var isStartContentAlign = isEndDirection && contentAlign === "start";
+    var startPos = isEndDirection ? -Infinity : Infinity;
+
+    if (isStartContentAlign) {
+      // support only end direction
+      startPos = Math.min.apply(Math, endOutline);
+    }
 
     var _loop_1 = function (i) {
       var item = items[isEndDirection ? i : itemsLength - 1 - i];
@@ -2051,8 +2060,17 @@ function (_super) {
       var contentSize = item.contentSize;
       var columnCount = Math.min(column, columnAttribute || Math.max(1, Math.ceil((item.inlineSize + gap) / columnDist)));
       var maxColumnCount = Math.min(column, Math.max(columnCount, maxColumnAttribute));
-      var columnIndex = getColumnIndex(endOutline, columnCount, nearestCalculationName);
+      var columnIndex = getColumnIndex(endOutline, columnCount, nearestCalculationName, startPos);
       var contentPos = getColumnPoint(endOutline, columnIndex, columnCount, pointCalculationName);
+
+      if (isStartContentAlign && startPos !== contentPos) {
+        startPos = Math.max.apply(Math, endOutline);
+        endOutline = endOutline.map(function () {
+          return startPos;
+        });
+        contentPos = startPos;
+        columnIndex = 0;
+      }
 
       while (columnCount < maxColumnCount) {
         var nextEndColumnIndex = columnIndex + columnCount;
@@ -2105,6 +2123,15 @@ function (_super) {
 
     for (var i = 0; i < itemsLength; ++i) {
       _loop_1(i);
+    } // Finally, check whether startPos and min of the outline match.
+    // If different, endOutline is updated.
+
+
+    if (isStartContentAlign && startPos !== Math.min.apply(Math, endOutline)) {
+      startPos = Math.max.apply(Math, endOutline);
+      endOutline = endOutline.map(function () {
+        return startPos;
+      });
     } // if end items, startOutline is low, endOutline is high
     // if start items, startOutline is high, endOutline is low
 
@@ -2219,7 +2246,8 @@ function (_super) {
     columnSizeRatio: PROPERTY_TYPE.RENDER_PROPERTY,
     align: PROPERTY_TYPE.RENDER_PROPERTY,
     columnCalculationThreshold: PROPERTY_TYPE.RENDER_PROPERTY,
-    maxStretchColumnSize: PROPERTY_TYPE.RENDER_PROPERTY
+    maxStretchColumnSize: PROPERTY_TYPE.RENDER_PROPERTY,
+    contentAlign: PROPERTY_TYPE.RENDER_PROPERTY
   });
   MasonryGrid.defaultOptions = __assign(__assign({}, Grid.defaultOptions), {
     align: "justify",
@@ -2227,7 +2255,8 @@ function (_super) {
     columnSize: 0,
     columnSizeRatio: 0,
     columnCalculationThreshold: 0.5,
-    maxStretchColumnSize: Infinity
+    maxStretchColumnSize: Infinity,
+    contentAlign: "masonry"
   });
   MasonryGrid = __decorate([GetterSetter], MasonryGrid);
   return MasonryGrid;
