@@ -135,6 +135,18 @@ export function getRangeCost(value: number, valueRange: number[]) {
   return Math.max(value - valueRange[1], valueRange[0] - value, 0) + 1;
 }
 
+export function between(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(value, min));
+}
+
+export function throttle(num: number, unit?: number) {
+  if (!unit) {
+    return num;
+  }
+  const reverseUnit = 1 / unit;
+  return Math.round(num / unit) / reverseUnit;
+}
+
 /**
  * Decorator that makes the method of grid available in the framework.
  * @ko 프레임워크에서 그리드의 메소드를 사용할 수 있게 하는 데코레이터.
