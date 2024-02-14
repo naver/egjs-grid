@@ -143,6 +143,7 @@ export interface GridOptions {
   externalContainerManager?: ContainerManager | null;
 
 }
+
 /**
  * @typedef
  * @memberof Grid
@@ -150,7 +151,11 @@ export interface GridOptions {
 export interface GridOutlines {
   start: number[];
   end: number[];
+  passed?: number[] | null;
+  passedItems?: number[] | null;
 }
+
+
 /**
  * @typedef
  * @memberof Grid

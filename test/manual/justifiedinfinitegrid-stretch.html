@@ -1,3 +1,11 @@
+<h1 class="header">
+  <a href="https://github.com/naver/egjs-infinitegrid" target="_blank">JustifiedInfiniteGrid</a>
+</h1>
+<div class="scroller">
+  <div class="container gridlayout">
+  </div>
+</div>
+
 <style>
   html,
   body {
@@ -9,9 +17,8 @@
 
   .container {
     position: relative;
-    width: 90%;
-    border: 1px solid black;
   }
+
   .container:after {
     position: absolute;
     top: 0;
@@ -77,13 +84,12 @@
     background: #f55;
   }
 </style>
-<div class="container">
 
-</div>
-<script src="../../dist/grid.js"></script>
+<script src="../../dist/infinitegrid.js"></script>
 <script>
+  const itemCount = 10;
 
-function getItems(nextGroupKey, count) {
+  function getItems(nextGroupKey, count) {
     const nextItems = [];
 
     for (let i = 0; i < count; ++i) {
@@ -97,18 +103,23 @@ function getItems(nextGroupKey, count) {
     }
     return nextItems;
   }
-  const grid = new Grid.JustifiedGrid(".container", {
-    // defaultDirection: "start",
+  const ig = new InfiniteGrid.JustifiedInfiniteGrid(".container", {
+    // scrollContainer: ".scroller",
+    // useFit: true,
+    useRecycle: true,
+    useResizeObserver: true,
     gap: 5,
     stretch: true,
-    passUnstretchRow: true,
     sizeRange: [228, 228],
-    stretchRange: ["-10%", "+10%"],
+    stretchRange: [144, 320],
     columnRange: [0, Infinity],
   });
 
+  ig.on("requestAppend", e => {
+    const nextGroupKey = (+e.groupKey || 0) + 1;
 
-  document.querySelector(".container").innerHTML = getItems(0, 20).join("");
+    ig.append(getItems(nextGroupKey, 40), nextGroupKey);
+  });
 
-  grid.renderItems();
+  ig.renderItems();
 </script>
