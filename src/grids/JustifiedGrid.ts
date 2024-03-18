@@ -6,7 +6,7 @@
 import Grid from "../Grid";
 import { MOUNT_STATE, PROPERTY_TYPE } from "../consts";
 import { GridOptions, GridOutlines, Properties } from "../types";
-import { between, getRangeCost, GetterSetter, isNumber, isObject, throttle } from "../utils";
+import { between, getRangeCost, GetterSetter, isNumber, isObject, sum, throttle } from "../utils";
 import { find_path } from "./lib/dijkstra";
 import { GridItem } from "../GridItem";
 
@@ -363,13 +363,136 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     }
     return 0;
   }
+
+  private _getExpectedInlineSizes(items: GridItem[], rowSize: number) {
+    const {
+      stretch,
+      stretchRange,
+    } = this.options;
+    return items.map((item) => {
+      const minInlineSize = stretch
+        ? parseStretchSize(item.orgInlineSize, item.gridData.minStretch || stretchRange[0])
+        : -Infinity;
+      const maxInlineSize = stretch
+        ? parseStretchSize(item.orgInlineSize, item.gridData.maxStretch || stretchRange[1])
+        : Infinity;
+
+      const itemInlineSize = getExpectedItemInlineSize(item, rowSize);
+      let isMax = false;
+      let isMin = false;
+      if (itemInlineSize >= maxInlineSize) {
+        isMax = true;
+      } else if (itemInlineSize <= minInlineSize) {
+        isMin = true;
+      }
+
+      return {
+        minSize: minInlineSize,
+        maxSize: maxInlineSize,
+        size: between(itemInlineSize, minInlineSize, maxInlineSize),
+        originalSize: itemInlineSize,
+        isMax,
+        isMin,
+      };
+    });
+  }
+  private _getStretchItemInfos(items: GridItem[], rowSize: number) {
+    const itemsLength = items.length;
+    const containerInlineSize = this.getContainerInlineSize() - this.getInlineGap() * (Math.max(1, itemsLength) - 1);
+    const itemInfos = this._getExpectedInlineSizes(items, rowSize);
+    const firstItemsSize = sum(itemInfos.map((info) => info.size));
+    const distSize = containerInlineSize - firstItemsSize;
+    const firstScale = containerInlineSize / sum(itemInfos.map((info) => info.originalSize));
+    const costInfos = itemInfos.map((info) => {
+      return {
+        ...info,
+        passed: false,
+        size: info.originalSize * firstScale,
+      };
+    });
+
+    if (distSize === 0) {
+      return {
+        infos: costInfos,
+        cost: 0,
+      };
+    }
+    // increase
+    const isIncrease = distSize > 0;
+    const costInfosLength = costInfos.length;
+
+    for (let i = 0; i < costInfosLength; ++i) {
+      const passedItemsSize = sum(costInfos.map((info) => info.passed ? info.size : 0));
+      const restItemsSize = sum(costInfos.map((info) => info.passed ? 0 : info.originalSize));
+      let distScale = (containerInlineSize - passedItemsSize) / restItemsSize;
+      // minimize or maximize
+      costInfos.forEach((info) => {
+        if (info.passed) {
+          return;
+        }
+
+        if (isIncrease) {
+          if (info.size > info.maxSize) {
+            distScale = Math.min(distScale, info.maxSize / info.originalSize);
+          }
+        } else {
+          if (info.size < info.minSize) {
+            distScale = Math.max(distScale, info.minSize / info.originalSize);
+          }
+        }
+      });
+
+      costInfos.forEach((info) => {
+        if (!info.passed) {
+          info.size = between(info.originalSize * distScale, info.minSize, info.maxSize);
+
+          if (
+            (isIncrease && !throttle(info.size - info.maxSize, 0.001))
+            || (!isIncrease && !throttle(info.size - info.minSize, 0.001))
+          ) {
+            info.passed = true;
+          }
+        }
+      });
+
+      if (costInfos.every((info) => info.passed)) {
+        break;
+      }
+    }
+    const lastDistScale = containerInlineSize / sum(costInfos.map((info) => info.size));
+
+    // last
+    if (throttle(lastDistScale - 1, 0.001)) {
+      costInfos.forEach((info) => {
+        info.size *= lastDistScale;
+      });
+    }
+
+
+    return {
+      infos: costInfos,
+      cost: sum(costInfos.map((info) => {
+        let costRatio = 1;
+
+        if (info.size > info.maxSize || info.size < info.minSize) {
+          costRatio = 2;
+        }
+        let originalSize = info.originalSize;
+
+        if (isIncrease) {
+          originalSize = Math.max(originalSize, info.minSize);
+        } else {
+          originalSize = Math.min(originalSize, info.maxSize);
+        }
+        return Math.abs(info.size - originalSize) * costRatio;
+      })),
+    };
+  }
   private _getExpectedInlineSize(items: GridItem[], rowSize: number) {
     const inlineGap = this.getInlineGap();
-    const size = items.reduce((sum, item) => {
-      return sum + getExpectedItemInlineSize(item, rowSize);
-    }, 0);
+    const itemInfos = this._getExpectedInlineSizes(items, rowSize);
 
-    return size ? size + inlineGap * (items.length - 1) : 0;
+    return itemInfos.length ? sum(itemInfos.map((info) => info.size)) + inlineGap * (items.length - 1) : 0;
   }
   private _getCost(
     items: GridItem[],
@@ -412,7 +535,9 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
         || (isEndDirection ? j !== items.length : i !== 0)
         || expectedInlineSize >= containerInlineSize
       ) {
-        extraCost = Math.abs(containerInlineSize - expectedInlineSize) / items.length;
+        const res = this._getStretchItemInfos(lineItems, rowSize);
+
+        extraCost = res.cost;
       }
 
       return extraCost;
@@ -473,7 +598,6 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       isCroppedSize,
       displayedRow,
       stretch,
-      stretchRange,
       passUnstretchRow,
     } = this.options;
     const itemsLength = items.length;
@@ -511,8 +635,8 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       });
       const expectedInlineSize = this._getExpectedInlineSize(groupItems, rowSize);
       const scale = (containerInlineSize - allGap) / (expectedInlineSize - allGap);
-      let noGapExpectedContainerInlineSize = expectedInlineSize - allGap;
-      let noGapContainerInlineSize = containerInlineSize - allGap;
+      const noGapExpectedContainerInlineSize = expectedInlineSize - allGap;
+      const noGapContainerInlineSize = containerInlineSize - allGap;
 
       if (stretch && expectedInlineSize && noGapContainerInlineSize !== noGapExpectedContainerInlineSize) {
         // passed이고 마지막 그룹의 경우 stretchSize가 containerSize보다 작으면 pass!
@@ -522,95 +646,31 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
         ) {
           passedPoint = [contentPos];
           passedItems = groupItems.map((_, i) => itemsLength - groupItemslength + i);
-        } else {
-          itemInfos.forEach((info) => {
-            info.minInlineSize = parseStretchSize(info.orgInlineSize, info.item.gridData.minStretch || stretchRange[0]);
-            info.maxInlineSize = parseStretchSize(info.orgInlineSize, info.item.gridData.maxStretch || stretchRange[1]);
+
+          const inlineSizes = this._getExpectedInlineSizes(groupItems, rowSize);
+
+          itemInfos.forEach((info, i) => {
+            info.minInlineSize = inlineSizes[i].minSize;
+            info.maxInlineSize = inlineSizes[i].maxSize;
+            info.inlineSize = between(info.inlineSize, info.minInlineSize, info.maxInlineSize);
           });
+        } else {
+          const { infos } = this._getStretchItemInfos(groupItems, rowSize);
 
-          const itemInfoslength = itemInfos.length;
-          let subInfos = [...itemInfos];
-
-          for (let i = 0; i < itemInfoslength; ++i) {
-            const maxRatio = Math.max(1, ...subInfos.map((info) => info.minInlineSize / info.orgInlineSize));
-            const minRatio = Math.min(1, ...subInfos.map((info) => info.maxInlineSize / info.orgInlineSize));
-            let stretchScale = 1;
-
-            if (noGapContainerInlineSize > noGapExpectedContainerInlineSize) {
-              // increase inline size
-              stretchScale = Math.min(minRatio, 1);
-
-              if (stretchScale === 1 && maxRatio !== 1) {
-                stretchScale = maxRatio;
-
-              }
-            } else {
-              // decrease inline size
-              stretchScale = Math.max(1, maxRatio);
-
-              if (stretchScale === 1 && minRatio !== 1) {
-                stretchScale = minRatio;
-              }
-            }
-
-            noGapExpectedContainerInlineSize *= stretchScale;
-            subInfos.forEach((info) => {
-              info.orgInlineSize *= stretchScale;
-
-              const nextInlineSize = between(
-                info.orgInlineSize,
-                info.minInlineSize,
-                info.maxInlineSize,
-              );
-
-
-              noGapExpectedContainerInlineSize += nextInlineSize - info.orgInlineSize;
-              info.orgInlineSize = nextInlineSize;
-            });
-
-            if (noGapContainerInlineSize > noGapExpectedContainerInlineSize) {
-              // increase inline size
-              subInfos.sort((a, b) => {
-                return b.orgInlineSize - a.orgInlineSize;
-              });
-            } else {
-              // decrease inline size
-              subInfos.sort((a, b) => {
-                return a.orgInlineSize - b.orgInlineSize;
-              });
-            }
-            const firstInfo = subInfos[0];
-            const expectedScale = noGapContainerInlineSize / noGapExpectedContainerInlineSize;
-            const nextInlineSize = between(
-              firstInfo.orgInlineSize * expectedScale,
-              firstInfo.minInlineSize,
-              firstInfo.maxInlineSize,
-            );
-
-            noGapContainerInlineSize -= nextInlineSize;
-            noGapExpectedContainerInlineSize -= firstInfo.orgInlineSize;
-            firstInfo.inlineSize = nextInlineSize;
-            subInfos = subInfos.slice(1);
-          }
-          noGapContainerInlineSize = throttle(noGapContainerInlineSize, 0.001);
-
-          if (noGapContainerInlineSize) {
-            // WARN: A gap appears. It exceeds minSize and maxSize.
-            const extraInlineSize = itemInfos.reduce((prev, cur) => prev + cur.inlineSize, 0);
-            const extraScale = (containerInlineSize - allGap) / extraInlineSize;
-
-            itemInfos.forEach((info) => {
-              info.inlineSize *= extraScale;
-            });
-          }
-
-          itemInfos.sort((a, b) => {
-            return a.index - b.index;
+          itemInfos.forEach((info, i) => {
+            info.inlineSize = infos[i].size;
+            info.minInlineSize = infos[i].minSize;
+            info.maxInlineSize = infos[i].maxSize;
           });
         }
       }
 
-      itemInfos.forEach(({ item, inlineSize }, i) => {
+      itemInfos.forEach((info, i) => {
+        const {
+          item,
+          inlineSize,
+
+        } = info;
         let nextInlineSize = inlineSize;
         const prevItem = groupItems[i - 1];
         const inlinePos = prevItem
@@ -620,6 +680,15 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
         if (isCroppedSize) {
           nextInlineSize *= scale;
         }
+
+
+        const gridData = item.gridData;
+
+        gridData.orgInlineSize = info.orgInlineSize;
+        gridData.orgContentSize = rowSize;
+        gridData.minInlineSize = info.minInlineSize;
+        gridData.maxInlineSize = info.maxInlineSize;
+
         item.setCSSGridRect({
           inlinePos,
           contentPos,

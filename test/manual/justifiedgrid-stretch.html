@@ -110,5 +110,8 @@ function getItems(nextGroupKey, count) {
 
   document.querySelector(".container").innerHTML = getItems(0, 20).join("");
 
+  grid.on("renderComplete", e => {
+    console.log(e.mounted);
+  })
   grid.renderItems();
 </script>

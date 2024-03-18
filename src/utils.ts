@@ -45,6 +45,9 @@ export function isNumber(val: any): val is number {
 export function camelize(str: string) {
   return str.replace(/[\s-_]([a-z])/g, (all, letter) => letter.toUpperCase());
 }
+export function sum(arr: number[]) {
+  return arr.reduce((a, b) => a + b, 0);
+}
 
 export function getDataAttributes(element: HTMLElement, attributePrefix: string) {
   const dataAttributes: Record<string, string> = {};
