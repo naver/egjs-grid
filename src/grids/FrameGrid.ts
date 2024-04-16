@@ -155,6 +155,8 @@ export class FrameGrid extends Grid<FrameGridOptions> {
       inlineSize: rectInlineSize,
       contentSize: rectContentSize,
     } = this.getRectSize(frameInlineSize);
+    const inlineGap = this.getInlineGap();
+    const contentGap = this.getContentGap();
 
 
     const itemsLength = items.length;
@@ -165,7 +167,7 @@ export class FrameGrid extends Grid<FrameGridOptions> {
     const rectsLength = frameRects.length;
     let startOutline = range(frameInlineSize).map(() => Infinity);
     let endOutline = range(frameInlineSize).map(() => -Infinity);
-    const frameOutline = frame.outline.map((point) => point * (rectContentSize + gap));
+    const frameOutline = frame.outline.map((point) => point * (rectContentSize + contentGap));
 
     for (let startIndex = 0; startIndex < itemsLength; startIndex += rectsLength) {
       // Compare group's startOutline and startOutline of rect
@@ -179,16 +181,16 @@ export class FrameGrid extends Grid<FrameGridOptions> {
           contentSize: frameRectContentSize,
           inlineSize: frameRectInlineSize,
         } = frameRects[rectIndex];
-        const contentPos = startPoint + frameRectContentPos * (rectContentSize + gap);
-        const inlinePos = frameRectInlinePos * (rectInlineSize + gap);
-        const contentSize = frameRectContentSize * (rectContentSize + gap) - gap;
-        const inlineSize = frameRectInlineSize * (rectInlineSize + gap) - gap;
+        const contentPos = startPoint + frameRectContentPos * (rectContentSize + contentGap);
+        const inlinePos = frameRectInlinePos * (rectInlineSize + inlineGap);
+        const contentSize = frameRectContentSize * (rectContentSize + contentGap) - contentGap;
+        const inlineSize = frameRectInlineSize * (rectInlineSize + inlineGap) - inlineGap;
 
         fillOutlines(startOutline, endOutline, {
           inlinePos: frameRectInlinePos,
           inlineSize: frameRectInlineSize,
           contentPos: contentPos,
-          contentSize: contentSize + gap,
+          contentSize: contentSize + contentGap,
         });
         item.setCSSGridRect({
           inlinePos,
@@ -228,28 +230,27 @@ export class FrameGrid extends Grid<FrameGridOptions> {
     return frame.length ? frame[0].length : 0;
   }
   public getComputedOutlineSize() {
-    const {
-      gap,
-      rectSize: rectSizeOption,
-    } = this.options;
+    const { rectSize: rectSizeOption } = this.options;
 
     if (typeof rectSizeOption === "object") {
       return rectSizeOption.inlineSize;
     }
-    return rectSizeOption || ((this.getContainerInlineSize()! + gap) / this.getComputedOutlineLength() - gap);
+    const inlineGap = this.getInlineGap();
+    return (
+      rectSizeOption ||
+      (this.getContainerInlineSize()! + inlineGap) / this.getComputedOutlineLength() - inlineGap
+    );
   }
   protected getRectSize(frameInlineSize: number) {
-    const {
-      gap,
-      rectSize: rectSizeOption,
-    } = this.options;
+    const { rectSize: rectSizeOption } = this.options;
 
     if (typeof rectSizeOption === "object") {
       return rectSizeOption;
     }
+    const inlineGap = this.getInlineGap();
     const rectSizeValue = rectSizeOption
       ? rectSizeOption
-      : (this.getContainerInlineSize()! + gap) / frameInlineSize - gap;
+      : (this.getContainerInlineSize()! + inlineGap) / frameInlineSize - inlineGap;
 
     return { inlineSize: rectSizeValue, contentSize: rectSizeValue };
   }

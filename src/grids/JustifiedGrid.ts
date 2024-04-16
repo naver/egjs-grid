@@ -265,10 +265,8 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     return links[0];
   }
   private _getExpectedRowSize(items: GridItem[]) {
-    const {
-      gap,
-    } = this.options;
-    let containerInlineSize = this.getContainerInlineSize()! - gap * (items.length - 1);
+    const inlineGap = this.getInlineGap();
+    let containerInlineSize = this.getContainerInlineSize()! - inlineGap * (items.length - 1);
     let ratioSum = 0;
     let inlineSum = 0;
 
@@ -294,14 +292,12 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     return ratioSum ? (containerInlineSize + inlineSum) / ratioSum : 0;
   }
   private _getExpectedInlineSize(items: GridItem[], rowSize: number) {
-    const {
-      gap,
-    } = this.options;
+    const inlineGap = this.getInlineGap();
     const size = items.reduce((sum, item) => {
       return sum + getExpectedColumnSize(item, rowSize);
     }, 0);
 
-    return size ? size + gap * (items.length - 1) : 0;
+    return size ? size + inlineGap * (items.length - 1) : 0;
   }
   private _getCost(
     items: GridItem[],
@@ -375,13 +371,14 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     isEndDirection: boolean,
   ) {
     const {
-      gap,
       isCroppedSize,
       displayedRow,
     } = this.options;
     const sizeRange = this._getSizeRange();
     const startPoint = outline[0] || 0;
     const containerInlineSize = this.getContainerInlineSize();
+    const inlineGap = this.getInlineGap();
+    const contentGap = this.getContentGap();
     const groups = splitItems(items, path);
     let contentPos = startPoint;
     let displayedSize = 0;
@@ -394,7 +391,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       }
       const expectedInlineSize = this._getExpectedInlineSize(groupItems, rowSize);
 
-      const allGap = gap * (length - 1);
+      const allGap = inlineGap * (length - 1);
       const scale = (containerInlineSize - allGap) / (expectedInlineSize - allGap);
 
       groupItems.forEach((item, i) => {
@@ -402,7 +399,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
 
         const prevItem = groupItems[i - 1];
         const inlinePos = prevItem
-          ? prevItem.cssInlinePos! + prevItem.cssInlineSize! + gap
+          ? prevItem.cssInlinePos! + prevItem.cssInlineSize! + inlineGap
           : 0;
 
         if (isCroppedSize) {
@@ -415,7 +412,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
           contentSize: rowSize,
         });
       });
-      contentPos += gap + rowSize;
+      contentPos += contentGap + rowSize;
       if (displayedRow < 0 || rowIndex < displayedRow) {
         displayedSize = contentPos;
       }

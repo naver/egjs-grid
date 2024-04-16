@@ -44,7 +44,7 @@ export interface GridOptions {
    * <ko>아이템들 사이의 공간.</ko>
    * @default 5
    */
-  gap?: number;
+  gap?: number | { horizontal?: number; vertical?: number };
   /**
    * The prefix to use element's data attribute.
    * <ko>엘리먼트의 데이타 속성에 사용할 접두사.</ko>
