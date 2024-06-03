@@ -126,6 +126,9 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
    * @param items - The items to set. <ko>설정할 아이템들</ko>
    */
   public setItems(items: GridItem[]): this {
+    items.forEach((item, i) => {
+      item.index = i;
+    });
     const options = this.options;
 
     if (options.useResizeObserver && options.observeChildren) {

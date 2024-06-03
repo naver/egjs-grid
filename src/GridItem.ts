@@ -10,6 +10,7 @@ import { MOUNT_STATE, RECT_NAMES, UPDATE_STATE } from "./consts";
  * @typedef
  * @memberof Grid.GridItem
  * @property - The item key. <ko>아이템 키.</ko>
+ * @property - The item index. <ko>아이템 index.</ko>
  * @property - The element for the item. <ko>아이템에 있는 엘리먼트.</ko>
  * @property - State of whether the element has been added to the container. <ko>element가 container에 추가되었는지 상태.</ko>
  * @property - The update state of the element's rect. <ko>element의 rect의 업데이트 상태.</ko>
@@ -24,6 +25,7 @@ import { MOUNT_STATE, RECT_NAMES, UPDATE_STATE } from "./consts";
  */
 export interface GridItemStatus {
   key?: string | number;
+  index?: number;
   element?: HTMLElement | null;
   mountState?: MOUNT_STATE;
   updateState?: UPDATE_STATE;
@@ -68,6 +70,7 @@ class GridItem {
     const element = itemStatus.element;
     const status: Required<GridItemStatus> = {
       key: "",
+      index: 0,
       orgRect: { left: 0, top: 0, width: 0, height: 0 },
       rect: { left: 0, top: 0, width: 0, height: 0 },
       cssRect: {},
@@ -227,6 +230,7 @@ class GridItem {
    */
   public getStatus(): Required<GridItemStatus> {
     return {
+      index: this.index,
       mountState: this.mountState,
       updateState: this.updateState,
       attributes: this.attributes,
