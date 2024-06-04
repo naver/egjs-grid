@@ -52,12 +52,13 @@ function parseStretchSize(inlineSize: number, size: number | string) {
 function getExpectedItemInlineSize(item: GridItem, rowSize: number) {
   const inlineSize = item.orgInlineSize;
   const contentSize = item.orgContentSize;
+  const inlineOffset = item.gridData.inlineOffset || 0;
+  const contentOffset = item.gridData.contentOffset || 0;
 
   if (!inlineSize || !contentSize) {
     return rowSize;
   }
-  const inlineOffset = parseFloat(item.gridData.inlineOffset) || 0;
-  const contentOffset = parseFloat(item.gridData.contentOffset) || 0;
+
   const ratio = contentSize <= contentOffset ? 1 : (inlineSize - inlineOffset) / (contentSize - contentOffset);
 
   return ratio * (rowSize - contentOffset) + inlineOffset;
@@ -88,21 +89,6 @@ export interface JustifiedGridOptions extends GridOptions {
    */
   sizeRange?: number | number[];
   /**
-   * 아이템의 inlineSize를 stretch 할지 여부
-   * @default false
-   */
-  stretch?: boolean;
-  /**
-   * string 값으로 `-`, `+`, `%`이 붙으면 원본 크기에 대한 상대값이며 number 값으로 들어오면 절대 값으로 stretch 범위를 설정할 수 있습니다.
-   * 낱개로 설정하고 싶다면 각 Element 또는 JSX로 data-grid-min-stretch="-10%", data-grid-max-stretch="+10%"로 설정할 수 있다.
-   * @default ["-10%", "+10%"]
-   */
-  stretchRange?: Array<string | number>;
-  /**
-   * 마지막 열에 stretch 범위에 벗어난 경우 다음 InfiniteGrid
-   */
-  passUnstretchRow?: boolean;
-  /**
    * Maximum number of rows to be counted for container size. You can hide it on the screen by setting overflow: hidden. -1 is not set.
    * <ko>컨테이너 크기에 계산될 최대 row 개수. overflow: hidden을 설정하면 화면에 가릴 수 있다. -1은 미설정이다.</ko>
    * @default -1
@@ -114,6 +100,39 @@ export interface JustifiedGridOptions extends GridOptions {
    * @default false
    */
   isCroppedSize?: boolean;
+  /**
+   * The ratio is maintained except for the offset value in the inline direction. If 'data-grid-inline-offset' is set in the element of each item, it will be applied first.
+   * <ko>inline 방향의 offset 수치 만큼 제외하고 비율을 유지한다. 각 아이템의 element에 'data-grid-inline-offset' 을 설정하면 우선 적용한다.</ko>
+   * @default 0
+   */
+  inlineOffset?: number;
+  /**
+   * The ratio is maintained except for the offset value in the content direction. If 'data-grid-content-offset' is set in the element or JSX of each item, it will be applied first.
+   * <ko>content 방향의 offset 수치 만큼 제외하고 비율을 유지한다. 각 아이템의 Element 또는 JSX에 'data-grid-content-offset' 을 설정하면 우선 적용한다.</ko>
+   * @default 0
+   */
+  contentOffset?: number;
+  /**
+   * Regardless of the `sizeRange` value, it is possible to basically break the proportion of the item and stretch the inline size to fill the container.
+   * If you set the `sizeRange` range narrowly, you can stretch well.
+   * <ko>sizeRange 값과 무관하게 기본적으로 아이템의 비율을 깨서 inline size를 stretch하여 container를 꽉 채우게 가능하다. sizeRange의 범위를 좁게 설정하면 stretch가 잘 될 수 있다. </ko>
+   * @default false
+   */
+  stretch?: boolean;
+  /**
+   * If `-`, `+`, or `%` are added as a string value, it is a relative value to the original size. If it is a number value, the stretch range can be set as an absolute value.
+   * * If `data-grid-min-stretch` and `data-grid-max-stretch` are set in the Element or JSX of each item, they will be applied first.
+   * <ko>string 값으로 `-`, `+`, `%`이 붙으면 원본 크기에 대한 상대값이며 number 값으로 들어오면 절대 값으로 stretch 범위를 설정할 수 있습니다.
+   * 각 아이템의 Element 또는 JSX에 `data-grid-min-stretch`, `data-grid-max-stretch`을 설정하면 우선 적용한다.</ko>
+   * @
+   * @default ["-10%", "+10%"]
+   */
+  stretchRange?: Array<string | number>;
+  /**
+   * Items placed in the last row are not stretched and are drawn maintaining their proportions. When using InfiniteGrid, it is calculated and re-rendered as follows:
+   * <ko>마지막 row에 배치되는 아이템들 경우 stretch되지 않고 비율유지한채로 그려진다. InfiniteGrid를 사용하는 경우 다음 그룹과 같이 계산되어 재렌더링한다.</ko>
+   */
+  passUnstretchRow?: boolean;
 }
 
 /**
@@ -139,6 +158,10 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     stretch: PROPERTY_TYPE.RENDER_PROPERTY,
     stretchRange: PROPERTY_TYPE.RENDER_PROPERTY,
     passUnstretchRow: PROPERTY_TYPE.RENDER_PROPERTY,
+    inlineMargin: PROPERTY_TYPE.RENDER_PROPERTY,
+    contentMargin: PROPERTY_TYPE.RENDER_PROPERTY,
+    inlineOffset: PROPERTY_TYPE.RENDER_PROPERTY,
+    contentOffset: PROPERTY_TYPE.RENDER_PROPERTY,
   };
   public static defaultOptions: Required<JustifiedGridOptions> = {
     ...Grid.defaultOptions,
@@ -148,8 +171,10 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     displayedRow: -1,
     isCroppedSize: false,
     stretch: false,
-    passUnstretchRow: false,
+    passUnstretchRow: true,
     stretchRange: ["-20%", "+20%"],
+    inlineOffset: 0,
+    contentOffset: 0,
   };
   public applyGrid(items: GridItem[], direction: "start" | "end", outline: number[]): GridOutlines {
     const {
@@ -164,14 +189,25 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       const element = item.element;
       const attributes = item.attributes;
       const gridData = item.gridData;
-      let inlineOffset = parseFloat(attributes.inlineOffset) || gridData.inlineOffset || 0;
-      let contentOffset = parseFloat(attributes.contentOffset) || gridData.contentOffset | 0;
+      let inlineOffset = parseFloat(attributes.inlineOffset);
+      let contentOffset = parseFloat(attributes.contentOffset);
+      // let contentMargin = parseFloat(attributes.contentMargin);
+
+      if (isNaN(inlineOffset)) {
+        inlineOffset = this.inlineOffset || gridData.inlineOffset || 0;
+      }
+      if (isNaN(contentOffset)) {
+        contentOffset = this.contentOffset || gridData.contentOffset | 0;
+      }
+      // if (isNaN(contentMargin)) {
+      //   contentMargin = this.contentMargin || gridData.contentMargin | 0;
+      // }
 
       if (
         element && !("inlineOffset" in attributes) && !("contentOffset" in attributes)
         && item.mountState === MOUNT_STATE.MOUNTED
       ) {
-        const maintainedTarget = element.querySelector(`[${attributePrefix}maintained-target]`);
+        const maintainedTarget = element.querySelector<HTMLImageElement>(`[${attributePrefix}maintained-target]`);
 
         if (maintainedTarget) {
           const widthOffset = element.offsetWidth - element.clientWidth
@@ -190,6 +226,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       }
       gridData.inlineOffset = inlineOffset;
       gridData.contentOffset = contentOffset;
+      // gridData.contentMargin = contentMargin;
     });
     const rowRange = this.options.rowRange;
     let path: string[] = [];
@@ -322,12 +359,15 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
         return;
       }
       // sum((expect - offset) * ratio) = container inline size
-      const inlineOffset = parseFloat(item.gridData.inlineOffset) || 0;
-      const contentOffset = parseFloat(item.gridData.contentOffset) || 0;
+      const inlineOffset = item.gridData.inlineOffset || 0;
+      const contentOffset = item.gridData.contentOffset || 0;
+      // const contentMargin = item.gridData.contentMargin || 0;
+
       const maintainedRatio = contentSize <= contentOffset ? 1
         : (inlineSize - inlineOffset) / (contentSize - contentOffset);
 
       ratioSum += maintainedRatio;
+      // inlineSum += (contentOffset + contentMargin) * maintainedRatio;
       inlineSum += contentOffset * maintainedRatio;
       fixedContainerInsize -= inlineOffset;
     });
@@ -347,10 +387,10 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
           return getExpectedItemInlineSize(item, stretchRowSize);
         });
         const minInlineSize = inlineSizes.reduce((prev, itemInlineSize, i) => {
-          return prev + parseStretchSize(itemInlineSize, items[i].gridData.minStretch || stretchRange[0]);
+          return prev + parseStretchSize(itemInlineSize, items[i].attributes.minStretch || stretchRange[0]);
         }, 0);
         const maxInlineSize = inlineSizes.reduce((prev, itemInlineSize, i) => {
-          return prev + parseStretchSize(itemInlineSize, items[i].gridData.maxStretch || stretchRange[1]);
+          return prev + parseStretchSize(itemInlineSize, items[i].attributes.maxStretch || stretchRange[1]);
         }, 0);
 
         // for stretch
@@ -371,10 +411,10 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     } = this.options;
     return items.map((item) => {
       const minInlineSize = stretch
-        ? parseStretchSize(item.orgInlineSize, item.gridData.minStretch || stretchRange[0])
+        ? parseStretchSize(item.orgInlineSize, item.attributes.minStretch || stretchRange[0])
         : -Infinity;
       const maxInlineSize = stretch
-        ? parseStretchSize(item.orgInlineSize, item.gridData.maxStretch || stretchRange[1])
+        ? parseStretchSize(item.orgInlineSize, item.attributes.maxStretch || stretchRange[1])
         : Infinity;
 
       const itemInlineSize = getExpectedItemInlineSize(item, rowSize);
@@ -524,6 +564,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       } else if (rowSize > maxSize) {
         rowSize = maxSize;
       }
+      const sizeCost = Math.abs(rowSize - minSize);
 
       const expectedInlineSize = this._getExpectedInlineSize(
         lineItems,
@@ -540,7 +581,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
         extraCost = res.cost;
       }
 
-      return extraCost;
+      return extraCost + sizeCost;
     }
 
     if (isFinite(maxSize)) {
@@ -653,6 +694,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
             info.minInlineSize = inlineSizes[i].minSize;
             info.maxInlineSize = inlineSizes[i].maxSize;
             info.inlineSize = between(info.inlineSize, info.minInlineSize, info.maxInlineSize);
+
           });
         } else {
           const { infos } = this._getStretchItemInfos(groupItems, rowSize);
