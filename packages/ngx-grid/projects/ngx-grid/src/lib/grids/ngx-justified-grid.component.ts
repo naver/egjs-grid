@@ -21,4 +21,7 @@ export class NgxJustifiedGridComponent
   @Input() sizeRange!: Required<JustifiedGrid>['sizeRange'];
   @Input() isCroppedSize!: Required<JustifiedGrid>['isCroppedSize'];
   @Input() displayedRow!: Required<JustifiedGrid>['displayedRow'];
+  @Input() stretch!: Required<JustifiedGrid>['stretch'];
+  @Input() stretchRange!: Required<JustifiedGrid>['stretchRange'];
+  @Input() passUnstretchRow!: Required<JustifiedGrid>['passUnstretchRow'];
 }

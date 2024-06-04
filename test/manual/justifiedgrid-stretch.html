@@ -88,7 +88,7 @@ function getItems(nextGroupKey, count) {
 
     for (let i = 0; i < count; ++i) {
       const num = nextGroupKey * count + i;
-      nextItems.push(`<div class="image">
+      nextItems.push(`<div class="image" ${i % 4 === 0 ? `data-grid-min-stretch="220" data-grid-max-stretch="220"` : ""}>
     <div class="imageArea">
         <img src="https://naver.github.io/egjs-infinitegrid/assets/image/${(num % 33) + 1}.jpg" alt="egjs" />
     </div>

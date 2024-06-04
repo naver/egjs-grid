@@ -13,6 +13,9 @@ export class AppComponent {
   @Input() sizeRange: any;
   @Input() isCroppedSize: any;
   @Input() displayedRow: any;
+  @Input() stretch!: any;
+  @Input() stretchRange!: any;
+  @Input() passUnstretchRow!: any;
   @Input() key: any;
   trackBy = () => this.key;
 }

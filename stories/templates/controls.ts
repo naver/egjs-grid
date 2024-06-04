@@ -71,6 +71,21 @@ export const JUSTIFIED_GRID_CONTROLS = {
     description: makeLink("JustifiedGrid", "displayedRow"),
     defaultValue: -1,
   }),
+  stretch: makeArgType({
+    type: "boolean",
+    description: makeLink("JustifiedGrid", "stretch"),
+    defaultValue: false,
+  }),
+  stretchRange: makeArgType({
+    type: "object",
+    description: makeLink("JustifiedGrid", "stretchRange"),
+    defaultValue: [144, 320],
+  }),
+  passUnstretchRow: makeArgType({
+    type: "boolean",
+    description: makeLink("JustifiedGrid", "passUnstretchRow"),
+    defaultValue: true,
+  }),
 };
 
 export const FRAME_GRID_CONTROLS = {

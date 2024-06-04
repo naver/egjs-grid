@@ -8,6 +8,9 @@
   export let sizeRange;
   export let isCroppedSize;
   export let displayedRow;
+  export let stretch;
+  export let stretchRange;
+  export let passUnstretchRow;
 </script>
 
 <JustifiedGrid
@@ -19,6 +22,9 @@
   {sizeRange}
   {isCroppedSize}
   {displayedRow}
+  {stretch}
+  {stretchRange}
+  {passUnstretchRow}
 >
   <div class="item">1</div>
   <div class="item">2</div>

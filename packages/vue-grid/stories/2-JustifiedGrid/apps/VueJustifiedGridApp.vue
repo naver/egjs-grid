@@ -8,6 +8,9 @@
     v-bind:sizeRange="sizeRange"
     v-bind:isCroppedSize="isCroppedSize"
     v-bind:displayedRow="displayedRow"
+    v-bind:stretch="stretch"
+    v-bind:stretchRange="stretchRange"
+    v-bind:passUnstretchRow="passUnstretchRow"
   >
     <div class="item">1</div>
     <div class="item">2</div>
