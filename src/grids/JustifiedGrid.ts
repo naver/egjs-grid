@@ -113,15 +113,15 @@ export interface JustifiedGridOptions extends GridOptions {
    */
   contentOffset?: number;
   /**
-   * Regardless of the `sizeRange` value, it is possible to basically break the proportion of the item and stretch the inline size to fill the container.
+   * it is possible to basically break the proportion of the item and stretch the inline size to fill the container.
    * If you set the `sizeRange` range narrowly, you can stretch well.
-   * <ko>sizeRange 값과 무관하게 기본적으로 아이템의 비율을 깨서 inline size를 stretch하여 container를 꽉 채우게 가능하다. sizeRange의 범위를 좁게 설정하면 stretch가 잘 될 수 있다. </ko>
+   * <ko>기본적으로 아이템의 비율을 깨서 inline size를 stretch하여 container를 꽉 채우게 가능하다. sizeRange의 범위를 좁게 설정하면 stretch가 잘 될 수 있다. </ko>
    * @default false
    */
   stretch?: boolean;
   /**
    * If `-`, `+`, or `%` are added as a string value, it is a relative value to the original size. If it is a number value, the stretch range can be set as an absolute value.
-   * * If `data-grid-min-stretch` and `data-grid-max-stretch` are set in the Element or JSX of each item, they will be applied first.
+   * If `data-grid-min-stretch` and `data-grid-max-stretch` are set in the Element or JSX of each item, they will be applied first.
    * <ko>string 값으로 `-`, `+`, `%`이 붙으면 원본 크기에 대한 상대값이며 number 값으로 들어오면 절대 값으로 stretch 범위를 설정할 수 있습니다.
    * 각 아이템의 Element 또는 JSX에 `data-grid-min-stretch`, `data-grid-max-stretch`을 설정하면 우선 적용한다.</ko>
    * @
