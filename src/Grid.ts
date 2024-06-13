@@ -320,7 +320,12 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
 
     this._im?.destroy();
   }
-
+  protected getInlineGap(): number {
+    return this._getDirectionalGap('inline');
+  }
+  protected getContentGap(): number {
+    return this._getDirectionalGap('content');
+  }
   protected checkReady(options: RenderOptions = {}) {
     // Grid: renderItems => checkReady => readyItems => applyGrid
     const items = this.items;
@@ -487,6 +492,13 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
   protected _updateItems(items: GridItem[]) {
     this.itemRenderer.updateEqualSizeItems(items, this.getItems());
   }
+  private _getDirectionalGap(direction: 'inline' | 'content'): number {
+    const horizontal = this.options.horizontal!;
+    const gap = this.options.gap!;
+    if (typeof gap === 'number') return gap;
+    const isVerticalGap = horizontal && direction === 'inline' || !horizontal && direction === 'content';
+    return (isVerticalGap ? (gap as any).vertical : (gap as any).horizontal) ?? (DEFAULT_GRID_OPTIONS["gap"] as number);
+  }
   private _renderComplete(e: OnRenderComplete) {
     /**
      * This event is fired when the Grid has completed rendering.
@@ -511,11 +523,11 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
       start: startOutline,
       end: endOutline,
     } = this.outlines;
-    const gap = this.options.gap!;
+    const contentGap = this.getContentGap();
 
     const endPoint = endOutline.length ? Math.max(...endOutline) : 0;
     const startPoint = startOutline.length ? Math.max(...startOutline) : 0;
-    const contentSize = Math.max(startPoint, endPoint - gap);
+    const contentSize = Math.max(startPoint, endPoint - contentGap);
 
     this.containerManager.setContentSize(contentSize);
   }

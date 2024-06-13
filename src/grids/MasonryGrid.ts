@@ -126,12 +126,13 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     const column = this.getComputedOutlineLength(items);
 
     const {
-      gap,
       align,
       observeChildren,
       columnSizeRatio,
       contentAlign,
     } = this.options;
+    const inlineGap = this.getContentGap();
+    const contentGap = this.getContentGap();
     const outlineLength = outline.length;
     const itemsLength = items.length;
     const alignPoses = this._getAlignPoses(column, columnSize);
@@ -168,7 +169,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
       let contentSize = item.contentSize;
       let columnCount = Math.min(
         column,
-        columnAttribute || Math.max(1, Math.ceil((item.inlineSize + gap) / columnDist)),
+        columnAttribute || Math.max(1, Math.ceil((item.inlineSize + inlineGap) / columnDist)),
       );
       const maxColumnCount = Math.min(column, Math.max(columnCount, maxColumnAttribute));
       let columnIndex = getColumnIndex(endOutline, columnCount, nearestCalculationName, startPos);
@@ -214,11 +215,11 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
         item.cssContentSize = contentSize;
       }
       const inlinePos = alignPoses[columnIndex];
-      contentPos = isEndDirection ? contentPos : contentPos - gap - contentSize;
+      contentPos = isEndDirection ? contentPos : contentPos - contentGap - contentSize;
 
       item.cssInlinePos = inlinePos;
       item.cssContentPos = contentPos;
-      const nextOutlinePoint = isEndDirection ? contentPos + contentSize + gap : contentPos;
+      const nextOutlinePoint = isEndDirection ? contentPos + contentSize + contentGap : contentPos;
 
       range(columnCount).forEach((indexOffset) => {
         endOutline[columnIndex + indexOffset] = nextOutlinePoint;
@@ -240,10 +241,8 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     };
   }
   public getComputedOutlineSize(items = this.items) {
-    const {
-      gap,
-      align,
-    } = this.options;
+    const { align } = this.options;
+    const inlineGap = this.getInlineGap();
     const containerInlineSize = this.getContainerInlineSize();
     const columnSizeOption = this.columnSize || this.outlineSize;
     const columnOption = this.column || this.outlineLength;
@@ -255,9 +254,9 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
       if (!columnOption) {
         const maxStretchColumnSize = this.maxStretchColumnSize || Infinity;
 
-        column = Math.max(1, Math.ceil((containerInlineSize + gap) / (maxStretchColumnSize + gap)));
+        column = Math.max(1, Math.ceil((containerInlineSize + inlineGap) / (maxStretchColumnSize + inlineGap)));
       }
-      columnSize = (containerInlineSize + gap) / (column || 1) - gap;
+      columnSize = (containerInlineSize + inlineGap) / (column || 1) - inlineGap;
     } else if (columnSizeOption) {
       columnSize = columnSizeOption;
     } else if (items.length) {
@@ -288,7 +287,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     return columnSize || 0;
   }
   public getComputedOutlineLength(items = this.items) {
-    const gap = this.gap;
+    const inlineGap = this.getInlineGap();
     const columnOption = this.column || this.outlineLength;
     const columnCalculationThreshold = this.columnCalculationThreshold;
     let column = 1;
@@ -300,17 +299,20 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
 
       column = Math.min(
         items.length,
-        Math.max(1, Math.floor((this.getContainerInlineSize() + gap)
-          / (columnSize - columnCalculationThreshold + gap))),
+        Math.max(
+          1,
+          Math.floor(
+            (this.getContainerInlineSize() + inlineGap) /
+              (columnSize - columnCalculationThreshold + inlineGap)
+          )
+        )
       );
     }
     return column;
   }
   private _getAlignPoses(column: number, columnSize: number) {
-    const {
-      align,
-      gap,
-    } = this.options;
+    const { align } = this.options;
+    const inlineGap = this.getInlineGap();
     const containerSize = this.getContainerInlineSize();
     const indexes = range(column);
 
@@ -320,10 +322,10 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     if (align === "justify" || align === "stretch") {
       const countDist = column - 1;
 
-      dist = countDist ? Math.max((containerSize - columnSize) / countDist, columnSize + gap) : 0;
+      dist = countDist ? Math.max((containerSize - columnSize) / countDist, columnSize + inlineGap) : 0;
       offset = Math.min(0, containerSize / 2 - (countDist * dist + columnSize) / 2);
     } else {
-      dist = columnSize + gap;
+      dist = columnSize + inlineGap;
       const totalColumnSize = (column - 1) * dist + columnSize;
 
       if (align === "center") {

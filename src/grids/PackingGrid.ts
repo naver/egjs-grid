@@ -107,14 +107,16 @@ export class PackingGrid extends Grid<PackingGridOptions> {
 
 
   public applyGrid(items: GridItem[], direction: "start" | "end", outline: number[]): GridOutlines {
-    const { aspectRatio, gap } = this.options;
+    const { aspectRatio } = this.options;
     const containerInlineSize = this.getContainerInlineSize();
     const containerContentSize = containerInlineSize / aspectRatio;
+    const inlineGap = this.getInlineGap();
+    const contentGap = this.getContentGap();
     const prevOutline = outline.length ? outline : [0];
     const startPoint = direction === "end"
       ? Math.max(...prevOutline)
-      : Math.min(...prevOutline) - containerContentSize - gap;
-    const endPoint = startPoint + containerContentSize + gap;
+      : Math.min(...prevOutline) - containerContentSize - contentGap;
+    const endPoint = startPoint + containerContentSize + contentGap;
     const container = new BoxModel({});
 
     items.forEach((item) => {
@@ -127,12 +129,12 @@ export class PackingGrid extends Grid<PackingGridOptions> {
 
       this._findBestFitArea(container, model);
       container.push(model);
-      container.scaleTo(containerInlineSize + gap, containerContentSize + gap);
+      container.scaleTo(containerInlineSize + inlineGap, containerContentSize + contentGap);
     });
     items.forEach((item, i) => {
       const boxItem = container.items[i];
-      const inlineSize = boxItem.inlineSize - gap;
-      const contentSize = boxItem.contentSize - gap;
+      const inlineSize = boxItem.inlineSize - inlineGap;
+      const contentSize = boxItem.contentSize - contentGap;
       const contentPos = startPoint + boxItem.contentPos;
       const inlinePos = boxItem.inlinePos;
 
