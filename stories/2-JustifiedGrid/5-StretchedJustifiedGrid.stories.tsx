@@ -1,21 +1,15 @@
-import React from "react";
-import { JustifiedGrid } from "../../../src";
+/* eslint-disable import/no-webpack-loader-syntax */
+import * as React from "react";
+import { makeArgs } from "../utils";
+import JustifiedGridApp from "./apps/VanillaJustifiedGridApp";
+import { JUSTIFIED_GRID_CONTROLS } from "../templates/controls";
+import { JustifiedGrid } from "../../src";
+import { getApp } from "../templates/ReactJSX";
+import "../templates/default.css";
+import { getPreview } from "../templates/preview";
 
-export default function App(props: Record<string, any>) {
-  return <JustifiedGrid
-    className="container"
-    gap={props.gap}
-    defaultDirection={props.defaultDirection}
-    align={props.align}
-    columnRange={props.columnRange}
-    rowRange={props.rowRange}
-    sizeRange={props.sizeRange}
-    isCroppedSize={props.isCroppedSize}
-    displayedRow={props.displayedRow}
-    stretch={props.stretch}
-    stretchRange={props.stretchRange}
-    passUnstretchRow={props.passUnstretchRow}
-  >
+export const StretchedJustifiedGridTemplate = getApp(JustifiedGrid, JustifiedGridApp, () => {
+  return <div className="container">
     <div className="image">
       <img src="https://naver.github.io/egjs-infinitegrid/assets/image/1.jpg"
         data-grid-maintained-target="" alt="image1" />
@@ -66,5 +60,21 @@ export default function App(props: Record<string, any>) {
         data-grid-maintained-target="" alt="image10" />
       <div className="title">Item 10</div>
     </div>
-  </JustifiedGrid>;
-}
+  </div>;
+});
+
+
+StretchedJustifiedGridTemplate.storyName = "Stretched Items with JustifiedGrid";
+StretchedJustifiedGridTemplate.argTypes = JUSTIFIED_GRID_CONTROLS;
+StretchedJustifiedGridTemplate.args = {
+  ...makeArgs(StretchedJustifiedGridTemplate.argTypes),
+  stretch: true,
+  sizeRange: [200, 300],
+};
+
+StretchedJustifiedGridTemplate.parameters = {
+  preview: getPreview("2-JustifiedGrid", "KeepRatioWithMaintainedTarget", {
+    vanillaCode: require("!!raw-loader!./apps/VanillaJustifiedGridApp.tsx").default,
+    htmlCode: require("!!raw-loader!./templates/VanillaKeepRatioWithMaintainedTarget.html").default,
+  }),
+};

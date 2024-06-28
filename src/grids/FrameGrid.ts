@@ -147,7 +147,6 @@ export class FrameGrid extends Grid<FrameGridOptions> {
       rects: frameRects,
     } = frame;
     const {
-      gap,
       useFrameFill,
     } = this.options;
 

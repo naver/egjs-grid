@@ -76,9 +76,11 @@ export class ResizeWatcher {
     const box = this._options.childrenRectBox;
 
     children.forEach((element) => {
-      observer.observe(element, {
-        box,
-      });
+      if (element) {
+        observer.observe(element, {
+          box,
+        });
+      }
     });
   }
   public unobserveChildren(children: Element[]) {
@@ -88,7 +90,9 @@ export class ResizeWatcher {
       return;
     }
     children.forEach((element) => {
-      observer.unobserve(element);
+      if (element) {
+        observer.unobserve(element);
+      }
     });
   }
   public listen(callback: (e: ResizeWatcherResizeEvent) => void) {

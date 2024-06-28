@@ -12,6 +12,9 @@ export default function App(props: Record<string, any>) {
     sizeRange={props.sizeRange}
     isCroppedSize={props.isCroppedSize}
     displayedRow={props.displayedRow}
+    stretch={props.stretch}
+    stretchRange={props.stretchRange}
+    passUnstretchRow={props.passUnstretchRow}
   >
     <div className={"item"}>1</div>
     <div className={"item"}>2</div>

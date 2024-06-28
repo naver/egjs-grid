@@ -8,6 +8,9 @@
   export let sizeRange;
   export let isCroppedSize;
   export let displayedRow;
+  export let stretch;
+  export let stretchRange;
+  export let passUnstretchRow;
 </script>
 
 <JustifiedGrid
@@ -19,6 +22,9 @@
   {sizeRange}
   {isCroppedSize}
   {displayedRow}
+  {stretch}
+  {stretchRange}
+  {passUnstretchRow}
 >
   <div class="image" data-grid-content-offset="40">
     <img src="https://naver.github.io/egjs-infinitegrid/assets/image/1.jpg" alt="image1" />

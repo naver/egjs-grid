@@ -8,6 +8,9 @@
     v-bind:sizeRange="sizeRange"
     v-bind:isCroppedSize="isCroppedSize"
     v-bind:displayedRow="displayedRow"
+    v-bind:stretch="stretch"
+    v-bind:stretchRange="stretchRange"
+    v-bind:passUnstretchRow="passUnstretchRow"
   >
     <div class="image">
       <img src="https://naver.github.io/egjs-infinitegrid/assets/image/1.jpg" data-grid-maintained-target="" alt="image1" />
@@ -124,6 +127,9 @@ body {
 }
 .image img {
   width: 100%;
+  object-fit: contain;
+  height: calc(100% - 40px);
+  background: #ddd;
 }
 
 .title {

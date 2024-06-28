@@ -9,6 +9,9 @@ export default function App(props: Record<string, any>) {
     sizeRange: props.sizeRange,
     isCroppedSize: props.isCroppedSize,
     displayedRow: props.displayedRow,
+    stretch: props.stretch,
+    stretchRange: props.stretchRange,
+    passUnstretchRow: props.passUnstretchRow,
   });
 
   grid.renderItems();

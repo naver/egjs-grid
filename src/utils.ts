@@ -45,6 +45,9 @@ export function isNumber(val: any): val is number {
 export function camelize(str: string) {
   return str.replace(/[\s-_]([a-z])/g, (all, letter) => letter.toUpperCase());
 }
+export function sum(arr: number[]) {
+  return arr.reduce((a, b) => a + b, 0);
+}
 
 export function getDataAttributes(element: HTMLElement, attributePrefix: string) {
   const dataAttributes: Record<string, string> = {};
@@ -133,6 +136,18 @@ export function range(length: number): number[] {
 
 export function getRangeCost(value: number, valueRange: number[]) {
   return Math.max(value - valueRange[1], valueRange[0] - value, 0) + 1;
+}
+
+export function between(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(value, min));
+}
+
+export function throttle(num: number, unit?: number) {
+  if (!unit) {
+    return num;
+  }
+  const reverseUnit = 1 / unit;
+  return Math.round(num / unit) / reverseUnit;
 }
 
 /**

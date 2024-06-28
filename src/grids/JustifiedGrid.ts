@@ -5,8 +5,8 @@
  */
 import Grid from "../Grid";
 import { MOUNT_STATE, PROPERTY_TYPE } from "../consts";
-import { GridOptions, Properties, GridOutlines } from "../types";
-import { getRangeCost, GetterSetter, isObject } from "../utils";
+import { GridOptions, GridOutlines, Properties } from "../types";
+import { between, getRangeCost, GetterSetter, isNumber, isObject, sum, throttle } from "../utils";
 import { find_path } from "./lib/dijkstra";
 import { GridItem } from "../GridItem";
 
@@ -31,15 +31,34 @@ function splitItems(items: GridItem[], path: string[]) {
   }
   return groups;
 }
-function getExpectedColumnSize(item: GridItem, rowSize: number) {
+
+function parseStretchSize(inlineSize: number, size: number | string) {
+  if (isNumber(size)) {
+    return size;
+  }
+  const signText = size.charAt(0);
+  const sign = signText === "+" ? 1 : (signText === "-" ? -1 : 0);
+  let nextSize = parseFloat(size);
+
+  if (size.match(/%$/g)) {
+    nextSize *= inlineSize / 100;
+  }
+  if (sign) {
+    return inlineSize + nextSize;
+  }
+  return nextSize;
+}
+
+function getExpectedItemInlineSize(item: GridItem, rowSize: number) {
   const inlineSize = item.orgInlineSize;
   const contentSize = item.orgContentSize;
+  const inlineOffset = item.gridData.inlineOffset || 0;
+  const contentOffset = item.gridData.contentOffset || 0;
 
   if (!inlineSize || !contentSize) {
     return rowSize;
   }
-  const inlineOffset = parseFloat(item.gridData.inlineOffset) || 0;
-  const contentOffset = parseFloat(item.gridData.contentOffset) || 0;
+
   const ratio = contentSize <= contentOffset ? 1 : (inlineSize - inlineOffset) / (contentSize - contentOffset);
 
   return ratio * (rowSize - contentOffset) + inlineOffset;
@@ -81,6 +100,39 @@ export interface JustifiedGridOptions extends GridOptions {
    * @default false
    */
   isCroppedSize?: boolean;
+  /**
+   * The ratio is maintained except for the offset value in the inline direction. If 'data-grid-inline-offset' is set in the element of each item, it will be applied first.
+   * <ko>inline 방향의 offset 수치 만큼 제외하고 비율을 유지한다. 각 아이템의 element에 'data-grid-inline-offset' 을 설정하면 우선 적용한다.</ko>
+   * @default 0
+   */
+  inlineOffset?: number;
+  /**
+   * The ratio is maintained except for the offset value in the content direction. If 'data-grid-content-offset' is set in the element or JSX of each item, it will be applied first.
+   * <ko>content 방향의 offset 수치 만큼 제외하고 비율을 유지한다. 각 아이템의 Element 또는 JSX에 'data-grid-content-offset' 을 설정하면 우선 적용한다.</ko>
+   * @default 0
+   */
+  contentOffset?: number;
+  /**
+   * it is possible to basically break the proportion of the item and stretch the inline size to fill the container.
+   * If you set the `sizeRange` range narrowly, you can stretch well.
+   * <ko>기본적으로 아이템의 비율을 깨서 inline size를 stretch하여 container를 꽉 채우게 가능하다. sizeRange의 범위를 좁게 설정하면 stretch가 잘 될 수 있다. </ko>
+   * @default false
+   */
+  stretch?: boolean;
+  /**
+   * If `-`, `+`, or `%` are added as a string value, it is a relative value to the original size. If it is a number value, the stretch range can be set as an absolute value.
+   * If `data-grid-min-stretch` and `data-grid-max-stretch` are set in the Element or JSX of each item, they will be applied first.
+   * <ko>string 값으로 `-`, `+`, `%`이 붙으면 원본 크기에 대한 상대값이며 number 값으로 들어오면 절대 값으로 stretch 범위를 설정할 수 있습니다.
+   * 각 아이템의 Element 또는 JSX에 `data-grid-min-stretch`, `data-grid-max-stretch`을 설정하면 우선 적용한다.</ko>
+   * @
+   * @default ["-10%", "+10%"]
+   */
+  stretchRange?: Array<string | number>;
+  /**
+   * Items placed in the last row are not stretched and are drawn maintaining their proportions. When using InfiniteGrid, it is calculated and re-rendered as follows:
+   * <ko>마지막 row에 배치되는 아이템들 경우 stretch되지 않고 비율유지한채로 그려진다. InfiniteGrid를 사용하는 경우 다음 그룹과 같이 계산되어 재렌더링한다.</ko>
+   */
+  passUnstretchRow?: boolean;
 }
 
 /**
@@ -103,6 +155,13 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     sizeRange: PROPERTY_TYPE.RENDER_PROPERTY,
     isCroppedSize: PROPERTY_TYPE.RENDER_PROPERTY,
     displayedRow: PROPERTY_TYPE.RENDER_PROPERTY,
+    stretch: PROPERTY_TYPE.RENDER_PROPERTY,
+    stretchRange: PROPERTY_TYPE.RENDER_PROPERTY,
+    passUnstretchRow: PROPERTY_TYPE.RENDER_PROPERTY,
+    inlineMargin: PROPERTY_TYPE.RENDER_PROPERTY,
+    contentMargin: PROPERTY_TYPE.RENDER_PROPERTY,
+    inlineOffset: PROPERTY_TYPE.RENDER_PROPERTY,
+    contentOffset: PROPERTY_TYPE.RENDER_PROPERTY,
   };
   public static defaultOptions: Required<JustifiedGridOptions> = {
     ...Grid.defaultOptions,
@@ -111,6 +170,11 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     sizeRange: [0, Infinity],
     displayedRow: -1,
     isCroppedSize: false,
+    stretch: false,
+    passUnstretchRow: true,
+    stretchRange: ["-20%", "+20%"],
+    inlineOffset: 0,
+    contentOffset: 0,
   };
   public applyGrid(items: GridItem[], direction: "start" | "end", outline: number[]): GridOutlines {
     const {
@@ -125,14 +189,25 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       const element = item.element;
       const attributes = item.attributes;
       const gridData = item.gridData;
-      let inlineOffset = parseFloat(attributes.inlineOffset) || gridData.inlineOffset || 0;
-      let contentOffset = parseFloat(attributes.contentOffset) || gridData.contentOffset | 0;
+      let inlineOffset = parseFloat(attributes.inlineOffset);
+      let contentOffset = parseFloat(attributes.contentOffset);
+      // let contentMargin = parseFloat(attributes.contentMargin);
+
+      if (isNaN(inlineOffset)) {
+        inlineOffset = this.inlineOffset || gridData.inlineOffset || 0;
+      }
+      if (isNaN(contentOffset)) {
+        contentOffset = this.contentOffset || gridData.contentOffset | 0;
+      }
+      // if (isNaN(contentMargin)) {
+      //   contentMargin = this.contentMargin || gridData.contentMargin | 0;
+      // }
 
       if (
         element && !("inlineOffset" in attributes) && !("contentOffset" in attributes)
         && item.mountState === MOUNT_STATE.MOUNTED
       ) {
-        const maintainedTarget = element.querySelector(`[${attributePrefix}maintained-target]`);
+        const maintainedTarget = element.querySelector<HTMLImageElement>(`[${attributePrefix}maintained-target]`);
 
         if (maintainedTarget) {
           const widthOffset = element.offsetWidth - element.clientWidth
@@ -151,17 +226,20 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       }
       gridData.inlineOffset = inlineOffset;
       gridData.contentOffset = contentOffset;
+      // gridData.contentMargin = contentMargin;
     });
     const rowRange = this.options.rowRange;
     let path: string[] = [];
 
+    const isEndDirection = direction === "end";
+
     if (items.length) {
-      path = rowRange ? this._getRowPath(items) : this._getPath(items);
+      path = rowRange ? this._getRowPath(items, isEndDirection) : this._getPath(items, isEndDirection);
     }
 
     return this._setStyle(items, path, outline, direction === "end");
   }
-  private _getRowPath(items: GridItem[]) {
+  private _getRowPath(items: GridItem[], isEndDirection: boolean) {
     const columnRange = this._getColumnRange();
     const rowRange = this._getRowRange();
 
@@ -170,7 +248,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       cost: 0,
       length: 0,
       currentNode: 0,
-    }, columnRange, rowRange);
+    }, columnRange, rowRange, isEndDirection);
 
     return pathLink?.path.map((node) => `${node}`) ?? [];
   }
@@ -178,7 +256,8 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     items: GridItem[],
     currentLink: Link,
     columnRange: number[],
-    rowRange: number[]
+    rowRange: number[],
+    isEndDirection: boolean,
   ): Link {
     const [minColumn] = columnRange;
     const [minRow, maxRow] = rowRange;
@@ -193,7 +272,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     // not reached lastNode but path is exceed or the number of remaining nodes is less than minColumn.
     if (currentNode < lastNode && (maxRow <= pathLength || currentNode + minColumn > lastNode)) {
       const rangeCost = getRangeCost(lastNode - currentNode, columnRange);
-      const lastCost = rangeCost * Math.abs(this._getCost(items, currentNode, lastNode));
+      const lastCost = rangeCost * Math.abs(this._getCost(items, currentNode, lastNode, isEndDirection));
 
       return {
         ...currentLink,
@@ -210,7 +289,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
         isOver: minRow > pathLength || maxRow < pathLength,
       };
     } else {
-      return this._searchRowLink(items, currentLink, lastNode, columnRange, rowRange);
+      return this._searchRowLink(items, currentLink, lastNode, columnRange, rowRange, isEndDirection);
     }
 
   }
@@ -219,7 +298,8 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     currentLink: Link,
     lastNode: number,
     columnRange: number[],
-    rowRange: number[]
+    rowRange: number[],
+    isEndDirection: boolean,
   ) {
     const [minColumn, maxColumn] = columnRange;
     const {
@@ -235,13 +315,13 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       if (nextNode === currentNode) {
         continue;
       }
-      const nextCost = Math.abs(this._getCost(items, currentNode, nextNode));
+      const nextCost = Math.abs(this._getCost(items, currentNode, nextNode, isEndDirection));
       const nextLink = this._getRowLink(items, {
         path: [...path, nextNode],
         length: pathLength + 1,
         cost: cost + nextCost,
         currentNode: nextNode,
-      }, columnRange, rowRange);
+      }, columnRange, rowRange, isEndDirection);
 
       if (nextLink) {
         links.push(nextLink);
@@ -264,9 +344,9 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     // It returns the lowest cost link.
     return links[0];
   }
-  private _getExpectedRowSize(items: GridItem[]) {
-    const inlineGap = this.getInlineGap();
-    let containerInlineSize = this.getContainerInlineSize()! - inlineGap * (items.length - 1);
+  private _getExpectedRowSize(items: GridItem[], forceStretch?: boolean) {
+    const containerInlineSize = this.getContainerInlineSize()! - this.getInlineGap() * (items.length - 1);
+    let fixedContainerInsize = containerInlineSize;
     let ratioSum = 0;
     let inlineSum = 0;
 
@@ -279,33 +359,190 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
         return;
       }
       // sum((expect - offset) * ratio) = container inline size
-      const inlineOffset = parseFloat(item.gridData.inlineOffset) || 0;
-      const contentOffset = parseFloat(item.gridData.contentOffset) || 0;
+      const inlineOffset = item.gridData.inlineOffset || 0;
+      const contentOffset = item.gridData.contentOffset || 0;
+      // const contentMargin = item.gridData.contentMargin || 0;
+
       const maintainedRatio = contentSize <= contentOffset ? 1
         : (inlineSize - inlineOffset) / (contentSize - contentOffset);
 
       ratioSum += maintainedRatio;
+      // inlineSum += (contentOffset + contentMargin) * maintainedRatio;
       inlineSum += contentOffset * maintainedRatio;
-      containerInlineSize -= inlineOffset;
+      fixedContainerInsize -= inlineOffset;
     });
 
-    return ratioSum ? (containerInlineSize + inlineSum) / ratioSum : 0;
+    if (ratioSum) {
+      const nextRowSize = (fixedContainerInsize + inlineSum) / ratioSum;
+
+      if (this.stretch) {
+        const [minRowSize, maxRowSize] = this._getSizeRange();
+        const stretchRowSize = between(nextRowSize, minRowSize, maxRowSize);
+
+        if (forceStretch) {
+          return stretchRowSize;
+        }
+        const stretchRange = this.stretchRange;
+        const inlineSizes = items.map((item) => {
+          return getExpectedItemInlineSize(item, stretchRowSize);
+        });
+        const minInlineSize = inlineSizes.reduce((prev, itemInlineSize, i) => {
+          return prev + parseStretchSize(itemInlineSize, items[i].attributes.minStretch || stretchRange[0]);
+        }, 0);
+        const maxInlineSize = inlineSizes.reduce((prev, itemInlineSize, i) => {
+          return prev + parseStretchSize(itemInlineSize, items[i].attributes.maxStretch || stretchRange[1]);
+        }, 0);
+
+        // for stretch
+        if (minInlineSize <= containerInlineSize && containerInlineSize <= maxInlineSize) {
+          return stretchRowSize;
+        }
+      }
+
+      return nextRowSize;
+    }
+    return 0;
+  }
+
+  private _getExpectedInlineSizes(items: GridItem[], rowSize: number) {
+    const {
+      stretch,
+      stretchRange,
+    } = this.options;
+    return items.map((item) => {
+      const minInlineSize = stretch
+        ? parseStretchSize(item.orgInlineSize, item.attributes.minStretch || stretchRange[0])
+        : -Infinity;
+      const maxInlineSize = stretch
+        ? parseStretchSize(item.orgInlineSize, item.attributes.maxStretch || stretchRange[1])
+        : Infinity;
+
+      const itemInlineSize = getExpectedItemInlineSize(item, rowSize);
+      let isMax = false;
+      let isMin = false;
+      if (itemInlineSize >= maxInlineSize) {
+        isMax = true;
+      } else if (itemInlineSize <= minInlineSize) {
+        isMin = true;
+      }
+
+      return {
+        minSize: minInlineSize,
+        maxSize: maxInlineSize,
+        size: between(itemInlineSize, minInlineSize, maxInlineSize),
+        originalSize: itemInlineSize,
+        isMax,
+        isMin,
+      };
+    });
+  }
+  private _getStretchItemInfos(items: GridItem[], rowSize: number) {
+    const itemsLength = items.length;
+    const containerInlineSize = this.getContainerInlineSize() - this.getInlineGap() * (Math.max(1, itemsLength) - 1);
+    const itemInfos = this._getExpectedInlineSizes(items, rowSize);
+    const firstItemsSize = sum(itemInfos.map((info) => info.size));
+    const distSize = containerInlineSize - firstItemsSize;
+    const firstScale = containerInlineSize / sum(itemInfos.map((info) => info.originalSize));
+    const costInfos = itemInfos.map((info) => {
+      return {
+        ...info,
+        passed: false,
+        size: info.originalSize * firstScale,
+      };
+    });
+
+    if (distSize === 0) {
+      return {
+        infos: costInfos,
+        cost: 0,
+      };
+    }
+    // increase
+    const isIncrease = distSize > 0;
+    const costInfosLength = costInfos.length;
+
+    for (let i = 0; i < costInfosLength; ++i) {
+      const passedItemsSize = sum(costInfos.map((info) => info.passed ? info.size : 0));
+      const restItemsSize = sum(costInfos.map((info) => info.passed ? 0 : info.originalSize));
+      let distScale = (containerInlineSize - passedItemsSize) / restItemsSize;
+      // minimize or maximize
+      costInfos.forEach((info) => {
+        if (info.passed) {
+          return;
+        }
+
+        if (isIncrease) {
+          if (info.size > info.maxSize) {
+            distScale = Math.min(distScale, info.maxSize / info.originalSize);
+          }
+        } else {
+          if (info.size < info.minSize) {
+            distScale = Math.max(distScale, info.minSize / info.originalSize);
+          }
+        }
+      });
+
+      costInfos.forEach((info) => {
+        if (!info.passed) {
+          info.size = between(info.originalSize * distScale, info.minSize, info.maxSize);
+
+          if (
+            (isIncrease && !throttle(info.size - info.maxSize, 0.001))
+            || (!isIncrease && !throttle(info.size - info.minSize, 0.001))
+          ) {
+            info.passed = true;
+          }
+        }
+      });
+
+      if (costInfos.every((info) => info.passed)) {
+        break;
+      }
+    }
+    const lastDistScale = containerInlineSize / sum(costInfos.map((info) => info.size));
+
+    // last
+    if (throttle(lastDistScale - 1, 0.001)) {
+      costInfos.forEach((info) => {
+        info.size *= lastDistScale;
+      });
+    }
+
+
+    return {
+      infos: costInfos,
+      cost: sum(costInfos.map((info) => {
+        let costRatio = 1;
+
+        if (info.size > info.maxSize || info.size < info.minSize) {
+          costRatio = 2;
+        }
+        let originalSize = info.originalSize;
+
+        if (isIncrease) {
+          originalSize = Math.max(originalSize, info.minSize);
+        } else {
+          originalSize = Math.min(originalSize, info.maxSize);
+        }
+        return Math.abs(info.size - originalSize) * costRatio;
+      })),
+    };
   }
   private _getExpectedInlineSize(items: GridItem[], rowSize: number) {
     const inlineGap = this.getInlineGap();
-    const size = items.reduce((sum, item) => {
-      return sum + getExpectedColumnSize(item, rowSize);
-    }, 0);
+    const itemInfos = this._getExpectedInlineSizes(items, rowSize);
 
-    return size ? size + inlineGap * (items.length - 1) : 0;
+    return itemInfos.length ? sum(itemInfos.map((info) => info.size)) + inlineGap * (items.length - 1) : 0;
   }
   private _getCost(
     items: GridItem[],
     i: number,
     j: number,
+    isEndDirection: boolean,
   ) {
     const lineItems = items.slice(i, j);
-    const rowSize = this._getExpectedRowSize(lineItems);
+    const containerInlineSize = this.getContainerInlineSize();
+    let rowSize = this._getExpectedRowSize(lineItems);
     const [minSize, maxSize] = this._getSizeRange();
 
     if (this.isCroppedSize) {
@@ -317,23 +554,50 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
         rowSize < minSize ? minSize : maxSize,
       );
 
-      return Math.pow(expectedInlineSize - this.getContainerInlineSize(), 2);
+      return Math.pow(expectedInlineSize - containerInlineSize, 2);
+    }
+    let extraCost = 0;
+
+    if (this.stretch) {
+      if (rowSize < minSize) {
+        rowSize = minSize;
+      } else if (rowSize > maxSize) {
+        rowSize = maxSize;
+      }
+      const sizeCost = Math.abs(rowSize - minSize);
+
+      const expectedInlineSize = this._getExpectedInlineSize(
+        lineItems,
+        rowSize,
+      );
+
+      if (
+        !this.passUnstretchRow
+        || (isEndDirection ? j !== items.length : i !== 0)
+        || expectedInlineSize >= containerInlineSize
+      ) {
+        const res = this._getStretchItemInfos(lineItems, rowSize);
+
+        extraCost = res.cost;
+      }
+
+      return extraCost + sizeCost;
     }
 
     if (isFinite(maxSize)) {
       // if this size is not in range, the cost increases sharply.
       if (rowSize < minSize) {
-        return Math.pow(rowSize - minSize, 2) + Math.pow(maxSize, 2);
+        return Math.pow(rowSize - minSize, 2) + Math.pow(maxSize, 2) + extraCost;
       } else if (rowSize > maxSize) {
-        return Math.pow(rowSize - maxSize, 2) + Math.pow(maxSize, 2);
+        return Math.pow(rowSize - maxSize, 2) + Math.pow(maxSize, 2) + extraCost;
       }
     } else if (rowSize < minSize) {
-      return Math.max(Math.pow(minSize, 2), Math.pow(rowSize, 2)) + Math.pow(maxSize, 2);
+      return Math.max(Math.pow(minSize, 2), Math.pow(rowSize, 2)) + Math.pow(maxSize, 2) + extraCost;
     }
     // if this size in range, the cost is row
-    return rowSize - minSize;
+    return rowSize - minSize + extraCost;
   }
-  private _getPath(items: GridItem[]) {
+  private _getPath(items: GridItem[], isEndDirection: boolean) {
     const lastNode = items.length;
     const columnRangeOption = this.options.columnRange;
     const [minColumn, maxColumn]: number[] = isObject(columnRangeOption)
@@ -352,6 +616,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
           items,
           currentNode,
           nextNode,
+          isEndDirection,
         );
 
         if (cost < 0 && nextNode === lastNode) {
@@ -373,42 +638,103 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     const {
       isCroppedSize,
       displayedRow,
+      stretch,
+      passUnstretchRow,
     } = this.options;
+    const itemsLength = items.length;
     const sizeRange = this._getSizeRange();
     const startPoint = outline[0] || 0;
     const containerInlineSize = this.getContainerInlineSize();
     const inlineGap = this.getInlineGap();
     const contentGap = this.getContentGap();
     const groups = splitItems(items, path);
+    let passedItems!: number[];
+    const groupsLength = groups.length;
     let contentPos = startPoint;
     let displayedSize = 0;
+    let passedPoint!: number[];
 
     groups.forEach((groupItems, rowIndex) => {
-      const length = groupItems.length;
-      let rowSize = this._getExpectedRowSize(groupItems);
+      const groupItemslength = groupItems.length;
+      let rowSize = this._getExpectedRowSize(groupItems, true);
+
       if (isCroppedSize) {
         rowSize = Math.max(sizeRange[0], Math.min(rowSize, sizeRange[1]));
       }
-      const expectedInlineSize = this._getExpectedInlineSize(groupItems, rowSize);
-
       const allGap = inlineGap * (length - 1);
+      const itemInfos = groupItems.map((item, index) => {
+        const itemInlineSize = getExpectedItemInlineSize(item, rowSize);
+
+        return {
+          index,
+          item,
+          inlineSize: itemInlineSize,
+          orgInlineSize: itemInlineSize,
+          maxInlineSize: itemInlineSize,
+          minInlineSize: itemInlineSize,
+        };
+      });
+      const expectedInlineSize = this._getExpectedInlineSize(groupItems, rowSize);
       const scale = (containerInlineSize - allGap) / (expectedInlineSize - allGap);
+      const noGapExpectedContainerInlineSize = expectedInlineSize - allGap;
+      const noGapContainerInlineSize = containerInlineSize - allGap;
 
-      groupItems.forEach((item, i) => {
-        let columnSize = getExpectedColumnSize(item, rowSize);
+      if (stretch && expectedInlineSize && noGapContainerInlineSize !== noGapExpectedContainerInlineSize) {
+        // passed이고 마지막 그룹의 경우 stretchSize가 containerSize보다 작으면 pass!
+        if (
+          passUnstretchRow && noGapExpectedContainerInlineSize < noGapContainerInlineSize
+          && (isEndDirection ? rowIndex === groupsLength - 1 : rowIndex === 0)
+        ) {
+          passedPoint = [contentPos];
+          passedItems = groupItems.map((_, i) => itemsLength - groupItemslength + i);
 
+          const inlineSizes = this._getExpectedInlineSizes(groupItems, rowSize);
+
+          itemInfos.forEach((info, i) => {
+            info.minInlineSize = inlineSizes[i].minSize;
+            info.maxInlineSize = inlineSizes[i].maxSize;
+            info.inlineSize = between(info.inlineSize, info.minInlineSize, info.maxInlineSize);
+
+          });
+        } else {
+          const { infos } = this._getStretchItemInfos(groupItems, rowSize);
+
+          itemInfos.forEach((info, i) => {
+            info.inlineSize = infos[i].size;
+            info.minInlineSize = infos[i].minSize;
+            info.maxInlineSize = infos[i].maxSize;
+          });
+        }
+      }
+
+      itemInfos.forEach((info, i) => {
+        const {
+          item,
+          inlineSize,
+
+        } = info;
+        let nextInlineSize = inlineSize;
         const prevItem = groupItems[i - 1];
         const inlinePos = prevItem
           ? prevItem.cssInlinePos! + prevItem.cssInlineSize! + inlineGap
           : 0;
 
         if (isCroppedSize) {
-          columnSize *= scale;
+          nextInlineSize *= scale;
         }
+
+
+        const gridData = item.gridData;
+
+        gridData.orgInlineSize = info.orgInlineSize;
+        gridData.orgContentSize = rowSize;
+        gridData.minInlineSize = info.minInlineSize;
+        gridData.maxInlineSize = info.maxInlineSize;
+
         item.setCSSGridRect({
           inlinePos,
           contentPos,
-          inlineSize: columnSize,
+          inlineSize: nextInlineSize,
           contentSize: rowSize,
         });
       });
@@ -423,6 +749,8 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       return {
         start: [startPoint],
         end: [displayedSize],
+        passedItems,
+        passed: passedPoint,
       };
     }
     // always start is lower than end.
@@ -433,6 +761,8 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       item.cssContentPos! -= height;
     });
     return {
+      passedItems,
+      passed: passedPoint ? [passedPoint[0] - height] : null,
       start: [startPoint - height],
       end: [startPoint], // endPoint - height = startPoint
     };

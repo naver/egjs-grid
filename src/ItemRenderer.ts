@@ -192,6 +192,7 @@ export class ItemRenderer {
     } = RECT_NAMES[horizontal ? "horizontal" : "vertical"];
     const inlineSize = this.getInlineSize();
     let keys = getKeys(cssRect);
+    const hasRectProperties = keys.length > 0;
 
     if (useTransform) {
       keys = keys.filter((key) => key !== "top" && key !== "left");
@@ -212,6 +213,8 @@ export class ItemRenderer {
       return `${name}: ${value}px;`;
     }));
 
-    element.style.cssText += cssTexts.join("");
+    if (hasRectProperties) {
+      element.style.cssText += cssTexts.join("");
+    }
   }
 }

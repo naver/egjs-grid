@@ -1,5 +1,6 @@
 import { GridItem } from "../../src";
 import { JustifiedGrid } from "../../src/grids/JustifiedGrid";
+import { SIZES } from "./utils/consts";
 import {
   appendElements, cleanup, expectItemsPosition,
   getRowCount, getRowPoses, sandbox, waitEvent,
@@ -502,6 +503,189 @@ describe("test JustifiedGrid", () => {
       expectItemsPosition(items);
       items.forEach((item) => {
         expect(item.cssContentSize).to.be.equals(200);
+      });
+    });
+  });
+  describe("test stretch option", () => {
+    it(`should check whether cost is reflected in stretch (no stretch)`, async () => {
+      // Given
+      container!.style.cssText = "width: 1000px;";
+
+      grid = new JustifiedGrid(container!, {
+        gap: 5,
+        horizontal: false,
+        sizeRange: [150, 300],
+        stretch: true,
+        stretchRange: [144, 320],
+        passUnstretchRow: false,
+      });
+
+      appendElements(container!, 5);
+
+      // When
+      grid.renderItems();
+
+      await waitEvent(grid, "renderComplete");
+
+      const items = grid.getItems();
+      const rowCount = getRowCount(items);
+      // [518, 517],
+      // [550, 825],
+      // [640, 640],
+      // [364, 520],
+      // [710, 1020],
+      // [600, 819],
+      // [486, 729],
+      // [544, 784],
+      // [720, 720],
+      // [381, 555],
+      // [521, 775],
+
+      // Then
+      expect(rowCount).to.be.equal(1);
+
+      // NO STRETCH
+      items.forEach((item, i) => {
+        expect(item.cssInlineSize).to.be.closeTo(SIZES[i][0] / SIZES[i][1] * 241.1, 0.1);
+        expect(item.cssContentSize).to.be.closeTo(241.1, 0.1);
+      });
+    });
+    it(`should check whether cost is reflected in stretch (stretch)`, async () => {
+      // Given
+      container!.style.cssText = "width: 1000px;";
+
+      grid = new JustifiedGrid(container!, {
+        gap: 0,
+        horizontal: false,
+        sizeRange: [150, 220],
+        stretch: true,
+        stretchRange: [144, 300],
+        passUnstretchRow: false,
+      });
+
+      appendElements(container!, 5);
+
+      // When
+      grid.renderItems();
+
+      await waitEvent(grid, "renderComplete");
+
+      const items = grid.getItems();
+      const rowCount = getRowCount(items);
+
+      // Then
+      expect(rowCount).to.be.equal(1);
+
+      // NO STRETCH
+      const expectedHeight =  220;
+      const sum = SIZES.slice(0, 5).reduce((v1, v2) => v1 + v2[0] / v2[1] * expectedHeight, 0);
+      const scale = grid.getContainerInlineSize() / sum;
+
+      items.forEach((item, i) => {
+        expect(item.cssContentSize).to.be.closeTo(expectedHeight, 0.1);
+        expect(item.cssInlineSize).to.be.not.closeTo(SIZES[i][0] / SIZES[i][1] * expectedHeight, 0.1);
+        expect(item.cssInlineSize).to.be.closeTo(SIZES[i][0] / SIZES[i][1] * scale * expectedHeight, 0.1, `expect ${i}`);
+      });
+    });
+    it(`should check whether cost is reflected in stretch (stretch, 2line)`, async () => {
+      // Given
+      container!.style.cssText = "width: 1000px;";
+
+      grid = new JustifiedGrid(container!, {
+        gap: 0,
+        horizontal: false,
+        sizeRange: [220, 220],
+        stretch: true,
+        stretchRange: [144, 300],
+        passUnstretchRow: false,
+      });
+
+      appendElements(container!, 8);
+
+      // When
+      grid.renderItems();
+
+      await waitEvent(grid, "renderComplete");
+
+
+      const items = grid.getItems();
+      const rowCount = getRowCount(items);
+
+      // Then
+      expect(rowCount).to.be.equal(2);
+
+      // NO STRETCH
+      const expectedHeight =  220;
+
+
+      // 0 4
+      // 4 8
+      const scale1 = grid.getContainerInlineSize()
+        / SIZES.slice(0, 4).reduce((v1, v2) => v1 + v2[0] / v2[1] * expectedHeight, 0);
+      const scale2 = grid.getContainerInlineSize()
+        / SIZES.slice(4, 8).reduce((v1, v2) => v1 + v2[0] / v2[1] * expectedHeight, 0);
+
+      items.slice(0, 4).forEach((item, i) => {
+        expect(item.cssContentSize).to.be.closeTo(expectedHeight, 0.1);
+        expect(item.cssInlineSize).to.be.not.closeTo(SIZES[i][0] / SIZES[i][1] * expectedHeight, 0.1);
+        expect(item.cssInlineSize).to.be.closeTo(SIZES[i][0] / SIZES[i][1] * scale1 * expectedHeight, 0.1, `expect ${i}`);
+      });
+      items.slice(4, 8).forEach((item, i) => {
+        const size = SIZES[i + 4];
+        expect(item.cssContentSize).to.be.closeTo(expectedHeight, 0.1);
+        expect(item.cssInlineSize).to.be.not.closeTo(size[0] / size[1] * expectedHeight, 0.1);
+        expect(item.cssInlineSize).to.be.closeTo(size[0] / size[1] * scale2 * expectedHeight, 0.1, `expect ${i + 4}`);
+      });
+    });
+    it(`should check whether cost is reflected in stretch (stretch, 2line, pass last line)`, async () => {
+      // Given
+      container!.style.cssText = "width: 1000px;";
+
+      grid = new JustifiedGrid(container!, {
+        gap: 0,
+        horizontal: false,
+        sizeRange: [220, 220],
+        stretch: true,
+        stretchRange: [130, 300],
+        passUnstretchRow: true,
+      });
+
+      appendElements(container!, 8);
+
+      // When
+      grid.renderItems();
+
+      await waitEvent(grid, "renderComplete");
+
+      const passedItems = grid.getOutlines().passedItems;
+      const items = grid.getItems();
+      const rowCount = getRowCount(items);
+
+      // Then
+
+      expect(passedItems?.length).to.be.equal(2);
+      expect(rowCount).to.be.equal(2);
+
+      // NO STRETCH
+      const expectedHeight =  220;
+
+      // 0 4
+      // 4 8
+      const scale1 = grid.getContainerInlineSize()
+        / SIZES.slice(0, 6).reduce((v1, v2) => v1 +  v2[0] / v2[1] * expectedHeight, 0);
+
+      items.slice(0, 6).forEach((item, i) => {
+        const size = SIZES[i];
+        expect(item.cssContentPos).to.be.equals(0);
+        expect(item.cssContentSize).to.be.closeTo(expectedHeight, 0.1);
+        expect(item.cssInlineSize).to.be.not.closeTo(size[0] / size[1] * expectedHeight, 0.1);
+        expect(item.cssInlineSize).to.be.closeTo(size[0] / size[1] * scale1 * expectedHeight, 0.1, `expect ${i}`);
+      });
+      items.slice(6, 8).forEach((item, i) => {
+        const size = SIZES[i + 4];
+
+        expect(item.cssContentSize).to.be.closeTo(expectedHeight, 0.1);
+        expect(item.cssInlineSize).to.be.not.closeTo(size[0] / size[1] * expectedHeight, 0.1);
       });
     });
   });
