@@ -23,5 +23,7 @@ export class NgxJustifiedGridComponent
   @Input() displayedRow!: Required<JustifiedGrid>['displayedRow'];
   @Input() stretch!: Required<JustifiedGrid>['stretch'];
   @Input() stretchRange!: Required<JustifiedGrid>['stretchRange'];
+  @Input() inlineOffset!: Required<JustifiedGrid>['inlineOffset'];
+  @Input() contentOffset!: Required<JustifiedGrid>['contentOffset'];
   @Input() passUnstretchRow!: Required<JustifiedGrid>['passUnstretchRow'];
 }
