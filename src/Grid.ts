@@ -331,6 +331,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
   }
   protected checkReady(options: RenderOptions = {}) {
     // Grid: renderItems => checkReady => readyItems => applyGrid
+    const useOrgResize = options.useOrgResize;
     const items = this.items;
     const updated = items.filter((item) => item.element?.parentNode && item.updateState !== UPDATE_STATE.UPDATED);
     const mounted = items.filter((item) => item.element?.parentNode && item.mountState !== MOUNT_STATE.MOUNTED);
@@ -361,10 +362,10 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     }).on("preReady", () => {
       // reset org size
       updated.forEach((item) => {
-        const hasOrgSize = item.orgRect.width && item.orgRect.height;
+        const isInitialState = !item.isFirstUpdate || !item.orgRect.width || !item.orgRect.height;
         const hasCSSSize = item.cssRect.width || item.cssRect.height;
 
-        if (!hasOrgSize && hasCSSSize) {
+        if ((isInitialState || useOrgResize) && hasCSSSize) {
           item.element!.style.cssText = item.orgCSSText;
         }
       });
@@ -376,9 +377,13 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
       item.updateState = UPDATE_STATE.NEED_UPDATE;
       // after preReady
       if (e.isPreReadyOver) {
-        if (item.isRestoreOrgCSSText) {
+        const isInitialState = !item.isFirstUpdate || !item.orgRect.width || !item.orgRect.height;
+        const hasCSSSize = item.cssRect.width || item.cssRect.height;
+
+        if (item.isRestoreOrgCSSText || (isInitialState || useOrgResize) && hasCSSSize) {
           item.element!.style.cssText = item.orgCSSText;
         }
+
         this._updateItems([item]);
         this.readyItems([], [item], options);
       }
