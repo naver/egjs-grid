@@ -125,7 +125,7 @@ export class ItemRenderer {
       rect = initialRects[sizeGroup];
     } else if (isEqualSize && !isNotEqualSize && !sizeGroup && initialRects[""]) {
       rect = initialRects[""];
-    } else if (isConstantSize && hasOrgSize && !isLoading) {
+    } else if (isConstantSize && hasOrgSize && !isLoading && item.isFirstUpdate) {
       rect = orgRect;
     } else if (checkSizeGroup || !element) {
       return;

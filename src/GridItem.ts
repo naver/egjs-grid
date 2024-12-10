@@ -210,7 +210,7 @@ class GridItem {
     return this.cssRect[name] ?? this.rect[name];
   }
   /**
-   * Set CSS Rect through GridRect.
+   * Set CSS rect through GridRect.
    * @ko GridRect을 통해 CSS Rect를 설정한다.
    * @param - The style for setting CSS rect. <ko>CSS rect를 설정하기 위한 스타일.</ko>
    */
@@ -223,6 +223,20 @@ class GridItem {
       rect[names[name]] = gridRect[name];
     }
     this.cssRect = rect;
+  }
+  /**
+   * Add CSS part of rect through GridRect.
+   * @ko GridRect을 통해 CSS Rect의 일부를 추가한다..
+   * @param - The style for setting CSS rect. <ko>CSS rect를 설정하기 위한 스타일.</ko>
+   */
+  public addCSSGridRect(gridRect: GridRect) {
+    const names = RECT_NAMES[this.horizontal ? "horizontal" : "vertical"];
+
+    const rect: DOMRect = this.cssRect;
+
+    for (const name in gridRect) {
+      rect[names[name]] = gridRect[name];
+    }
   }
   /**
    * Returns the status of the item.

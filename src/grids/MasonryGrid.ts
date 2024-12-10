@@ -56,11 +56,11 @@ export interface MasonryGridOptions extends GridOptions {
    */
   columnSize?: number;
   /**
-   * The size ratio(inlineSize / contentSize) of the columns. 0 is not set.
-   * <ko>열의 사이즈 비율(inlineSize / contentSize). 0은 미설정이다.</ko>
+   * The size ratio(inlineSize / contentSize) of the columns. 0 is not set. `true` is automatically calculated as orgInlineSize / orgContentSize.
+   * <ko>열의 사이즈 비율(inlineSize / contentSize). 0은 미설정이다. `true` 는 orgInlineSize / orgContentSize로 자동 계산이 된다.</ko>
    * @default 0
    */
-  columnSizeRatio?: number;
+  columnSizeRatio?: number | boolean;
   /**
    * Align of the position of the items. If you want to use `stretch`, be sure to set `column`, `columnSize` or `maxStretchColumnSize` option. ("start", "center", "end", "justify", "stretch")
    * <ko>아이템들의 위치의 정렬. `stretch`를 사용하고 싶다면 `column`, `columnSize` 또는 `maxStretchColumnSize` 옵션을 설정해라.  ("start", "center", "end", "justify", "stretch")</ko>
@@ -86,6 +86,13 @@ export interface MasonryGridOptions extends GridOptions {
    * @default Infinity
    */
   maxStretchColumnSize?: number;
+
+  /**
+   * Adjust the contentSize of the items to make the outlines equal.
+   * <ko>아이템들의 contentSize를 조절하여 outline을 동등하게 한다.</ko>
+   * @default ""
+   */
+  stretchOutline?: "scale-down" | "scale-up" | "scale-center" | "";
 }
 
 /**
@@ -106,6 +113,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     columnCalculationThreshold: PROPERTY_TYPE.RENDER_PROPERTY,
     maxStretchColumnSize: PROPERTY_TYPE.RENDER_PROPERTY,
     contentAlign: PROPERTY_TYPE.RENDER_PROPERTY,
+    stretchOutline: PROPERTY_TYPE.RENDER_PROPERTY,
   };
   public static defaultOptions: Required<MasonryGridOptions> = {
     ...Grid.defaultOptions,
@@ -116,6 +124,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     columnCalculationThreshold: 0.5,
     maxStretchColumnSize: Infinity,
     contentAlign: "masonry",
+    stretchOutline: "",
   };
 
   public applyGrid(items: GridItem[], direction: "start" | "end", outline: number[]): GridOutlines {
@@ -130,8 +139,9 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
       observeChildren,
       columnSizeRatio,
       contentAlign,
+      stretchOutline,
     } = this.options;
-    const inlineGap = this.getContentGap();
+    const inlineGap = this.getInlineGap();
     const contentGap = this.getContentGap();
     const outlineLength = outline.length;
     const itemsLength = items.length;
@@ -139,6 +149,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     const isEndDirection = direction === "end";
     const nearestCalculationName = isEndDirection ? "min" : "max";
     const pointCalculationName = isEndDirection ? "max" : "min";
+
     let startOutline = [0];
 
     if (outlineLength === column) {
@@ -152,6 +163,8 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     const columnDist = column > 1 ? alignPoses[1] - alignPoses[0] : 0;
     const isStretch = align === "stretch";
     const isStartContentAlign = isEndDirection && contentAlign === "start";
+    const itemIndexes: number[][] = range(startOutline.length).map(() => []);
+
 
 
     let startPos = isEndDirection ? -Infinity : Infinity;
@@ -163,7 +176,8 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     }
 
     for (let i = 0; i < itemsLength; ++i) {
-      const item = items[isEndDirection ? i : itemsLength - 1 - i];
+      const itemIndex = isEndDirection ? i : itemsLength - 1 - i;
+      const item = items[itemIndex];
       const columnAttribute = parseInt(item.attributes.column || "1", 10);
       const maxColumnAttribute = parseInt(item.attributes.maxColumn || "1", 10);
       let contentSize = item.contentSize;
@@ -201,6 +215,8 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
       columnIndex = Math.max(0, columnIndex);
       columnCount = Math.min(column - columnIndex, columnCount);
 
+      itemIndexes[columnIndex].push(itemIndex);
+
       // stretch mode or data-grid-column > "1"
       if ((columnAttribute > 0 && columnCount > 1) || isStretch) {
         const nextInlineSize = (columnCount - 1) * columnDist + columnSize;
@@ -210,7 +226,12 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
         }
         item.cssInlineSize = nextInlineSize;
       }
-      if (columnSizeRatio > 0) {
+      if (columnSizeRatio === true) {
+        const ratio = item.orgContentSize / item.orgInlineSize;
+
+        contentSize = item.computedInlineSize * ratio;
+        item.cssContentSize = contentSize;
+      } else if (columnSizeRatio && columnSizeRatio > 0) {
         contentSize = item.computedInlineSize / columnSizeRatio;
         item.cssContentSize = contentSize;
       }
@@ -226,6 +247,79 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
       });
     }
 
+    if (stretchOutline && items.length) {
+      let scalePoint = 0;
+
+      if (stretchOutline === "scale-up") {
+        scalePoint = Math.max(...endOutline);
+      } else if (stretchOutline === "scale-center") {
+        scalePoint = (Math.max(...endOutline) + Math.min(...endOutline)) / 2;
+      } else {
+        // scale-down
+        scalePoint = Math.min(...endOutline);
+      }
+      if (isEndDirection) {
+        scalePoint -= contentGap;
+      }
+
+      endOutline.forEach((point, i) => {
+        const totalGap = (itemIndexes[i].length - 1) * contentGap;
+        const startPoint = startOutline[i];
+        const scale = (Math.abs(scalePoint - startPoint) - totalGap)
+          / (Math.abs(point - startPoint) - (isEndDirection ? contentGap : 0) - totalGap);
+
+        if (scale === 1 || !isFinite(scale)) {
+          return;
+        }
+        if (isEndDirection) {
+          endOutline[i] = scalePoint + contentGap;
+        } else {
+          endOutline[i] = scalePoint;
+        }
+
+        const length = itemIndexes[i].length;
+        let prevPoint = isEndDirection ? startOutline[i]: startOutline[i] - contentGap;
+
+        itemIndexes[i].forEach((itemIndex, j) => {
+          const item = items[itemIndex];
+          const prevSize = item.computedContentSize;
+          const nextSize = prevSize * scale;
+
+
+          item.addCSSGridRect({
+            contentPos: isEndDirection ? prevPoint : prevPoint - nextSize,
+            contentSize: nextSize,
+          });
+
+          if (isEndDirection) {
+            prevPoint = item.cssContentPos! + item.cssContentSize! + contentGap;
+          } else {
+            prevPoint = item.cssContentPos! - contentGap;
+          }
+
+          if (j === length - 1) {
+            let posOffset = 0;
+            let sizeOffset = 0;
+
+            if (isEndDirection) {
+              sizeOffset = (item.cssContentPos! % 1 >= 0.5 ? 1 : 0)
+                + (item.cssContentSize! % 1 >= 0.5 ? 1 : 0)
+                + (scalePoint % 1 >= 0.5 ? -1 : 0);
+            } else {
+              posOffset = (item.cssContentPos! % 1 < 0.5 ? -1 : 0)
+                + (scalePoint % 1 < 0.5 ? 1 : 0);
+            }
+            // Offset position and size need to be adjusted because they are rounded.
+
+
+            item.addCSSGridRect({
+              contentPos: item.cssContentPos! - posOffset,
+              contentSize: item.cssContentSize! - sizeOffset,
+            });
+          }
+        });
+      });
+    }
     // Finally, check whether startPos and min of the outline match.
     // If different, endOutline is updated.
     if (isStartContentAlign && startPos !== Math.min(...endOutline)) {
@@ -297,16 +391,19 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     } else {
       const columnSize = this.getComputedOutlineSize(items);
 
-      column = Math.min(
-        items.length,
-        Math.max(
-          1,
-          Math.floor(
-            (this.getContainerInlineSize() + inlineGap) /
-              (columnSize - columnCalculationThreshold + inlineGap)
-          )
+      column = Math.max(
+        1,
+        Math.floor(
+          (this.getContainerInlineSize() + inlineGap) /
+          (columnSize - columnCalculationThreshold + inlineGap)
         )
       );
+      if (!this.maxStretchColumnSize) {
+        column = Math.min(
+          items.length,
+          column,
+        );
+      }
     }
     return column;
   }
