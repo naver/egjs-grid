@@ -603,8 +603,15 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     const [minColumn, maxColumn]: number[] = isObject(columnRangeOption)
       ? columnRangeOption
       : [columnRangeOption, columnRangeOption];
+    const graphMap: Record<string, Record<string, number>> = {};
 
     const graph = (nodeKey: string) => {
+      // use cache
+      if (nodeKey in graphMap) {
+        return graphMap[nodeKey];
+      }
+      graphMap[nodeKey] = {};
+
       const results: { [key: string]: number } = {};
       const currentNode = parseInt(nodeKey, 10);
 
@@ -624,6 +631,8 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
         }
         results[`${nextNode}`] = Math.pow(cost, 2);
       }
+      // caching
+      graphMap[nodeKey] = results;
       return results;
     };
     // shortest path for items' total height.
