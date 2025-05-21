@@ -377,7 +377,9 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
 
       if (this.stretch) {
         const [minRowSize, maxRowSize] = this._getSizeRange();
+
         const stretchRowSize = between(nextRowSize, minRowSize, maxRowSize);
+
 
         if (forceStretch) {
           return stretchRowSize;
@@ -512,28 +514,28 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     return {
       infos: costInfos,
       cost: sum(costInfos.map((info) => {
-        let cost = 0;
+        let cost = Math.abs(info.originalSize - info.size) / 2;
         let costRatio = 1;
 
         if (info.size > info.maxSize) {
           costRatio = 2;
           if (info.isMin) {
-            cost = Math.abs(info.size - info.minSize);
+            cost += Math.abs(info.size - info.minSize);
           } else {
-            cost = Math.abs(info.size - info.maxSize);
+            cost += Math.abs(info.size - info.maxSize);
           }
         } else if (info.size < info.minSize) {
           costRatio = 2;
 
           if (info.isMax) {
-            cost = Math.abs(info.size - info.maxSize);
+            cost += Math.abs(info.size - info.maxSize);
           } else {
-            cost = Math.abs(info.size - info.minSize);
+            cost += Math.abs(info.size - info.minSize);
           }
         } else if (info.isMax) {
-          cost = Math.abs(info.maxSize - info.size);
+          cost += Math.abs(info.maxSize - info.size);
         } else if (info.isMin) {
-          cost = Math.abs(info.minSize - info.size);
+          cost += Math.abs(info.minSize - info.size);
         }
         return cost * costRatio;
       })),
@@ -691,6 +693,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
           minInlineSize: itemInlineSize,
         };
       });
+
       const expectedInlineSize = this._getExpectedInlineSize(groupItems, rowSize);
       const scale = (containerInlineSize - allGap) / (expectedInlineSize - allGap);
       const noGapExpectedContainerInlineSize = expectedInlineSize - allGap;

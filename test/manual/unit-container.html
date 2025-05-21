@@ -1,0 +1,78 @@
+<style>
+  .container>div:nth-child(5n+1) {
+    --color: #ff5;
+  }
+
+  .container>div:nth-child(5n+2) {
+    --color: #f55;
+  }
+
+  .container>div:nth-child(5n+3) {
+    --color: #f5f;
+  }
+
+  .container>div:nth-child(5n+4) {
+    --color: #55f;
+  }
+
+  .container>div:nth-child(5n+5) {
+    --color: #5f5;
+  }
+
+  .container>div {
+    background: var(--color);
+  }
+</style>
+<div id="container" class="container">
+
+</div>
+<script src="../../dist/grid.js"></script>
+<script>
+  const SIZES = [
+    [518, 517],
+    [550, 825],
+    [640, 640],
+    [364, 520],
+    [710, 1020],
+    [600, 819],
+    [486, 729],
+    [544, 784],
+    [720, 720],
+    [381, 555],
+    [521, 775],
+  ];
+
+  function appendElements(container, count) {
+    const length = SIZES.length;
+    const elements = [];
+
+    for (let i = 0; i < count; ++i) {
+      const size = SIZES[i % length];
+      const element = document.createElement("div");
+
+      element.style.cssText = `position: absolute; width: ${size[0]}px; height: ${size[1]}px;`;
+      element.innerHTML = `${size[0]}x${size[1]}`;
+      container.appendChild(element);
+      elements.push(element);
+    }
+    return elements;
+  }
+  container.style.cssText = "max-width: 1000px;";
+
+  const grid = new Grid.JustifiedGrid(".container", {
+    gap: 0,
+    horizontal: false,
+    sizeRange: [220, 220],
+    stretch: true,
+    stretchRange: [130, 300],
+    passUnstretchRow: true,
+  }).on("renderComplete", () => {
+    console.log("?");
+  });
+
+
+  appendElements(container, 8);
+
+  // When
+  grid.renderItems();
+</script>

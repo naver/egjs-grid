@@ -120,8 +120,8 @@ describe("test MasonryGrid", () => {
 
     // Then
     expect(grid.getOutlines()).to.be.deep.equals({
-      start: [0],
-      end: [205],
+      start: [0, 0],
+      end: [205, 0],
     });
     expect(grid.getItems().map((item) => item.cssRect)).to.be.deep.equals([
       { left: 0, top: 0 },
@@ -649,7 +649,7 @@ describe("test MasonryGrid", () => {
     await waitEvent(grid, "renderComplete");
 
     // Then
-    expect(grid.getOutlines().start).to.be.deep.equals([100, 100, 100, 100]);
+    expect(grid.getOutlines().start).to.be.deep.equals([100, 100, 100, 100, 100]);
   });
   it(`should check whether the column is calculated as the first item`, async () => {
     // Given

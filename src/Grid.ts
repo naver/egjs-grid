@@ -354,6 +354,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
     }).forEach((item) => {
       item.element!.style.transitionDuration = "0s";
     });
+
     this._im?.destroy();
     this._im = new ImReady({
       prefix: this.options.attributePrefix,
@@ -572,6 +573,7 @@ abstract class Grid<Options extends GridOptions = GridOptions> extends Component
       this.itemRenderer.resize();
     }
 
+    // 초기상태
     if (!this.getItems().length && this.getChildren().length) {
       this.syncElements(options);
     } else if (isResize) {
@@ -700,4 +702,3 @@ export default Grid;
  * grid.outlineSize = 300;
  * ```
  */
-
