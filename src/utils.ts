@@ -39,6 +39,9 @@ export function isString(val: any): val is string {
 export function isObject(val: any): val is object {
   return typeof val === "object";
 }
+export function isFunction(val: any): val is Function {
+  return typeof val === "function";
+}
 export function isNumber(val: any): val is number {
   return typeof val === "number";
 }

@@ -6,7 +6,7 @@
 import Grid from "../Grid";
 import { MOUNT_STATE, PROPERTY_TYPE } from "../consts";
 import { GridOptions, GridOutlines, Properties } from "../types";
-import { between, getRangeCost, GetterSetter, isNumber, isObject, sum, throttle } from "../utils";
+import { between, getRangeCost, GetterSetter, isFunction, isNumber, isObject, sum, throttle } from "../utils";
 import { find_path } from "./lib/dijkstra";
 import { GridItem } from "../GridItem";
 
@@ -75,7 +75,7 @@ export interface JustifiedGridOptions extends GridOptions {
    * <ko> 한 줄에 들어가는 아이템의 최소, 최대 개수.</ko>
    * @default [1, 8]
    */
-  columnRange?: number | number[];
+  columnRange?: number | number[] | ((self: JustifiedGrid) => number | number[]);
   /**
    * The minimum and maximum number of rows in a group, 0 is not set.
    * <ko> 한 그룹에 들어가는 행의 최소, 최대 개수, 0은 미설정이다.</ko>
@@ -377,7 +377,9 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
 
       if (this.stretch) {
         const [minRowSize, maxRowSize] = this._getSizeRange();
+
         const stretchRowSize = between(nextRowSize, minRowSize, maxRowSize);
+
 
         if (forceStretch) {
           return stretchRowSize;
@@ -512,19 +514,30 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
     return {
       infos: costInfos,
       cost: sum(costInfos.map((info) => {
+        let cost = Math.abs(info.originalSize - info.size) / 2;
         let costRatio = 1;
 
-        if (info.size > info.maxSize || info.size < info.minSize) {
+        if (info.size > info.maxSize) {
           costRatio = 2;
-        }
-        let originalSize = info.originalSize;
+          if (info.isMin) {
+            cost += Math.abs(info.size - info.minSize);
+          } else {
+            cost += Math.abs(info.size - info.maxSize);
+          }
+        } else if (info.size < info.minSize) {
+          costRatio = 2;
 
-        if (isIncrease) {
-          originalSize = Math.max(originalSize, info.minSize);
-        } else {
-          originalSize = Math.min(originalSize, info.maxSize);
+          if (info.isMax) {
+            cost += Math.abs(info.size - info.maxSize);
+          } else {
+            cost += Math.abs(info.size - info.minSize);
+          }
+        } else if (info.isMax) {
+          cost += Math.abs(info.maxSize - info.size);
+        } else if (info.isMin) {
+          cost += Math.abs(info.minSize - info.size);
         }
-        return Math.abs(info.size - originalSize) * costRatio;
+        return cost * costRatio;
       })),
     };
   }
@@ -599,12 +612,16 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
   }
   private _getPath(items: GridItem[], isEndDirection: boolean) {
     const lastNode = items.length;
-    const columnRangeOption = this.options.columnRange;
-    const [minColumn, maxColumn]: number[] = isObject(columnRangeOption)
-      ? columnRangeOption
-      : [columnRangeOption, columnRangeOption];
+    const [minColumn, maxColumn]: number[] = this._getColumnRange();
+    const graphMap: Record<string, Record<string, number>> = {};
 
     const graph = (nodeKey: string) => {
+      // use cache
+      if (nodeKey in graphMap) {
+        return graphMap[nodeKey];
+      }
+      graphMap[nodeKey] = {};
+
       const results: { [key: string]: number } = {};
       const currentNode = parseInt(nodeKey, 10);
 
@@ -624,6 +641,8 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
         }
         results[`${nextNode}`] = Math.pow(cost, 2);
       }
+      // caching
+      graphMap[nodeKey] = results;
       return results;
     };
     // shortest path for items' total height.
@@ -661,7 +680,7 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
       if (isCroppedSize) {
         rowSize = Math.max(sizeRange[0], Math.min(rowSize, sizeRange[1]));
       }
-      const allGap = inlineGap * (length - 1);
+      const allGap = inlineGap * (groupItemslength - 1);
       const itemInfos = groupItems.map((item, index) => {
         const itemInlineSize = getExpectedItemInlineSize(item, rowSize);
 
@@ -674,19 +693,22 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
           minInlineSize: itemInlineSize,
         };
       });
+
       const expectedInlineSize = this._getExpectedInlineSize(groupItems, rowSize);
       const scale = (containerInlineSize - allGap) / (expectedInlineSize - allGap);
       const noGapExpectedContainerInlineSize = expectedInlineSize - allGap;
       const noGapContainerInlineSize = containerInlineSize - allGap;
 
-      if (stretch && expectedInlineSize && noGapContainerInlineSize !== noGapExpectedContainerInlineSize) {
-        // passed이고 마지막 그룹의 경우 stretchSize가 containerSize보다 작으면 pass!
-        if (
-          passUnstretchRow && noGapExpectedContainerInlineSize < noGapContainerInlineSize
-          && (isEndDirection ? rowIndex === groupsLength - 1 : rowIndex === 0)
-        ) {
-          passedPoint = [contentPos];
-          passedItems = groupItems.map((_, i) => itemsLength - groupItemslength + i);
+      if (stretch && expectedInlineSize) {
+        // passed and for the last group, if stretchSize is less than containerSize, pass!
+        const passed = passUnstretchRow
+          && noGapExpectedContainerInlineSize < noGapContainerInlineSize
+          && (isEndDirection ? rowIndex === groupsLength - 1 : rowIndex === 0);
+        if (passed || noGapContainerInlineSize === noGapExpectedContainerInlineSize) {
+          if (passed) {
+            passedPoint = [contentPos];
+            passedItems = groupItems.map((_, i) => itemsLength - groupItemslength + i);
+          }
 
           const inlineSizes = this._getExpectedInlineSizes(groupItems, rowSize);
 
@@ -711,7 +733,6 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
         const {
           item,
           inlineSize,
-
         } = info;
         let nextInlineSize = inlineSize;
         const prevItem = groupItems[i - 1];
@@ -779,7 +800,15 @@ export class JustifiedGrid extends Grid<JustifiedGridOptions> {
   }
   private _getColumnRange() {
     const columnRange = this.columnRange;
-    return isObject(columnRange) ? columnRange : [columnRange, columnRange];
+
+    let res: number | number[];
+
+    if (isFunction(columnRange)) {
+      res = columnRange(this);
+    } else {
+      res = columnRange;
+    }
+    return isObject(res) ? res : [res, res];
   }
   private _getSizeRange() {
     const sizeRange = this.sizeRange;
