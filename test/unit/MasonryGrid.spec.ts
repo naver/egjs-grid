@@ -406,6 +406,42 @@ describe("test MasonryGrid", () => {
     ]);
     expect(container!.style.height).to.be.deep.equals("460px");
   });
+  it(`should check the size of the items must be stretched,`, async () => {
+    // Given
+    container!.style.cssText = "width: 600px; height: 600px;";
+    container!.innerHTML = `
+      <div style="position: absolute;width: 200px; height: 400px;"></div>
+      <div style="position: absolute;width: 150px; height: 150px;"></div>
+      <div style="position: absolute;width: 300px; height: 600px;"></div>
+      <div style="position: absolute;width: 250px; height: 250px;"></div>
+    `;
+    grid = new MasonryGrid(container!, {
+      align: "end",
+      gap: 10,
+      // stretch item size
+      stretchItemSize: [0, "1:1"],
+    });
+
+    // When
+    grid.renderItems();
+
+    await waitEvent(grid, "renderComplete");
+
+    // Then
+    expect(grid.getOutlines()).to.be.deep.equals({
+      start: [0, 0],
+      end: [470, 470],
+    });
+
+
+    expect(grid.getItems().map((item) => item.cssRect)).to.be.deep.equals([
+      { left: 190, top: 0, height: 200 },
+      { left: 400, top: 0 },
+      { left: 400, top: 160, height: 300 },
+      { left: 190, top: 210 },
+    ]);
+    expect(container!.style.height).to.be.deep.equals("460px");
+  });
   it(`should check if it is aligned with end`, async () => {
     // Given
     container!.style.cssText = "width: 600px; height: 600px;";

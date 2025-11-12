@@ -266,14 +266,14 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
         const [inline, content] = stretchItemSize[0].split(":").map((value) => parseFloat(value));
 
         minStretchSize = item.computedInlineSize * content / inline;
-      } else {
+      } else if (stretchItemSize[0]) {
         minStretchSize = stretchItemSize[0];
       }
       if (isString(stretchItemSize[1])) {
         const [inline, content] = stretchItemSize[1].split(":").map((value) => parseFloat(value));
 
         maxStretchSize = item.computedInlineSize * content / inline;
-      } else {
+      } else if (stretchItemSize[1]) {
         maxStretchSize = stretchItemSize[1];
       }
       const nextContentSize = between(contentSize, minStretchSize, maxStretchSize);
