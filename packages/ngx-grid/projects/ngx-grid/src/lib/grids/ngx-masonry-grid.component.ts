@@ -14,6 +14,8 @@ import { NgxGridComponent } from '../ngx-grid.component';
 export class NgxMasonryGridComponent
   extends NgxGridComponent
   implements Required<MasonryGridOptions> {
+
+
   public static GridClass: GridFunction = MasonryGrid;
 
   @Input() column!: Required<MasonryGrid>['column'];
@@ -23,4 +25,7 @@ export class NgxMasonryGridComponent
   @Input() columnCalculationThreshold!: Required<MasonryGrid>['columnCalculationThreshold'];
   @Input() maxStretchColumnSize!: Required<MasonryGrid>['maxStretchColumnSize'];
   @Input() contentAlign!: Required<MasonryGrid>['contentAlign'];
+  @Input() stretchOutline!: Required<MasonryGrid>['stretchOutline'];
+  @Input() stretchContainerSize!: Required<MasonryGrid>['stretchContainerSize'];
+  @Input() stretchItemSize!: Required<MasonryGrid>['stretchItemSize'];
 }
