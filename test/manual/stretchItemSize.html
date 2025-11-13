@@ -43,7 +43,8 @@
 .image {
   position: relative;
   display: flex;
-  width: calc(50% - 12px);
+  width: 100px;
+  /* calc(50% - 12px); */
   color: black;
   overflow: hidden;
   border-radius: 16px;
@@ -95,10 +96,11 @@ const html = items.join("");
 
 document.querySelector(".container").innerHTML = html;
 const grid = new Grid.MasonryGrid(".container", {
+  align: "stretch",
   column: 2,
   columnSizeRatio: true,
   isConstantSize: true,
-  stretchItemSize: [0, "1:1"],
+  stretchItemSize: ["1:1", "3:4"],
   gap: 12,
 }).on("renderComplete", () => {
   console.log("?");
