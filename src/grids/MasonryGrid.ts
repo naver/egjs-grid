@@ -261,24 +261,31 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
       // 배치가 조금 더 수월하기 위해서는 min, max scaling 1차 작업
       let minStretchSize = 0;
       let maxStretchSize = Infinity;
+      let useStretchItemSize = false;
 
       if (isString(stretchItemSize[0])) {
         const [inline, content] = stretchItemSize[0].split(":").map((value) => parseFloat(value));
 
         minStretchSize = item.computedInlineSize * content / inline;
+        useStretchItemSize = true;
       } else if (stretchItemSize[0]) {
         minStretchSize = stretchItemSize[0];
+        useStretchItemSize = true;
       }
       if (isString(stretchItemSize[1])) {
         const [inline, content] = stretchItemSize[1].split(":").map((value) => parseFloat(value));
 
         maxStretchSize = item.computedInlineSize * content / inline;
+        useStretchItemSize = true;
       } else if (stretchItemSize[1]) {
         maxStretchSize = stretchItemSize[1];
+        useStretchItemSize = true;
       }
       const nextContentSize = between(contentSize, minStretchSize, maxStretchSize);
 
-      if (nextContentSize !== contentSize) {
+
+      // stretchItemSize를 사용한 케이스라면 반영
+      if (useStretchItemSize) {
         contentSize = nextContentSize;
         item.cssContentSize = contentSize;
         useComputedSize = true;
