@@ -89,7 +89,13 @@ export interface MasonryGridOptions extends GridOptions {
 
   /**
    * Adjust the contentSize of the items to make the outlines equal.
-   * <ko>아이템들의 contentSize를 조절하여 outline을 동등하게 한다.</ko>
+   * "scale-down": Scales down to fit the start of the item's outline.
+   * "scale-center": Scales down or up to fit the center of the item's outline.
+   * "scale-up": Scales up to fit the end of the item's outline.
+   * <ko>아이템들의 contentSize를 조절하여 outline을 동등하게 한다.
+   * "scale-down": 아이템들의 아웃라인 시작 부분에 맞춰 축소시킨다.
+   * "scale-center": 아이템들의 아웃라인 중간 부분에 맞춰 축소시키거나 확장시킨다.
+   * "scale-up": 아이템들의 아웃라인 끝 부분에 맞춰 확장시킨다.</ko>
    * @default ""
    */
   stretchOutline?: "scale-down" | "scale-up" | "scale-center" | "";
