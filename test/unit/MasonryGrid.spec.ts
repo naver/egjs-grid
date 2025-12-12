@@ -436,9 +436,9 @@ describe("test MasonryGrid", () => {
 
     expect(grid.getItems().map((item) => item.cssRect)).to.be.deep.equals([
       { left: 190, top: 0, height: 200 },
-      { left: 400, top: 0 },
+      { left: 400, top: 0, height: 150 },
       { left: 400, top: 160, height: 300 },
-      { left: 190, top: 210 },
+      { left: 190, top: 210, height: 250 },
     ]);
     expect(container!.style.height).to.be.deep.equals("460px");
   });

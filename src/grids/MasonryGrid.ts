@@ -283,7 +283,8 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
 
         maxStretchSize = item.computedInlineSize * content / inline;
         useStretchItemSize = true;
-      } else if (stretchItemSize[1]) {
+      } else if (stretchItemSize[1] && isFinite(stretchItemSize[1])) {
+        // 유한한 숫자라면 stretch 대상으로 판단
         maxStretchSize = stretchItemSize[1];
         useStretchItemSize = true;
       }
