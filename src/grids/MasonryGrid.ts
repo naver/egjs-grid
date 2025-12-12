@@ -6,7 +6,7 @@
 import Grid from "../Grid";
 import { PROPERTY_TYPE, UPDATE_STATE } from "../consts";
 import { GridOptions, Properties, GridOutlines, GridAlign, MasonryGridVerticalAlign } from "../types";
-import { range, GetterSetter } from "../utils";
+import { range, GetterSetter, between, isString, throttle } from "../utils";
 import { GridItem } from "../GridItem";
 
 
@@ -89,10 +89,28 @@ export interface MasonryGridOptions extends GridOptions {
 
   /**
    * Adjust the contentSize of the items to make the outlines equal.
-   * <ko>아이템들의 contentSize를 조절하여 outline을 동등하게 한다.</ko>
+   * "scale-down": Scales down to fit the start of the item's outline.
+   * "scale-center": Scales down or up to fit the center of the item's outline.
+   * "scale-up": Scales up to fit the end of the item's outline.
+   * <ko>아이템들의 contentSize를 조절하여 outline을 동등하게 한다.
+   * "scale-down": 아이템들의 아웃라인 시작 부분에 맞춰 축소시킨다.
+   * "scale-center": 아이템들의 아웃라인 중간 부분에 맞춰 축소시키거나 확장시킨다.
+   * "scale-up": 아이템들의 아웃라인 끝 부분에 맞춰 확장시킨다.</ko>
    * @default ""
    */
   stretchOutline?: "scale-down" | "scale-up" | "scale-center" | "";
+  /**
+   * When using stretchOutline, the contentSize of the items is adjusted to adjust the outline to a value between min and max. ([minSize, maxSize])
+   * <ko>stretchOutline를 사용하는 경우 아이템들의 contentSize를 조절하여 container의 outline을 min과 max 사이 값으로 조절한다. ([minSize, maxSize])</ko>
+   * @default [0, Infinity]
+   */
+  stretchContainerSize?: number[];
+  /**
+   * adjust the minimum and maximum item size of the items. ([minSize, maxSize])
+   * <ko>아이템들의 item size 최소, 최대 크기를 조절한다. ([minSize, maxSize])</ko>
+   * @default [0, Infinity]
+   */
+  stretchItemSize?: Array<string | number>;
 }
 
 /**
@@ -114,6 +132,8 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     maxStretchColumnSize: PROPERTY_TYPE.RENDER_PROPERTY,
     contentAlign: PROPERTY_TYPE.RENDER_PROPERTY,
     stretchOutline: PROPERTY_TYPE.RENDER_PROPERTY,
+    stretchContainerSize: PROPERTY_TYPE.RENDER_PROPERTY,
+    stretchItemSize: PROPERTY_TYPE.RENDER_PROPERTY,
   };
   public static defaultOptions: Required<MasonryGridOptions> = {
     ...Grid.defaultOptions,
@@ -125,6 +145,8 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     maxStretchColumnSize: Infinity,
     contentAlign: "masonry",
     stretchOutline: "",
+    stretchContainerSize: [0, Infinity],
+    stretchItemSize: [0, Infinity],
   };
 
   public applyGrid(items: GridItem[], direction: "start" | "end", outline: number[]): GridOutlines {
@@ -134,12 +156,16 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
     const columnSize = this.getComputedOutlineSize(items);
     const column = this.getComputedOutlineLength(items);
 
+    // contentPos를 변경했는지에 따라 computedSize로 설정해야 함.
+    let useComputedSize = false;
     const {
       align,
       observeChildren,
       columnSizeRatio,
       contentAlign,
       stretchOutline,
+      stretchContainerSize,
+      stretchItemSize,
     } = this.options;
     const inlineGap = this.getInlineGap();
     const contentGap = this.getContentGap();
@@ -174,6 +200,7 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
       // support only end direction
       startPos = Math.min(...endOutline);
     }
+
 
     for (let i = 0; i < itemsLength; ++i) {
       const itemIndex = isEndDirection ? i : itemsLength - 1 - i;
@@ -231,9 +258,43 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
 
         contentSize = item.computedInlineSize * ratio;
         item.cssContentSize = contentSize;
+        useComputedSize = true;
       } else if (columnSizeRatio && columnSizeRatio > 0) {
         contentSize = item.computedInlineSize / columnSizeRatio;
         item.cssContentSize = contentSize;
+        useComputedSize = true;
+      }
+      // 배치가 조금 더 수월하기 위해서는 min, max scaling 1차 작업
+      let minStretchSize = 0;
+      let maxStretchSize = Infinity;
+      let useStretchItemSize = false;
+
+      if (isString(stretchItemSize[0])) {
+        const [inline, content] = stretchItemSize[0].split(":").map((value) => parseFloat(value));
+
+        minStretchSize = item.computedInlineSize * content / inline;
+        useStretchItemSize = true;
+      } else if (stretchItemSize[0]) {
+        minStretchSize = stretchItemSize[0];
+        useStretchItemSize = true;
+      }
+      if (isString(stretchItemSize[1])) {
+        const [inline, content] = stretchItemSize[1].split(":").map((value) => parseFloat(value));
+
+        maxStretchSize = item.computedInlineSize * content / inline;
+        useStretchItemSize = true;
+      } else if (stretchItemSize[1]) {
+        maxStretchSize = stretchItemSize[1];
+        useStretchItemSize = true;
+      }
+      const nextContentSize = between(contentSize, minStretchSize, maxStretchSize);
+
+
+      // stretchItemSize를 사용한 케이스라면 반영
+      if (useStretchItemSize) {
+        contentSize = nextContentSize;
+        item.cssContentSize = contentSize;
+        useComputedSize = true;
       }
       const inlinePos = alignPoses[columnIndex];
       contentPos = isEndDirection ? contentPos : contentPos - contentGap - contentSize;
@@ -259,16 +320,40 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
         scalePoint = Math.min(...endOutline);
       }
       if (isEndDirection) {
+        // end 방향이면 endOutline이 gap만큼 더 추가되어 있다.
         scalePoint -= contentGap;
+
+        // 높이 제한
+        const startPoint = Math.min(...startOutline);
+        const nextHeight = between(
+          // 높이
+          scalePoint - startPoint,
+          stretchContainerSize[0],
+          stretchContainerSize[1],
+        );
+
+        scalePoint = nextHeight + startPoint;
+      } else {
+        // 높이 제한
+        const startPoint = Math.max(...startOutline);
+        const nextHeight = between(
+          // 반대 방향의 경우 startPoint(start)가 scalePoint(end)보다 큰 숫자다.
+          startPoint - scalePoint,
+          stretchContainerSize[0],
+          stretchContainerSize[1],
+        );
+
+        scalePoint = nextHeight - startPoint;
       }
 
       endOutline.forEach((point, i) => {
         const totalGap = (itemIndexes[i].length - 1) * contentGap;
         const startPoint = startOutline[i];
-        const scale = (Math.abs(scalePoint - startPoint) - totalGap)
-          / (Math.abs(point - startPoint) - (isEndDirection ? contentGap : 0) - totalGap);
+        const prevSize = Math.abs(point - startPoint) - (isEndDirection ? contentGap : 0) - totalGap;
+        const nextSize = (Math.abs(scalePoint - startPoint) - totalGap);
+        const scale = nextSize / prevSize;
 
-        if (scale === 1 || !isFinite(scale)) {
+        if (!prevSize || scale === 1 || !isFinite(scale)) {
           return;
         }
         if (isEndDirection) {
@@ -278,17 +363,85 @@ export class MasonryGrid extends Grid<MasonryGridOptions> {
         }
 
         const length = itemIndexes[i].length;
-        let prevPoint = isEndDirection ? startOutline[i]: startOutline[i] - contentGap;
+        let prevPoint = isEndDirection ? startOutline[i] : startOutline[i] - contentGap;
 
-        itemIndexes[i].forEach((itemIndex, j) => {
+        const itemInfos = itemIndexes[i].map((itemIndex, j) => {
           const item = items[itemIndex];
-          const prevSize = item.computedContentSize;
-          const nextSize = prevSize * scale;
+          const originalSize = useComputedSize
+            ? item.computedContentSize
+            : item.contentSize;
+          let minStretchSize = 0;
+          let maxStretchSize = Infinity;
+
+          if (isString(stretchItemSize[0])) {
+            const [inline, content] = stretchItemSize[0].split(":").map((value) => parseFloat(value));
+
+            minStretchSize = item.computedInlineSize * content / inline;
+          } else {
+            minStretchSize = stretchItemSize[0];
+          }
+          if (isString(stretchItemSize[1])) {
+            const [inline, content] = stretchItemSize[1].split(":").map((value) => parseFloat(value));
+
+            maxStretchSize = item.computedInlineSize * content / inline;
+          } else {
+            maxStretchSize = stretchItemSize[1];
+          }
 
 
+          return {
+            item,
+            index: j,
+            itemIndex,
+            minSize: minStretchSize,
+            originalSize,
+            nextSize: originalSize,
+            maxSize: maxStretchSize,
+          };
+        });
+
+        if (scale > 1) {
+          itemInfos.sort((a, b) => {
+            return a.originalSize - b.originalSize;
+          });
+        } else {
+          itemInfos.sort((a, b) => {
+            return b.originalSize - a.originalSize;
+          });
+        }
+        // minSize, maxSize 제한하여 scale을 적용한다.
+        let sumPrevSize = 0;
+        let sumNextSize = 0;
+        itemInfos.forEach((itemInfo) => {
+          // 이전까지의 합 scale은 점점 목표치(`scale`)에 다가가야 한다.
+          // 그렇지 않는 경우는 max, min에 도달한 경우라고 판단.
+
+          const nextScale = sumNextSize > nextSize ? scale : (nextSize - sumNextSize) / (prevSize - sumPrevSize);
+          const prevItemSize = itemInfo.originalSize;
+          const nextItemSize = throttle(between(prevItemSize * nextScale, itemInfo.minSize, itemInfo.maxSize), 0.01);
+
+          sumPrevSize += prevItemSize;
+          sumNextSize += nextItemSize;
+          itemInfo.nextSize = nextItemSize;
+        });
+        // minSize, maxSize 적용 이후 gap이 남는 경우 전부 강제 scale 한다.
+        if (throttle(sumNextSize - nextSize, 0.01)) {
+          const lastScale = throttle(nextSize / sumNextSize, 0.01);
+
+          itemInfos.forEach((itemInfo) => {
+            itemInfo.nextSize *= lastScale;
+          });
+        }
+        // 다시 index 순서로 정렬해야 포지션을 설정 가능함
+        itemInfos.sort((a, b) => {
+          return a.index - b.index;
+        });
+        itemInfos.forEach((itemInfo, j) => {
+          const item = itemInfo.item;
+          const nextItemSize = itemInfo.nextSize;
           item.addCSSGridRect({
-            contentPos: isEndDirection ? prevPoint : prevPoint - nextSize,
-            contentSize: nextSize,
+            contentPos: isEndDirection ? prevPoint : prevPoint - nextItemSize,
+            contentSize: nextItemSize,
           });
 
           if (isEndDirection) {
