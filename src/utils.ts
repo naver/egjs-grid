@@ -20,12 +20,12 @@ export function getUpdatedItems(items: GridItem[], entries: ResizeWatcherEntry[]
     mountedItems.map((item) => item.element!),
   ).maintained.filter(([prevIndex, nextIndex]) => {
     const entrySize = entries[prevIndex].size!;
-    const item = items[nextIndex];
+    const item = mountedItems[nextIndex];
 
     return !item.inlineSize || !item.contentSize
       || entrySize.inlineSize !== item.computedInlineSize
       || entrySize.blockSize !== item.computedContentSize;
-  }).map(([, nextIndex]) => items[nextIndex]);
+  }).map(([, nextIndex]) => mountedItems[nextIndex]);
 }
 export function getMountedItems(items: GridItem[]) {
   return items.filter((item) => item.element);
