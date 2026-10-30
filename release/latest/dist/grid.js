@@ -4,7 +4,7 @@ name: @egjs/grid
 license: MIT
 author: NAVER Corp.
 repository: https://github.com/naver/egjs-grid
-version: 1.18.0
+version: 1.18.1
 */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -944,11 +944,11 @@ version: 1.18.0
         var prevIndex = _a[0],
             nextIndex = _a[1];
         var entrySize = entries[prevIndex].size;
-        var item = items[nextIndex];
+        var item = mountedItems[nextIndex];
         return !item.inlineSize || !item.contentSize || entrySize.inlineSize !== item.computedInlineSize || entrySize.blockSize !== item.computedContentSize;
       }).map(function (_a) {
         var nextIndex = _a[1];
-        return items[nextIndex];
+        return mountedItems[nextIndex];
       });
     }
     function getMountedItems(items) {

@@ -4,7 +4,7 @@ name: @egjs/grid
 license: MIT
 author: NAVER Corp.
 repository: https://github.com/naver/egjs-grid
-version: 1.18.0
+version: 1.18.1
 */
 import Component from '@egjs/component';
 import { diff } from '@egjs/children-differ';
@@ -159,11 +159,11 @@ function getUpdatedItems(items, entries) {
     var prevIndex = _a[0],
         nextIndex = _a[1];
     var entrySize = entries[prevIndex].size;
-    var item = items[nextIndex];
+    var item = mountedItems[nextIndex];
     return !item.inlineSize || !item.contentSize || entrySize.inlineSize !== item.computedInlineSize || entrySize.blockSize !== item.computedContentSize;
   }).map(function (_a) {
     var nextIndex = _a[1];
-    return items[nextIndex];
+    return mountedItems[nextIndex];
   });
 }
 function getMountedItems(items) {
